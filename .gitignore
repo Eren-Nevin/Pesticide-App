@@ -1,3 +1,4 @@
+*.vim
 # Miscellaneous
 *.class
 *.log
