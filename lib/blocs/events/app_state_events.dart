@@ -7,6 +7,13 @@ class ChangeMoodEvent extends AppStateEvent {
   ChangeMoodEvent({required this.everythingIsGood});
 }
 
+class ChoseLocalEvent extends AppStateEvent {
+  String chosenLocale;
+  ChoseLocalEvent({required this.chosenLocale});
+}
+
+class UnchoseLocalEvent extends AppStateEvent {}
+
 class ReloadAppStateEvent extends AppStateEvent {
   AppState? appState;
   ReloadAppStateEvent(this.appState);

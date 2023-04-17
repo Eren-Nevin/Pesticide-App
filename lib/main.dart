@@ -2,44 +2,22 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:localization/localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger/logger.dart';
+import 'package:pesticide/blocs/app_state_bloc.dart';
+import 'package:pesticide/blocs/events/app_state_events.dart';
+import 'package:pesticide/model/app_state.dart';
+import 'package:pesticide/model/models.dart';
 import 'package:pesticide/repository.dart';
 
 import 'package:pesticide/routing.dart';
 import 'package:pesticide/theme.dart';
 
-// TODO: Replace gesture detectors with proper click handling
-
-// TODO: Make more recently used tasksheets and users to be more acceissible in
-// add task and add tasksheet dialogs
-
-// TODO: Fix tasksheet notes
-
-// TODO: Make server send state in separate parts, one for tasks, one for
-// tasksheets and so on. This lets you to only update that model in the database
-// and bloc causing fewer updates in UI. In an ideal world, the granuality of
-// updates should be minimal, down to a signle task or tasksheet.
-
-// TODO: Change deleting task when shared, instead unsubscribe from it (like
-// tasksheet)
-// TODO: Create undo for deleting tasks using snackbar
-// TODO: Validate every user input including on signup, task titles, ...
-// TODO: Add snackbar on delete using a new event (userIntentsOnDeleting
-// Task/TaskSheet) which is not reported to server but instead is observed by
-// repository and only when user has not clicked 'undo' in the snackbar, the
-// real UserDeletesTaskEvent is fired. Note that we can create a new class of
-// UserEvent called UserLocalEvent that are not sent to server and these new
-// events can be its children.
-
-// Initializers
-// TODO: Why not close repository and services on app stop and re initialize
-// them on app reload?
-
-// TODO: should we deinitialize firebase like notification services on stop and
-// reinitialize in on resume?
 void initializeLogger() {
   final logger = Logger(
       level: Level.info,
@@ -57,28 +35,78 @@ Future<void> initializeRepository() async {
   GetIt.I.registerSingleton<Repository>(repository);
 }
 
-/* Future<void> initializeFirebase() async { */
-/*   FirebaseService firebaseService = FirebaseService(); */
-/*   await firebaseService.initialize(); */
-/*   GetIt.I.registerSingleton<FirebaseService>(firebaseService); */
-/* } */
+Future<void> createAndAddGoRouterToGetIt() async {
+  bool isLoggedIn =
+      (await GetIt.I<Repository>().readAuthenticationFromDatabase()).loggedIn;
 
-void addGoRouterToGetIt() {
+  GoRouter appRouter = createAppRouter(isLoggedIn);
+
   GetIt.I.registerSingleton<GoRouter>(appRouter);
+
+  print(GetIt.I<GoRouter>());
 }
 
 void main() async {
   initializeLogger();
   GetIt.I<Logger>().i("App Start");
-  addGoRouterToGetIt();
-  WidgetsFlutterBinding.ensureInitialized();
   await initializeRepository();
-  /* await initializeFirebase(); */
-
+  await createAndAddGoRouterToGetIt();
+  WidgetsFlutterBinding.ensureInitialized();
+  setTestData();
   runApp(MyApp());
 }
 
 CupertinoThemeData appTheme = getMainTheme();
+
+class LocaleCubit extends Cubit<Locale> {
+  LocaleCubit(super.initialState);
+
+  void setLocale(Locale locale) {
+    emit(locale);
+  }
+}
+
+void setTestData() {
+  AppStateBloc appStateBloc = GetIt.I<Repository>().getAppStateBloc();
+  AppState state = appStateBloc.state;
+  AppState newState = AppState.clone(state);
+  newState.lands = [
+    Land(landId: 1, location: 'Turkey', area: 100, slope: 10),
+    Land(landId: 2, location: 'Greece', area: 10, slope: 20),
+  ];
+  newState.crops = [
+    Crop(
+        name: 'Tomato',
+        plantingDate:
+            DateTime.now().subtract(Duration(days: 40)).millisecondsSinceEpoch,
+        landId: 1),
+    Crop(
+        name: 'Potato',
+        plantingDate:
+            DateTime.now().subtract(Duration(days: 10)).millisecondsSinceEpoch,
+        harvestDates: [
+          DateTime.now().millisecondsSinceEpoch,
+          DateTime.now().add(Duration(days: 10)).millisecondsSinceEpoch,
+        ],
+        landId: 1),
+  ];
+
+  newState.pesticides = [
+    Pesticide(
+      pesticide: 'Argon',
+      cropId: 2,
+      landId: 1,
+      problem: 'Ants',
+      dose: 3,
+      applicationDate: DateTime.now().millisecondsSinceEpoch,
+      harvestIntervalDays: 21,
+    ),
+  ];
+
+  appStateBloc.add(
+    ReloadAppStateEvent(newState),
+  );
+}
 
 class MyApp extends StatelessWidget {
   MyLifecycleObserver observer = MyLifecycleObserver();
@@ -87,6 +115,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    LocalJsonLocalization.delegate.directories = ['lib/i18n'];
     MyLifecycleObserver observer = MyLifecycleObserver();
     observer.start();
 
@@ -94,14 +123,24 @@ class MyApp extends StatelessWidget {
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
     return CupertinoApp.router(
+      supportedLocales: const [
+        Locale('en'),
+        Locale('de'),
+        Locale('it'),
+        Locale('ro'),
+        Locale('hr'),
+        Locale('tr'),
+      ],
       debugShowCheckedModeBanner: false,
       title: 'Pesticide-App',
       theme: appTheme,
-      localizationsDelegates: const [
-        DefaultCupertinoLocalizations.delegate,
-        DefaultMaterialLocalizations.delegate,
+      localizationsDelegates: [
+        LocalJsonLocalization.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
       ],
-      routerConfig: appRouter,
+      routerConfig: GetIt.I<GoRouter>(),
     );
   }
 
@@ -136,7 +175,7 @@ class MyLifecycleObserver with WidgetsBindingObserver {
         GetIt.I<Logger>().i("App Resumed");
         // TODO: How to prevent repository onAppResume from sending us to the first page on every
         // relaunch of app?
-        await GetIt.I<Repository>().onAppResume();
+        /* await GetIt.I<Repository>().onAppResume(); */
         break;
       case AppLifecycleState.paused:
         GetIt.I<Logger>().i("App Paused");

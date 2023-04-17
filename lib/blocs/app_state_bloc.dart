@@ -18,6 +18,20 @@ class AppStateBloc extends Bloc<AppStateEvent, AppState> {
       emit(state);
     });
 
+    on<ChoseLocalEvent>((event, emit) {
+      AppState newState = AppState.clone(state);
+      newState.chosenLocale = event.chosenLocale;
+      newState.hasChosenLocale = true;
+      emit(newState);
+    });
+
+    on<UnchoseLocalEvent>((event, emit) {
+      AppState newState = AppState.clone(state);
+      newState.hasChosenLocale = false;
+      newState.chosenLocale = 'en';
+      emit(newState);
+    });
+
     on<ReloadAppStateEvent>((event, emit) {
       AppState state = event.appState ?? AppState(everythingIsGood: true);
       emit(state);

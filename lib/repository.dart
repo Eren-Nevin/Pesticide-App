@@ -12,23 +12,16 @@ import 'package:pesticide/model/app_state.dart';
 import 'package:pesticide/blocs/app_state_bloc.dart';
 import 'package:pesticide/blocs/authentication_bloc.dart';
 
+class SigningUpSelectLanguageCubit extends Cubit<bool> {
+  SigningUpSelectLanguageCubit() : super(true);
+
+  void languageSelected() => emit(false);
+  void goBackToLanguageSelection() => emit(true);
+}
+
 // REQUIRES LOGGER
 class Repository {
-  final emptyAuthenticationState = AuthenticationState(
-      token: '',
-      firebaseToken: '',
-      loggedInUserGlobalId: 0,
-      loggedIn: false,
-      profileImageUrl: '',
-      username: '');
-
   final emptyAppState = AppState(everythingIsGood: true);
-  /* final testUserModel = UserModel( */
-  /*     globalId: 555, */
-  /*     name: 'John ' */
-  /*         'Appleseed', */
-  /*     email: 'email@example.com', */
-  /*     avatarUrl: 'https://i.pravatar.cc/64'); */
 
   late final Isar localDatabase;
 
@@ -157,6 +150,7 @@ class Repository {
     });
 
     _appStateBlocSubscription = _appStateBloc.stream.listen((appState) async {
+      print(appState.toString());
       await _saveAppStateToDatabase(appState);
     });
   }
@@ -214,7 +208,7 @@ class Repository {
 
     if (authStates.isEmpty) {
       GetIt.I<Logger>().w("Couldn't find auth state");
-      return emptyAuthenticationState;
+      return AuthenticationState.getEmptyAuthState();
     } else if (authStates.length > 1) {
       GetIt.I<Logger>().e("Multiple Auth States");
       return authStates.first;

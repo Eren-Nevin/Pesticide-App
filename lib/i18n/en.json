@@ -1,0 +1,13 @@
+{
+    "sign-in-prompt-text": "Already have an account?",
+    "sign-in-prompt-cta": "Sign in",
+    "sign-up-prompt-text": "Don't have an account?",
+    "sign-up-prompt-cta": "Sign up",
+    "sign-in-button-text": "Sign in",
+    "select-language-text": "< Select Language",
+
+    "name-input-field-placeholder": "Name",
+    "email-input-field-placeholder": "Email",
+    "password-input-field-placeholder": "Password"
+
+}

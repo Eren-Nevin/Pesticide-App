@@ -7,11 +7,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
+import 'package:localization/localization.dart';
 import 'package:logger/logger.dart';
+import 'package:flag/flag.dart';
+import 'package:pesticide/blocs/app_state_bloc.dart';
+import 'package:pesticide/blocs/authentication_bloc.dart';
+import 'package:pesticide/blocs/events/app_state_events.dart';
+import 'package:pesticide/blocs/events/authentication_events.dart';
+import 'package:pesticide/model/authentication_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pesticide/main.dart';
 import 'package:pesticide/view/common_widgets.dart';
+
+import 'package:pesticide/i18n/translator.dart';
+import 'package:country_picker/country_picker.dart';
 
 // TODO: Add toast errors for both login and signup + form validations
 
@@ -22,25 +35,49 @@ int loginButtonColor = 0xFF69f0ae;
 
 class UserLoginPageInput {
   String name = '';
+  String username = '';
   String email = '';
   String password = '';
+  String language = '';
+  String education = '';
+  String occupation = '';
+
+  String country = '';
   Uint8List? photoFile;
 
   UserLoginPageInput();
+
+  UserLoginPageInput.clone(UserLoginPageInput source) {
+    name = source.name;
+    username = source.username;
+    email = source.email;
+    password = source.password;
+    language = source.language;
+    education = source.education;
+    occupation = source.occupation;
+    country = source.country;
+    photoFile = source.photoFile;
+  }
 
   @override
   bool operator ==(Object other) {
     if (other is UserLoginPageInput) {
       return name == other.name &&
+          username == other.username &&
           email == other.email &&
           password == other.password &&
-          photoFile == photoFile;
+          photoFile == other.photoFile &&
+          country == other.country &&
+          language == other.language &&
+          education == other.education &&
+          occupation == other.occupation;
     }
     return false;
   }
 
   @override
-  int get hashCode => Object.hash(name, email, password, photoFile);
+  int get hashCode => Object.hash(name, username, email, password, photoFile,
+      country, language, education, occupation);
 }
 
 class UserLoginPageInputCubit extends Cubit<UserLoginPageInput> {
@@ -58,6 +95,12 @@ class UserLoginPageInputCubit extends Cubit<UserLoginPageInput> {
     emit(currentState);
   }
 
+  void setUsername(String username) {
+    UserLoginPageInput currentState = state;
+    currentState.username = username;
+    emit(currentState);
+  }
+
   void setPassword(String password) {
     UserLoginPageInput currentState = state;
     currentState.password = password;
@@ -70,18 +113,43 @@ class UserLoginPageInputCubit extends Cubit<UserLoginPageInput> {
     emit(currentState);
   }
 
+  void setLanguage(String language) {
+    UserLoginPageInput currentState = state;
+    currentState.language = language;
+    emit(currentState);
+  }
+
+  void setCountry(String country) {
+    UserLoginPageInput newState = UserLoginPageInput.clone(state);
+    newState.country = country;
+    emit(newState);
+  }
+
+  void setEducation(String education) {
+    UserLoginPageInput newState = UserLoginPageInput.clone(state);
+    newState.education = education;
+    emit(newState);
+  }
+
+  void setOccupation(String occupation) {
+    UserLoginPageInput newState = UserLoginPageInput.clone(state);
+    newState.occupation = occupation;
+    emit(newState);
+  }
+
   void reset() => emit(UserLoginPageInput());
 }
 
-class LoggingInCubit extends Cubit<bool> {
-  LoggingInCubit() : super(false);
+class IsLoggingInCubit extends Cubit<bool> {
+  IsLoggingInCubit() : super(false);
 
-  void loggingIn() => emit(true);
-  void signingUp() => emit(false);
+  void setToLogin() => emit(true);
+  void setToSignup() => emit(false);
 }
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  final Future<SharedPreferences> prefs = SharedPreferences.getInstance();
+  LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +159,7 @@ class LoginPage extends StatelessWidget {
       resizeToAvoidBottomInset: true,
       body: Builder(builder: (context) {
         UserLoginPageInputCubit inputCubit = UserLoginPageInputCubit();
-        LoggingInCubit loggingInCubit = LoggingInCubit();
+        IsLoggingInCubit loggingInCubit = IsLoggingInCubit();
         return MultiBlocProvider(providers: [
           BlocProvider.value(
             value: loggingInCubit,
@@ -141,7 +209,9 @@ class LoginPageContents extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 16),
                   child: Builder(builder: (context) {
-                    if (context.watch<LoggingInCubit>().state) {
+                    bool isLoggingInCubit =
+                        context.watch<IsLoggingInCubit>().state;
+                    if (isLoggingInCubit) {
                       return LoginForm();
                     } else {
                       return SignupForm();
@@ -161,26 +231,26 @@ class LoginOrSignupPrompt extends StatelessWidget {
   List<TextSpan> getPrompt(BuildContext context, bool loggingIn) {
     if (loggingIn) {
       return [
-        const TextSpan(text: "Don't have account? "),
+        const TextSpan(text: 'Dont have an account?'),
         TextSpan(
             recognizer: TapGestureRecognizer()
               ..onTap = () {
                 context.read<UserLoginPageInputCubit>().reset();
-                context.read<LoggingInCubit>().signingUp();
+                context.read<IsLoggingInCubit>().setToSignup();
               },
-            text: 'Sign up',
+            text: ' ' 'Sign up',
             style: const TextStyle(fontWeight: FontWeight.bold))
       ];
     } else {
       return [
-        const TextSpan(text: 'Already have an account? '),
+        const TextSpan(text: 'Already have an account?'),
         TextSpan(
             recognizer: TapGestureRecognizer()
               ..onTap = () {
                 context.read<UserLoginPageInputCubit>().reset();
-                context.read<LoggingInCubit>().loggingIn();
+                context.read<IsLoggingInCubit>().setToLogin();
               },
-            text: 'Sign in',
+            text: ' ' 'Sign in',
             style: const TextStyle(fontWeight: FontWeight.bold))
       ];
     }
@@ -209,7 +279,7 @@ class LoginOrSignupPrompt extends StatelessWidget {
               child: Text.rich(
                 TextSpan(
                     style: const TextStyle(color: Colors.white, fontSize: 16),
-                    children: context.watch<LoggingInCubit>().state
+                    children: context.watch<IsLoggingInCubit>().state
                         ? getPrompt(context, true)
                         : getPrompt(context, false)),
               ),
@@ -237,11 +307,11 @@ class LoginForm extends StatelessWidget {
                 alignment: AlignmentDirectional.bottomCenter,
                 child: Row(
                   children: [
-                    Container(),
-                    /* Expanded( */
-                    /*     child: ActionButton( */
-                    /*   loggingIn: true, */
-                    /* )), */
+                    /* Container(), */
+                    Expanded(
+                        child: ActionButton(
+                      loggingIn: true,
+                    )),
                   ],
                 ),
               ),
@@ -257,11 +327,17 @@ class SignupForm extends StatelessWidget {
     // TODO: Use the form or remove it. Currently doesn't do anything since it
     // only has a single container child
     return Form(
-      child: Container(
-          /* color: Colors.yellow, */
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          /* height: 900, */
-          child: Column(
+        child: Container(
+      /* color: Colors.yellow, */
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      /* height: 900, */
+      child: Builder(builder: ((context) {
+        bool languageSelected =
+            context.watch<AppStateBloc>().state.hasChosenLocale;
+        if (!languageSelected) {
+          return SignupSelectLanguageWidget();
+        } else {
+          return Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -273,19 +349,109 @@ class SignupForm extends StatelessWidget {
                   alignment: AlignmentDirectional.bottomCenter,
                   child: Row(
                     children: [
-                      Container(),
-                      /* Expanded( */
-                      /*     child: ActionButton( */
-                      /*   loggingIn: false, */
-                      /* )), */
+                      Expanded(
+                          child: ActionButton(
+                        loggingIn: false,
+                      )),
                     ],
                   ),
                 ),
-              ])),
-    );
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () async {
+                    context.read<IsLoggingInCubit>().setToSignup();
+                    context.read<AppStateBloc>().add(UnchoseLocalEvent());
+                    /* chosenLocale: )); */
+                    /* context */
+                    /*     .read<SigningUpSelectLanguageCubit>() */
+                    /*     .goBackToLanguageSelection(); */
+                  },
+                  child: Container(
+                    margin: EdgeInsetsDirectional.symmetric(vertical: 8),
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text("< Select Language",
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelMedium!
+                            .apply(color: Colors.white)),
+                  ),
+                ),
+              ]);
+        }
+      })),
+    ));
   }
 }
 
+class SignupSelectLanguageWidget extends StatelessWidget {
+  const SignupSelectLanguageWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              for (String language in languages)
+                Row(children: [
+                  Expanded(child: SelectLanguageButton(language: language))
+                ])
+            ]));
+  }
+}
+
+class SelectLanguageButton extends StatelessWidget {
+  final String language;
+  const SelectLanguageButton({super.key, required this.language});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+        height: 64,
+        child: OutlinedButton(
+            onPressed: (() async {
+              String? countryCode = countryCodes[language];
+
+              if (countryCode != null) {
+                GetIt.I<Logger>().i("$language Button Clicked");
+                context.read<AppStateBloc>().add(ChoseLocalEvent(
+                      chosenLocale: countryCode,
+                    ));
+              } else {
+                GetIt.I<Logger>().e("""$language Button Clicked, But
+                country code not found""");
+              }
+              /* context.read<LocaleCubit>().setLocale(Locale('de')); */
+              /* context.read<SigningUpSelectLanguageCubit>().languageSelected(); */
+            }),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6)),
+              backgroundColor: Colors.white,
+              textStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                  fontFamily: 'SF Pro Text'),
+            ),
+            child: Row(children: [
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 8),
+                child: Flag.fromString(
+                  countryCodes[language]!,
+                  height: 48,
+                  width: 48,
+                  borderRadius: 12,
+                ),
+              ),
+              Expanded(child: Text(language)),
+            ])));
+  }
+}
 /* class SignupImage extends StatefulWidget { */
 /*   const SignupImage({super.key}); */
 
@@ -350,10 +516,36 @@ class SignupFields extends StatelessWidget {
               context.read<UserLoginPageInputCubit>().setName(value);
             },
           ),
+          CountryField(
+            hint: 'Select Country',
+            onChanged: (String selectedCountry) {
+              context
+                  .read<UserLoginPageInputCubit>()
+                  .setCountry(selectedCountry);
+            },
+          ),
+          InputField(
+            hint: 'Occupation',
+            onChanged: (value) {
+              context.read<UserLoginPageInputCubit>().setOccupation(value);
+            },
+          ),
+          InputField(
+            hint: 'Education',
+            onChanged: (value) {
+              context.read<UserLoginPageInputCubit>().setEducation(value);
+            },
+          ),
           InputField(
             hint: 'Email*',
             onChanged: (value) {
               context.read<UserLoginPageInputCubit>().setEmail(value);
+            },
+          ),
+          InputField(
+            hint: 'Username*',
+            onChanged: (value) {
+              context.read<UserLoginPageInputCubit>().setUsername(value);
             },
           ),
           const PasswordField(),
@@ -423,6 +615,54 @@ class _PasswordFieldState extends State<PasswordField> {
   }
 }
 
+class CountryField extends StatelessWidget {
+  final String hint, initialValue;
+  final void Function(String value) onChanged;
+  const CountryField(
+      {super.key,
+      this.hint = '',
+      this.initialValue = '',
+      required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    String selectedCountry =
+        context.watch<UserLoginPageInputCubit>().state.country;
+    return Row(
+      children: [
+        Expanded(
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () async {
+              showCountryPicker(
+                context: context,
+                showPhoneCode: false,
+                showSearch: true,
+                onSelect: (Country country) {
+                  onChanged(country.name);
+                },
+              );
+            },
+            child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 22),
+                decoration: BoxDecoration(
+                    border: Border.all(width: 0, color: Color(0x88000000)),
+                    color: const Color(0x17000000),
+                    borderRadius: BorderRadius.circular(6)),
+                child: Text(selectedCountry.isEmpty ? hint : selectedCountry,
+                    style: TextStyle(
+                        color: selectedCountry.isEmpty
+                            ? Colors.grey
+                            : Colors.white))),
+          ),
+        )
+      ],
+    );
+  }
+}
+
 class InputField extends StatelessWidget {
   final String hint, initialValue;
   final bool obscured;
@@ -443,6 +683,7 @@ class InputField extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
             color: const Color(0x17000000),
+            border: Border.all(width: 0, color: Color(0x88000000)),
             borderRadius: BorderRadius.circular(6)),
         child: Builder(builder: (context) {
           var textFormFieldRow = CupertinoTextFormFieldRow(
@@ -470,99 +711,120 @@ void showLoginPageToast(FToast fToast, String message) {
       toastDuration: Duration(seconds: 1));
 }
 
-/* class ActionButton extends StatelessWidget { */
-/*   final bool loggingIn; */
-/*   const ActionButton({super.key, required this.loggingIn}); */
+class ActionButton extends StatelessWidget {
+  final bool loggingIn;
+  const ActionButton({super.key, required this.loggingIn});
 
-/*   @override */
-/*   Widget build(BuildContext context) { */
-/*     FToast fToast = FToast(); */
-/*     fToast.init(context); */
-/*     return Container( */
-/*         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8), */
-/*         height: 56, */
-/*         child: OutlinedButton( */
-/*             onPressed: (() async { */
-/*               if (loggingIn) { */
-/*                 GetIt.I<Logger>().i("Logging in"); */
-/*                 LoginResponse? response = await GetIt.I<AuthService>().login( */
-/*                   context.read<UserLoginPageInputCubit>().state.email, */
-/*                   context.read<UserLoginPageInputCubit>().state.password, */
-/*                 ); */
-/*                 if (response == null) { */
-/*                   showLoginPageToast(fToast, 'Login Error'); */
-/*                 } else if (response.result == LoginResult.UserNotFound) { */
-/*                   showLoginPageToast(fToast, 'Email Not Found'); */
-/*                 } else if (response.result == LoginResult.WrongPassword) { */
-/*                   showLoginPageToast(fToast, 'Wrong Password'); */
-/*                 } */
-/*               } else { */
-/*                 GetIt.I<Logger>().i("Signing up"); */
+  @override
+  Widget build(BuildContext context) {
+    FToast fToast = FToast();
+    fToast.init(context);
+    return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+        height: 56,
+        child: OutlinedButton(
+            onPressed: (() async {
+              if (loggingIn) {
+                GetIt.I<Logger>().i("Logging in");
+                /* LoginResponse? response = await GetIt.I<AuthService>().login( */
+                /*   context.read<UserLoginPageInputCubit>().state.email, */
+                /*   context.read<UserLoginPageInputCubit>().state.password, */
+                /* ); */
+                /* if (response == null) { */
+                showLoginPageToast(fToast, 'Login Error');
+                /* } else if (response.result == LoginResult.UserNotFound) { */
+                /*   showLoginPageToast(fToast, 'Email Not Found'); */
+                /* } else if (response.result == LoginResult.WrongPassword) { */
+                /*   showLoginPageToast(fToast, 'Wrong Password'); */
+                /* } */
+              } else {
+                GetIt.I<Logger>().i("Signing up");
+                UserLoginPageInput loginPageInput =
+                    context.read<UserLoginPageInputCubit>().state;
+                AuthenticationState authState = AuthenticationState(
+                    token: '',
+                    firebaseToken: '',
+                    profileImageUrl: '',
+                    loggedInUserGlobalId: 0,
+                    name: loginPageInput.name,
+                    email: loginPageInput.email,
+                    username: loginPageInput.username,
+                    password: loginPageInput.password,
+                    language: loginPageInput.language,
+                    education: loginPageInput.education,
+                    occupation: loginPageInput.occupation,
+                    loggedIn: true);
 
-/*                 Uint8List? photoFile = */
-/*                     context.read<UserLoginPageInputCubit>().state.photoFile; */
+                context
+                    .read<AuthenticationBloc>()
+                    .add(ReloadAuthEvent(authState));
 
-/*                 SignupResponse? signupResponse; */
+                GoRouter.of(context).go('/dashboard');
 
-/*                 if (photoFile == null) { */
-/*                   signupResponse = await GetIt.I<AuthService>().signup( */
-/*                     context.read<UserLoginPageInputCubit>().state.email, */
-/*                     context.read<UserLoginPageInputCubit>().state.password, */
-/*                     context.read<UserLoginPageInputCubit>().state.name, */
-/*                   ); */
-/*                 } else { */
-/*                   String filename = */
-/*                       context.read<UserLoginPageInputCubit>().state.email; */
-/*                   filename = filename.replaceAll(RegExp(r'@'), '_'); */
-/*                   filename = filename.replaceAll(RegExp(r'\.'), '_'); */
-/*                   GetIt.I<Logger>().w(filename); */
-/*                   final storageRef = FirebaseStorage.instance.ref(); */
-/*                   final imageRef = storageRef.child("profile_images/$filename"); */
+                /* Uint8List? photoFile = */
+                /*     context.read<UserLoginPageInputCubit>().state.photoFile; */
 
-/*                   GetIt.I<Logger>().w(imageRef.fullPath); */
-/*                   try { */
-/*                     await imageRef.putData(photoFile); */
-/*                     String avatarUrl = await imageRef.getDownloadURL(); */
-/*                     GetIt.I<Logger>().i("Avatar uploaded:$avatarUrl"); */
-/*                     signupResponse = await GetIt.I<AuthService>().signup( */
-/*                       context.read<UserLoginPageInputCubit>().state.email, */
-/*                       context.read<UserLoginPageInputCubit>().state.password, */
-/*                       context.read<UserLoginPageInputCubit>().state.name, */
-/*                       uploadedPhotoUrl: avatarUrl, */
-/*                     ); */
-/*                   } catch (e) { */
-/*                     GetIt.I<Logger>().e(e); */
-/*                   } */
-/*                 } */
+                /* SignupResponse? signupResponse; */
 
-/*                 if (signupResponse != null) { */
-/*                   if (SignupResult.InvalidUsername == signupResponse.result) { */
-/*                     showLoginPageToast(fToast, 'Invalid Username'); */
-/*                   } */
-/*                   if (SignupResult.InvalidEmail == signupResponse.result) { */
-/*                     showLoginPageToast(fToast, 'Invalid Email'); */
-/*                   } */
-/*                   if (SignupResult.InvalidPassword == signupResponse.result) { */
-/*                     showLoginPageToast(fToast, 'Invalid Password'); */
-/*                   } */
-/*                   if (SignupResult.AlreadySignedUp == signupResponse.result) { */
-/*                     showLoginPageToast(fToast, 'Already signed up'); */
-/*                     context.read<UserLoginPageInputCubit>().reset(); */
-/*                     context.read<LoggingInCubit>().loggingIn(); */
-/*                   } */
-/*                 } */
-/*               } */
-/*             }), */
-/*             style: OutlinedButton.styleFrom( */
-/*               foregroundColor: Colors.black, */
-/*               shape: RoundedRectangleBorder( */
-/*                   borderRadius: BorderRadius.circular(6)), */
-/*               backgroundColor: Color(loginButtonColor), */
-/*               textStyle: const TextStyle( */
-/*                   fontWeight: FontWeight.bold, */
-/*                   fontSize: 17, */
-/*                   fontFamily: 'SF Pro Text'), */
-/*             ), */
-/*             child: Text(loggingIn ? 'Sign in' : 'Sign up'))); */
-/*   } */
-/* } */
+                /* if (photoFile == null) { */
+                /*   signupResponse = await GetIt.I<AuthService>().signup( */
+                /*     context.read<UserLoginPageInputCubit>().state.email, */
+                /*     context.read<UserLoginPageInputCubit>().state.password, */
+                /*     context.read<UserLoginPageInputCubit>().state.name, */
+                /*   ); */
+                /* } else { */
+                /*   String filename = */
+                /*       context.read<UserLoginPageInputCubit>().state.email; */
+                /*   filename = filename.replaceAll(RegExp(r'@'), '_'); */
+                /*   filename = filename.replaceAll(RegExp(r'\.'), '_'); */
+                /*   GetIt.I<Logger>().w(filename); */
+                /*   final storageRef = FirebaseStorage.instance.ref(); */
+                /*   final imageRef = storageRef.child("profile_images/$filename"); */
+
+                /*   GetIt.I<Logger>().w(imageRef.fullPath); */
+                /*   try { */
+                /*     await imageRef.putData(photoFile); */
+                /*     String avatarUrl = await imageRef.getDownloadURL(); */
+                /*     GetIt.I<Logger>().i("Avatar uploaded:$avatarUrl"); */
+                /*     signupResponse = await GetIt.I<AuthService>().signup( */
+                /*       context.read<UserLoginPageInputCubit>().state.email, */
+                /*       context.read<UserLoginPageInputCubit>().state.password, */
+                /*       context.read<UserLoginPageInputCubit>().state.name, */
+                /*       uploadedPhotoUrl: avatarUrl, */
+                /*     ); */
+                /*   } catch (e) { */
+                /*     GetIt.I<Logger>().e(e); */
+                /*   } */
+                /* } */
+
+                /* if (signupResponse != null) { */
+                /*   if (SignupResult.InvalidUsername == signupResponse.result) { */
+                /*     showLoginPageToast(fToast, 'Invalid Username'); */
+                /*   } */
+                /*   if (SignupResult.InvalidEmail == signupResponse.result) { */
+                /*     showLoginPageToast(fToast, 'Invalid Email'); */
+                /*   } */
+                /*   if (SignupResult.InvalidPassword == signupResponse.result) { */
+                /*     showLoginPageToast(fToast, 'Invalid Password'); */
+                /*   } */
+                /*   if (SignupResult.AlreadySignedUp == signupResponse.result) { */
+                /* showLoginPageToast(fToast, 'Cant signup now'); */
+                /*     context.read<UserLoginPageInputCubit>().reset(); */
+                /*     context.read<LoggingInCubit>().loggingIn(); */
+                /*   } */
+                /* } */
+              }
+            }),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6)),
+              backgroundColor: Color(loginButtonColor),
+              textStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                  fontFamily: 'SF Pro Text'),
+            ),
+            child: Text(loggingIn ? 'Sign in' : 'Sign up')));
+  }
+}

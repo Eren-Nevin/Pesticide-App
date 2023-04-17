@@ -24,14 +24,8 @@ class AuthenticationBloc
     });
 
     on<ReloadAuthEvent>((event, emit) {
-      AuthenticationState state = event.authenticationState ??
-          AuthenticationState(
-              loggedIn: false,
-              loggedInUserGlobalId: 0,
-              firebaseToken: 'firebase_token',
-              token: 'token',
-              username: '',
-              profileImageUrl: '');
+      AuthenticationState state =
+          event.authenticationState ?? AuthenticationState.getEmptyAuthState();
       emit(state);
     });
   }
@@ -40,10 +34,17 @@ class AuthenticationBloc
 class Authenticator {
   AuthenticationState login(String username, String password) {
     return AuthenticationState(
-        token: 'token',
-        firebaseToken: 'firebase_token',
-        loggedInUserGlobalId: 3001,
-        username: username,
+        loggedIn: false,
+        language: 'en',
+        loggedInUserGlobalId: 0,
+        firebaseToken: '',
+        token: '',
+        occupation: '',
+        education: '',
+        name: '',
+        username: '',
+        email: '',
+        password: '',
         profileImageUrl: '');
   }
 }
