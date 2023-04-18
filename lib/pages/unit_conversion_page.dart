@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:get_it/get_it.dart';
 
 import '../view/add_fab.dart';
 import '../view/common_widgets.dart';
+import '../view/unit_conversion_widgets.dart';
 import 'home.dart';
 
 class UnitConversionPageWidget extends StatelessWidget {
@@ -41,36 +43,85 @@ class UnitConversionPageWidget extends StatelessWidget {
                   color: Color(0xFFE4E4E4),
                   height: 12,
                 ),
-                ExpandableNotifier(
-                  controller: controller,
-                  child: Container(
-                    child: Expandable(
-                        collapsed: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 16),
-                          color: Colors.white54,
-                          /* margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4), */
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Text("Area"),
-                              ),
-                              ExpandableButton(
-                                  child: const Icon(Icons.expand_more,
-                                      size: 24,
-                                      color: CupertinoColors.systemGrey)),
-                            ],
-                          ),
-                        ),
-                        expanded: Column(
-                          children: [
-                            Text("Area"),
-                            Text("Expanded"),
-                          ],
-                        )),
-                  ),
+                Column(
+                  children: [
+                    Container(
+                      margin:
+                          const EdgeInsetsDirectional.symmetric(vertical: 8),
+                      child: ExpandableNotifier(
+                          child: Expandable(
+                              collapsed: const UnitConversionTitleWidget(
+                                  title: "Area", expanded: false),
+                              expanded: Column(
+                                children: const [
+                                  UnitConversionTitleWidget(
+                                    title: "Area",
+                                    expanded: true,
+                                  ),
+                                  UnitConversionExpandedWidget(
+                                    child: UnitConversionAreaWidget(),
+                                  ),
+                                ],
+                              ))),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsetsDirectional.symmetric(vertical: 8),
+                      child: ExpandableNotifier(
+                          child: Expandable(
+                              collapsed: const UnitConversionTitleWidget(
+                                  title: "Volume", expanded: false),
+                              expanded: Column(
+                                children: const [
+                                  UnitConversionTitleWidget(
+                                    title: "Volume",
+                                    expanded: true,
+                                  ),
+                                  UnitConversionExpandedWidget(
+                                    child: UnitConversionVolumeWidget(),
+                                  ),
+                                ],
+                              ))),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsetsDirectional.symmetric(vertical: 8),
+                      child: ExpandableNotifier(
+                          child: Expandable(
+                              collapsed: const UnitConversionTitleWidget(
+                                  title: "Weight", expanded: false),
+                              expanded: Column(
+                                children: const [
+                                  UnitConversionTitleWidget(
+                                    title: "Weight",
+                                    expanded: true,
+                                  ),
+                                  UnitConversionExpandedWidget(
+                                    child: UnitConversionWeightWidget(),
+                                  ),
+                                ],
+                              ))),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsetsDirectional.symmetric(vertical: 8),
+                      child: ExpandableNotifier(
+                          child: Expandable(
+                              collapsed: const UnitConversionTitleWidget(
+                                  title: "Dose", expanded: false),
+                              expanded: Column(
+                                children: const [
+                                  UnitConversionTitleWidget(
+                                    title: "Dose",
+                                    expanded: true,
+                                  ),
+                                  UnitConversionExpandedWidget(
+                                    child: UnitConversionDoseWidget(),
+                                  ),
+                                ],
+                              ))),
+                    ),
+                  ],
                 )
               ],
             ),
@@ -78,5 +129,54 @@ class UnitConversionPageWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class UnitConversionExpandedWidget extends StatelessWidget {
+  final Widget child;
+  const UnitConversionExpandedWidget({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.white30,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(width: 1, color: Colors.grey),
+        ),
+        padding: EdgeInsets.all(8),
+        child: child);
+  }
+}
+
+class UnitConversionTitleWidget extends StatelessWidget {
+  final String title;
+  final bool expanded;
+  const UnitConversionTitleWidget({
+    required this.title,
+    required this.expanded,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        color: Colors.white54,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+            ExpandableButton(
+                child: Icon(expanded ? Icons.expand_less : Icons.expand_more,
+                    size: 24, color: CupertinoColors.systemGrey)),
+          ],
+        ));
   }
 }
