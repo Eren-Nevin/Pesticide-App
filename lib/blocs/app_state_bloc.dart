@@ -33,8 +33,11 @@ class AppStateBloc extends Bloc<AppStateEvent, AppState> {
     });
 
     on<ReloadAppStateEvent>((event, emit) {
-      AppState state = event.appState ?? AppState(everythingIsGood: true);
-      emit(state);
+      GetIt.I<Logger>().i("Reload App State Event");
+      AppState newState = event.appState != null
+          ? AppState.clone(event.appState!)
+          : AppState(everythingIsGood: true);
+      emit(newState);
     });
   }
 }

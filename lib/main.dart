@@ -71,8 +71,13 @@ void setTestData() {
   AppState state = appStateBloc.state;
   AppState newState = AppState.clone(state);
   newState.lands = [
-    Land(landId: 1, location: 'Turkey', area: 100, slope: 10),
-    Land(landId: 2, location: 'Greece', area: 10, slope: 20),
+    Land(
+        landId: 1,
+        name: 'West Field',
+        location: 'Turkey',
+        area: 100,
+        slope: 10),
+    Land(landId: 2, name: 'Bigly', location: 'Greece', area: 10, slope: 20),
   ];
   newState.crops = [
     Crop(

@@ -47,7 +47,7 @@ class UnitConversionPageWidget extends StatelessWidget {
                   children: [
                     Container(
                       margin:
-                          const EdgeInsetsDirectional.symmetric(vertical: 8),
+                          const EdgeInsetsDirectional.symmetric(vertical: 4),
                       child: ExpandableNotifier(
                           child: Expandable(
                               collapsed: const UnitConversionTitleWidget(
@@ -66,7 +66,7 @@ class UnitConversionPageWidget extends StatelessWidget {
                     ),
                     Container(
                       margin:
-                          const EdgeInsetsDirectional.symmetric(vertical: 8),
+                          const EdgeInsetsDirectional.symmetric(vertical: 4),
                       child: ExpandableNotifier(
                           child: Expandable(
                               collapsed: const UnitConversionTitleWidget(
@@ -85,7 +85,7 @@ class UnitConversionPageWidget extends StatelessWidget {
                     ),
                     Container(
                       margin:
-                          const EdgeInsetsDirectional.symmetric(vertical: 8),
+                          const EdgeInsetsDirectional.symmetric(vertical: 4),
                       child: ExpandableNotifier(
                           child: Expandable(
                               collapsed: const UnitConversionTitleWidget(
@@ -104,7 +104,7 @@ class UnitConversionPageWidget extends StatelessWidget {
                     ),
                     Container(
                       margin:
-                          const EdgeInsetsDirectional.symmetric(vertical: 8),
+                          const EdgeInsetsDirectional.symmetric(vertical: 4),
                       child: ExpandableNotifier(
                           child: Expandable(
                               collapsed: const UnitConversionTitleWidget(

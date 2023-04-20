@@ -1,10 +1,12 @@
 // Context should have access to providers
+import 'package:pesticide/blocs/app_state_bloc.dart';
 import 'package:pesticide/pages/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
+import 'package:pesticide/view/add_modal.dart';
 
 import '../blocs/authentication_bloc.dart';
 /* import '../blocs/events/temp_model_events.dart'; */
@@ -26,6 +28,7 @@ class AddFABController {
   AppPages _activePage = AppPages.Other;
   Future<void> defaultOnPressed(BuildContext context) async {
     print("FAB CLICKED");
+    showAddStuffDialog(context, appStateBloc: context.read<AppStateBloc>());
   }
 
   void setOnPressed(AppPages page, FabClickHandler onPressed) {

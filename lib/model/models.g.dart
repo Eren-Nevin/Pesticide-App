@@ -78,7 +78,7 @@ void _landSerialize(
   writer.writeDouble(offsets[0], object.area);
   writer.writeDouble(offsets[1], object.lattitude);
   writer.writeString(offsets[2], object.location);
-  writer.writeDouble(offsets[3], object.longtitude);
+  writer.writeDouble(offsets[3], object.longitude);
   writer.writeDouble(offsets[4], object.slope);
   writer.writeString(offsets[5], object.structure.name);
   writer.writeString(offsets[6], object.texture.name);
@@ -94,7 +94,7 @@ Land _landDeserialize(
     area: reader.readDoubleOrNull(offsets[0]) ?? 0,
     lattitude: reader.readDoubleOrNull(offsets[1]) ?? 0,
     location: reader.readStringOrNull(offsets[2]) ?? '',
-    longtitude: reader.readDoubleOrNull(offsets[3]) ?? 0,
+    longitude: reader.readDoubleOrNull(offsets[3]) ?? 0,
     slope: reader.readDoubleOrNull(offsets[4]) ?? 0,
     structure:
         _LandstructureValueEnumMap[reader.readStringOrNull(offsets[5])] ??

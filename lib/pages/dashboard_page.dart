@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pesticide/blocs/app_state_bloc.dart';
 
+import '../model/app_state.dart';
 import '../model/models.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -35,6 +38,7 @@ class DashboardPageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppState appState = context.watch<AppStateBloc>().state;
     return ListView.separated(
         separatorBuilder: (context, index) {
           return const Divider(color: Colors.grey, height: 0, thickness: 0);
@@ -42,18 +46,26 @@ class DashboardPageContent extends StatelessWidget {
         itemCount: segementPositions.length,
         itemBuilder: (context, index) {
           Segment? segment = segementPositions[index];
+          int numberOfItems = 0;
           if (segment == null) {
             throw Exception('Segment not found');
+          }
+          if (segment.title == 'Lands') {
+            numberOfItems = appState.lands.length;
+          } else if (segment.title == 'Crops') {
+            numberOfItems = appState.crops.length;
+          } else if (segment.title == 'Pesticides') {
+            numberOfItems = appState.pesticides.length;
           }
           return Align(
               /* key: ValueKey(valueKey), */
               alignment: Alignment.topCenter,
               child: DashboardRowContainerWidget(
-                color: segment.color,
-                pageName: segment.title,
-                pagePath: segment.pagePath,
-                numberOfItems: segment.number,
-              ));
+                  color: segment.color,
+                  pageName: segment.title,
+                  pagePath: segment.pagePath,
+                  showNumber: segment.title != 'Unit Conversion',
+                  numberOfItems: numberOfItems));
         });
   }
 }
@@ -64,8 +76,10 @@ class DashboardRowContainerWidget extends StatelessWidget {
   final String pagePath;
   final int color;
   final int numberOfItems;
+  final bool showNumber;
   const DashboardRowContainerWidget(
       {super.key,
+      this.showNumber = true,
       required this.pageName,
       required this.pagePath,
       required this.color,
@@ -73,11 +87,11 @@ class DashboardRowContainerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(pagePath);
-    print(pagePath);
-    print(pagePath);
     Widget rowWidget = DashboardRowWidget(
-        title: pageName, color: color, numberOfItems: numberOfItems);
+        title: pageName,
+        color: color,
+        numberOfItems: numberOfItems,
+        showNumber: showNumber);
 
     return Container(
       alignment: AlignmentDirectional.topStart,
@@ -106,8 +120,10 @@ class DashboardRowWidget extends StatelessWidget {
   final String title;
   final int color;
   final int numberOfItems;
+  final bool showNumber;
   const DashboardRowWidget({
     super.key,
+    this.showNumber = true,
     required this.title,
     required this.numberOfItems,
     required this.color,
@@ -133,18 +149,19 @@ class DashboardRowWidget extends StatelessWidget {
                     ),
                     title)),
             Spacer(),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 8),
-              alignment: AlignmentDirectional.topEnd,
-              child: Builder(builder: (context) {
-                return Text(
-                    style: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 26,
-                    ),
-                    numberOfItems.toString());
-              }),
-            ),
+            if (showNumber)
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 8),
+                alignment: AlignmentDirectional.topEnd,
+                child: Builder(builder: (context) {
+                  return Text(
+                      style: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 26,
+                      ),
+                      numberOfItems.toString());
+                }),
+              ),
           ]),
     );
   }

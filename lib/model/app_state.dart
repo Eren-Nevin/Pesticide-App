@@ -25,11 +25,18 @@ class AppState {
     everythingIsGood = appState.everythingIsGood;
     hasChosenLocale = appState.hasChosenLocale;
     chosenLocale = appState.chosenLocale;
+    lands = appState.lands;
+    crops = appState.crops;
+    pesticides = appState.pesticides;
   }
 
   @override
   String toString() => """hasChosenLocale: $hasChosenLocale, 
-      chosenLocale: $chosenLocale""";
+      chosenLocale: $chosenLocale,
+      lands: $lands,
+      crops: $crops,
+      pesticides: $pesticides,
+      """;
 
   @override
   bool operator ==(Object other) {
@@ -37,7 +44,10 @@ class AppState {
       bool result = id == other.id &&
           everythingIsGood == other.everythingIsGood &&
           hasChosenLocale == other.hasChosenLocale &&
-          chosenLocale == other.chosenLocale;
+          chosenLocale == other.chosenLocale &&
+          lands == other.lands &&
+          crops == other.crops &&
+          pesticides == other.pesticides;
       return result;
     }
     return false;
@@ -49,5 +59,8 @@ class AppState {
         everythingIsGood,
         hasChosenLocale,
         chosenLocale,
+        lands,
+        crops,
+        pesticides,
       );
 }
