@@ -30,7 +30,10 @@ import 'package:country_picker/country_picker.dart';
 
 // TODO: Add field validation and sanitation
 
-int loginBackdropColor = 0xFF651fff;
+/* int loginBackdropColor = 0xFF651fff; */
+/* int loginBackdropColor = 0xFFad905c; */
+int loginBackdropColor = 0xFFada55c;
+/* int loginBackdropColor = Colors.green.value; */
 int loginButtonColor = 0xFF69f0ae;
 
 class UserLoginPageInput {
@@ -154,7 +157,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
+      backgroundColor: Color(loginBackdropColor),
       appBar: null,
       resizeToAvoidBottomInset: true,
       body: Builder(builder: (context) {
@@ -649,13 +652,14 @@ class CountryField extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 22),
                 decoration: BoxDecoration(
                     border: Border.all(width: 0, color: Color(0x88000000)),
-                    color: const Color(0x17000000),
+                    /* color: const Color(0x17000000), */
+                    color: Colors.white70,
                     borderRadius: BorderRadius.circular(6)),
                 child: Text(selectedCountry.isEmpty ? hint : selectedCountry,
                     style: TextStyle(
                         color: selectedCountry.isEmpty
                             ? Colors.grey
-                            : Colors.white))),
+                            : Colors.black87))),
           ),
         )
       ],
@@ -682,7 +686,8 @@ class InputField extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
-            color: const Color(0x17000000),
+            /* color: const Color(0x17000000), */
+            color: Colors.white70,
             border: Border.all(width: 0, color: Color(0x88000000)),
             borderRadius: BorderRadius.circular(6)),
         child: Builder(builder: (context) {
@@ -692,6 +697,7 @@ class InputField extends StatelessWidget {
               obscureText: obscured,
               placeholder: hint,
               placeholderStyle: const TextStyle(color: Colors.grey),
+              style: Theme.of(context).textTheme.bodyLarge,
               onChanged: onChanged,
               textInputAction:
                   lastField ? TextInputAction.done : TextInputAction.next);

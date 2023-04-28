@@ -23,7 +23,9 @@ class CropPageWidget extends StatelessWidget {
     final ScrollController scrollController = ScrollController();
     GetIt.I<AddFABController>().setOnPressed(AppPages.Crop, (context) async {});
 
-    List<Crop> crops = context.read<AppStateBloc>().state.crops;
+    AppState appState = context.read<AppStateBloc>().state;
+
+    List<Crop> crops = appState.crops;
 
     return SafeArea(
       child: Stack(
@@ -51,6 +53,7 @@ class CropPageWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         Crop crop = crops[index];
+                        Land? land = getLandById(appState, crop.landId);
                         List<int>? harvestDates = crop.harvestDates;
                         List<CardSingleItem> harvestDatesItems = [];
                         if (harvestDates != null) {
@@ -66,7 +69,9 @@ class CropPageWidget extends StatelessWidget {
                         List<CardSingleItem> cardItems = [
                           CardSingleItem(title: 'Name:', value: crop.name),
                           CardSingleItem(
-                              title: 'Land Id', value: crop.landId.toString()),
+                            title: 'Land',
+                            value: land != null ? land.name : 'Not Available',
+                          ),
                           CardSingleItem(
                               title: 'Planting date:',
                               value: convertIntTimeToDate(crop.plantingDate)),

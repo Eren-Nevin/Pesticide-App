@@ -108,6 +108,16 @@ class Land {
         structure: soilStructure ?? structure);
     return newLand;
   }
+
+  @override
+  String toString() {
+    return """
+    landId: $landId, name: $name,
+    lattitude: $lattitude, longitude: $longitude,
+    area: $area, location: $location,
+    soilStructure: $structure, soilTexture: $texture
+  """;
+  }
 }
 
 List<String> knownCropNames = [
@@ -157,8 +167,13 @@ class Crop {
   }
 
   @override
-  String toString() => """name: $name, 
-      plantingDate: $plantingDate""";
+  String toString() {
+    return """
+    landId: $landId, cropId: $cropId
+    plantingDate: $plantingDate, harvestDates: $harvestDates
+    name: $name, 
+  """;
+  }
 }
 
 @embedded
@@ -198,8 +213,8 @@ class Pesticide {
     int? harvestIntervalDays,
   }) {
     Pesticide newPesticide = Pesticide(
-      landId: landId ?? 0,
-      cropId: cropId ?? 0,
+      landId: landId ?? this.landId,
+      cropId: cropId ?? this.cropId,
       problem: problem ?? this.problem,
       pesticide: pesticide ?? this.pesticide,
       dose: dose ?? this.dose,
@@ -207,6 +222,17 @@ class Pesticide {
       harvestIntervalDays: harvestIntervalDays ?? this.harvestIntervalDays,
     );
     return newPesticide;
+  }
+
+  @override
+  String toString() {
+    return """
+    pesticideId: $pesticideId
+    landId: $landId, cropId: $cropId
+    problem: $problem, pesticide: $pesticide
+    dose: $dose, applicationDate: $applicationDate
+    harvestIntervalDays: $harvestIntervalDays
+  """;
   }
 }
 

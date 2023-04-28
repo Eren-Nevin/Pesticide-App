@@ -240,9 +240,7 @@ class AddDialogTitleRow extends StatelessWidget {
               inputAppState.pesticide
             ];
           }
-          /* print(newState.pesticides.map((e) => e.landId)); */
-          /* print(newState.pesticides.map((e) => e.landId)); */
-          /* print(newState.pesticides.map((e) => e.landId)); */
+
           context.read<AppStateBloc>().add(ReloadAppStateEvent(newState));
           GoRouter.of(context).pop();
         });

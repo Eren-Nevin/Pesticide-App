@@ -86,7 +86,7 @@ class _UnitConversionWeightWidgetState
           Container(
             alignment: AlignmentDirectional.centerStart,
             child: Text(
-              outputNumber.toString(),
+              outputNumber.toStringAsFixed(4).toString(),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
@@ -201,7 +201,7 @@ class _UnitConversionAreaWidgetState extends State<UnitConversionAreaWidget> {
           Container(
             alignment: AlignmentDirectional.centerStart,
             child: Text(
-              outputNumber.toString(),
+              outputNumber.toStringAsFixed(4).toString(),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
@@ -313,7 +313,7 @@ class _UnitConversionVolumeWidgetState
           Container(
             alignment: AlignmentDirectional.centerStart,
             child: Text(
-              outputNumber.toString(),
+              outputNumber.toStringAsFixed(4).toString(),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
@@ -420,7 +420,7 @@ class _UnitConversionDoseWidgetState extends State<UnitConversionDoseWidget> {
           Container(
             alignment: AlignmentDirectional.centerStart,
             child: Text(
-              outputNumber.toString(),
+              outputNumber.toStringAsFixed(4).toString(),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),

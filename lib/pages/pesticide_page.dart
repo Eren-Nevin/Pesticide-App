@@ -23,7 +23,9 @@ class PesticidePageWidget extends StatelessWidget {
     final ScrollController scrollController = ScrollController();
     GetIt.I<AddFABController>().setOnPressed(AppPages.Crop, (context) async {});
 
-    List<Pesticide> pesticides = context.read<AppStateBloc>().state.pesticides;
+    AppState appState = context.read<AppStateBloc>().state;
+
+    List<Pesticide> pesticides = appState.pesticides;
 
     return SafeArea(
       child: Stack(
@@ -51,6 +53,10 @@ class PesticidePageWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         Pesticide pesticide = pesticides[index];
+
+                        Land? land = getLandById(appState, pesticide.landId);
+                        Crop? crop = getCropById(appState, pesticide.cropId);
+
                         /* List<int>? harvestDates = crop.harvestDates; */
                         /* List<CardSingleItem> harvestDatesItems = []; */
                         /* if (harvestDates != null) { */
@@ -67,11 +73,13 @@ class PesticidePageWidget extends StatelessWidget {
                           CardSingleItem(
                               title: 'Name:', value: pesticide.pesticide),
                           CardSingleItem(
-                              title: 'Land Id:',
-                              value: pesticide.landId.toString()),
+                              title: 'Land',
+                              value:
+                                  land != null ? land.name : 'Not Available'),
                           CardSingleItem(
-                              title: 'Crop Id:',
-                              value: pesticide.cropId.toString()),
+                              title: 'Crop',
+                              value:
+                                  crop != null ? crop.name : 'Not Available'),
                           CardSingleItem(
                               title: 'Problem:', value: pesticide.problem),
                           CardSingleItem(

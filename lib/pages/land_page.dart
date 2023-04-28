@@ -53,14 +53,17 @@ class LandPageWidget extends StatelessWidget {
                       itemBuilder: (context, index) {
                         Land land = lands[index];
                         List<CardSingleItem> cards = [
+                          CardSingleItem(title: 'Name:', value: land.name),
                           CardSingleItem(
                               title: 'Location:', value: land.location),
                           CardSingleItem(
                               title: 'Slope:', value: land.slope.toString()),
                           CardSingleItem(
+                              title: 'Area:', value: land.area.toString()),
+                          CardSingleItem(
                               title: 'Structure:', value: land.structure.name),
                           CardSingleItem(
-                              title: 'Area:', value: land.area.toString()),
+                              title: 'Texture:', value: land.texture.name),
                         ];
                         return SegmentCard(itemCards: cards);
                       },

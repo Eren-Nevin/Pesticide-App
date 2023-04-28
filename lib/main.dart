@@ -81,11 +81,13 @@ void setTestData() {
   ];
   newState.crops = [
     Crop(
+        cropId: 1,
         name: 'Tomato',
         plantingDate:
             DateTime.now().subtract(Duration(days: 40)).millisecondsSinceEpoch,
         landId: 1),
     Crop(
+        cropId: 2,
         name: 'Potato',
         plantingDate:
             DateTime.now().subtract(Duration(days: 10)).millisecondsSinceEpoch,

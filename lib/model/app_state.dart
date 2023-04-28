@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:isar/isar.dart';
 import 'package:pesticide/model/models.dart';
 part 'app_state.g.dart';
@@ -33,9 +35,9 @@ class AppState {
   @override
   String toString() => """hasChosenLocale: $hasChosenLocale, 
       chosenLocale: $chosenLocale,
-      lands: $lands,
-      crops: $crops,
-      pesticides: $pesticides,
+      lands: ${lands.map((v) => v.toString())},
+      crops: ${crops.map((v) => v.toString())},
+      pesticides: ${pesticides.map((v) => v.toString())},
       """;
 
   @override

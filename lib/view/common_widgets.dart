@@ -367,9 +367,10 @@ class SegmentCard extends StatelessWidget {
       /* height: 150, */
       margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-          color: Colors.green,
+          color: Colors.white70,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: CupertinoColors.systemGrey4, width: 0)),
+          /* border: Border.all(color: CupertinoColors.systemGrey4, width: 0)), */
+          border: Border.all(color: Colors.green, width: 1)),
       child: Container(
         /* height: 150, */
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
