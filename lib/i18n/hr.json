@@ -1,0 +1,57 @@
+{
+  "Select Language": "Select Language",
+
+  "Already have an account?": "Već imate račun?",
+  "Don't have an account?": "Nemate račun?",
+  "Sign up": "upisati se",
+  "Sign in": "Prijavite se",
+
+  "Name": "Ime",
+  "Email": "Email",
+  "Password": "Lozinka",
+
+  "Select Country": "Odaberi državu",
+  "Occupation": "Okupacija",
+  "Education": "Obrazovanje",
+  "Username": "Korisničko ime",
+
+  "Dashboard": "Nadzorna ploča",
+  "Lands": "Zemlje",
+  "Land": "Zemljište",
+  "Crops": "Usjevi",
+  "Crop": "Usjev",
+  "Pesticides": "Pesticidi",
+  "Unit Conversion": "Pretvorba jedinica",
+
+  "Location": "Mjesto",
+  "Slope": "Nagib",
+  "Area": "Površina",
+  "Structure": "Struktura",
+  "Texture": "Tekstura",
+
+  "Harvest Date": "Datum berbe",
+  "Planting Date": "Datum sadnje",
+  "Problem": "Problem",
+  "Dose": "Doza",
+  "Harvest Interval": "Interval berbe",
+  "Application Date": "Datum prijave",
+
+  "VeryThin": "Vrlo tanko",
+  "Thin": "Tanak",
+  "Medium": "Srednji",
+  "Thick": "Debeo",
+  "VeryThick": "Vrlo debeo",
+
+  "Sandy": "pjeskovit",
+  "Silt": "Mulj",
+  "Clay": "Glina",
+  "Loamy": "Ilovasta",
+
+  "Volume": "Volumen",
+  "Calculate": "Izračunati",
+
+  "Not Available": "Nije dostupno",
+  "Not Set": "Nespreman",
+
+  "Report": "izvješće"
+}

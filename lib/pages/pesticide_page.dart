@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:localization/localization.dart';
 import 'package:pesticide/blocs/app_state_bloc.dart';
 import 'package:pesticide/model/app_state.dart';
 import 'package:pesticide/model/models.dart';
@@ -38,8 +39,8 @@ class PesticidePageWidget extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsetsDirectional.all(4),
-                  child: const SegmentDetailTitleRowWidget(
-                    title: 'Pesticides',
+                  child: SegmentDetailTitleRowWidget(
+                    title: 'Pesticides'.i18n(),
                     color: 0xFFb8b8b8,
                   ),
                 ),
@@ -71,27 +72,33 @@ class PesticidePageWidget extends StatelessWidget {
 
                         List<CardSingleItem> cardItems = [
                           CardSingleItem(
-                              title: 'Name:', value: pesticide.pesticide),
+                              title: 'Name'.i18n() + ':',
+                              value: pesticide.pesticide),
                           CardSingleItem(
-                              title: 'Land',
-                              value:
-                                  land != null ? land.name : 'Not Available'),
+                              title: 'Land'.i18n(),
+                              value: land != null
+                                  ? land.name
+                                  : 'Not Available'.i18n()),
                           CardSingleItem(
-                              title: 'Crop',
-                              value:
-                                  crop != null ? crop.name : 'Not Available'),
+                              title: 'Crop'.i18n(),
+                              value: crop != null
+                                  ? crop.name
+                                  : 'Not Available'.i18n()),
                           CardSingleItem(
-                              title: 'Problem:', value: pesticide.problem),
+                              title: 'Problem'.i18n() + ':',
+                              value: pesticide.problem),
                           CardSingleItem(
-                              title: 'Dose:', value: pesticide.dose.toString()),
+                              title: 'Dose'.i18n() + ':',
+                              value: pesticide.dose.toString()),
                           CardSingleItem(
-                              title: 'Application Date:',
+                              title: 'Application Date'.i18n() + ':',
                               value: convertIntTimeToDate(
                                   pesticide.applicationDate)),
                           CardSingleItem(
-                              title: 'Harvest Interval:',
+                              title: 'Harvest Interval'.i18n() + ':',
                               value:
-                                  '${pesticide.harvestIntervalDays.toString()} Days'),
+                                  '${pesticide.harvestIntervalDays.toString()}' +
+                                      'Days'.i18n()),
                         ];
                         return SegmentCard(itemCards: cardItems);
                       },

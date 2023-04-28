@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:localization/localization.dart';
 
 import '../view/add_fab.dart';
 import '../view/common_widgets.dart';
@@ -33,8 +34,8 @@ class UnitConversionPageWidget extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsetsDirectional.all(4),
-                  child: const SegmentDetailTitleRowWidget(
-                    title: 'Unit Conversion',
+                  child: SegmentDetailTitleRowWidget(
+                    title: 'Unit Conversion'.i18n(),
                     color: 0xFFb8b8b8,
                   ),
                 ),
@@ -50,12 +51,12 @@ class UnitConversionPageWidget extends StatelessWidget {
                           const EdgeInsetsDirectional.symmetric(vertical: 4),
                       child: ExpandableNotifier(
                           child: Expandable(
-                              collapsed: const UnitConversionTitleWidget(
-                                  title: "Area", expanded: false),
+                              collapsed: UnitConversionTitleWidget(
+                                  title: "Area".i18n(), expanded: false),
                               expanded: Column(
-                                children: const [
+                                children: [
                                   UnitConversionTitleWidget(
-                                    title: "Area",
+                                    title: "Area".i18n(),
                                     expanded: true,
                                   ),
                                   UnitConversionExpandedWidget(
@@ -69,12 +70,12 @@ class UnitConversionPageWidget extends StatelessWidget {
                           const EdgeInsetsDirectional.symmetric(vertical: 4),
                       child: ExpandableNotifier(
                           child: Expandable(
-                              collapsed: const UnitConversionTitleWidget(
-                                  title: "Volume", expanded: false),
+                              collapsed: UnitConversionTitleWidget(
+                                  title: "Volume".i18n(), expanded: false),
                               expanded: Column(
-                                children: const [
+                                children: [
                                   UnitConversionTitleWidget(
-                                    title: "Volume",
+                                    title: "Volume".i18n(),
                                     expanded: true,
                                   ),
                                   UnitConversionExpandedWidget(
@@ -88,12 +89,12 @@ class UnitConversionPageWidget extends StatelessWidget {
                           const EdgeInsetsDirectional.symmetric(vertical: 4),
                       child: ExpandableNotifier(
                           child: Expandable(
-                              collapsed: const UnitConversionTitleWidget(
-                                  title: "Weight", expanded: false),
+                              collapsed: UnitConversionTitleWidget(
+                                  title: "Weight".i18n(), expanded: false),
                               expanded: Column(
-                                children: const [
+                                children: [
                                   UnitConversionTitleWidget(
-                                    title: "Weight",
+                                    title: "Weight".i18n(),
                                     expanded: true,
                                   ),
                                   UnitConversionExpandedWidget(
@@ -107,12 +108,12 @@ class UnitConversionPageWidget extends StatelessWidget {
                           const EdgeInsetsDirectional.symmetric(vertical: 4),
                       child: ExpandableNotifier(
                           child: Expandable(
-                              collapsed: const UnitConversionTitleWidget(
-                                  title: "Dose", expanded: false),
+                              collapsed: UnitConversionTitleWidget(
+                                  title: "Dose".i18n(), expanded: false),
                               expanded: Column(
-                                children: const [
+                                children: [
                                   UnitConversionTitleWidget(
-                                    title: "Dose",
+                                    title: "Dose".i18n(),
                                     expanded: true,
                                   ),
                                   UnitConversionExpandedWidget(

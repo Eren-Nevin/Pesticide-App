@@ -1,0 +1,57 @@
+{
+  "Select Language": "Select Language",
+
+  "Already have an account?": "Ai deja un cont?",
+  "Don't have an account?": "Nu ai un cont?",
+  "Sign up": "Inscrie-te",
+  "Sign in": "Conectare",
+
+  "Name": "Nume",
+  "Email": "Email",
+  "Password": "Parola",
+
+  "Select Country": "Selecteaza tara",
+  "Occupation": "Ocupaţie",
+  "Education": "Educaţie",
+  "Username": "Nume de utilizator",
+
+  "Dashboard": "Bord",
+  "Lands": "Terenuri",
+  "Land": "Teren",
+  "Crops": "Culturi",
+  "Crop": "Recolta",
+  "Pesticides": "Pesticides",
+  "Unit Conversion": "Conversie de unitate",
+
+  "Location": "Locație",
+  "Slope": "Pantă",
+  "Area": "Suprafaţă",
+  "Structure": "Structura",
+  "Texture": "Textură",
+
+  "Harvest Date": "Data recoltei",
+  "Planting Date": "Data plantarii",
+  "Problem": "Problemă",
+  "Dose": "Doza",
+  "Harvest Interval": "Interval de recoltare",
+  "Application Date": "Data aplicării",
+
+  "VeryThin": "Foarte subtire",
+  "Thin": "Subţire",
+  "Medium": "Mediu",
+  "Thick": "Gros",
+  "VeryThick": "Foarte gros",
+
+  "Sandy": "Nisipos",
+  "Silt": "Nămol",
+  "Clay": "Lut",
+  "Loamy": "Argilos",
+
+  "Volume": "Volum",
+  "Calculate": "Calculati",
+
+  "Not Available": "Nu este disponibil",
+  "Not Set": "Nu setat",
+
+  "Report": "Raport"
+}

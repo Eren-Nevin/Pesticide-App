@@ -1,13 +1,57 @@
 {
-    "sign-in-prompt-text": "Already have an account?",
-    "sign-in-prompt-cta": "Sign in",
-    "sign-up-prompt-text": "Don't have an account?",
-    "sign-up-prompt-cta": "Sign up",
-    "sign-in-button-text": "Sign in",
-    "select-language-text": "< Select Language",
+  "Select Language": "Select Language",
 
-    "name-input-field-placeholder": "Name",
-    "email-input-field-placeholder": "Email",
-    "password-input-field-placeholder": "Password"
+  "Already have an account?": "Already have an account?",
+  "Don't have an account?": "Don't have an account?",
+  "Sign up": "Sign up",
+  "Sign in": "Sign in",
 
+  "Name": "Name",
+  "Email": "Email",
+  "Password": "Password",
+
+  "Select Country": "Select Country",
+  "Occupation": "Occupation",
+  "Education": "Education",
+  "Username": "Username",
+
+  "Dashboard": "Dashboard",
+  "Lands": "Lands",
+  "Land": "Land",
+  "Crops": "Crops",
+  "Crop": "Crop",
+  "Pesticides": "Pesticides",
+  "Unit Conversion": "Unit Conversion",
+
+  "Location": "Location",
+  "Slope": "Slope",
+  "Area": "Area",
+  "Structure": "Structure",
+  "Texture": "Texture",
+
+  "Harvest Date": "Harvest Date",
+  "Planting Date": "Planting Date",
+  "Problem": "Problem",
+  "Dose": "Dose",
+  "Harvest Interval": "Harvest Interval",
+  "Application Date": "Application Date",
+
+  "VeryThin": "Very Thin",
+  "Thin": "Thin",
+  "Medium": "Medium",
+  "Thick": "Thick",
+  "VeryThick": "Very Thick",
+
+  "Sandy": "Sandy",
+  "Silt": "Silt",
+  "Clay": "Clay",
+  "Loamy": "Loamy",
+
+  "Volume": "Volume",
+  "Calculate": "Calculate",
+
+  "Not Available": "Not Available",
+  "Not Set": "Not Set",
+
+  "Report": "Report"
 }

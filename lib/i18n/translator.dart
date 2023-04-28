@@ -7,13 +7,13 @@ const List<String> languages = [
   'Turkish'
 ];
 
-const Map<String, String> countryCodes = {
-  'English': 'GB',
-  'German': 'DE',
-  'Italian': 'IT',
-  'Romainian': 'RO',
-  'Crotian': 'HR',
-  'Turkish': 'TR',
+const Map<String, String> languageCodes = {
+  'English': 'en',
+  'German': 'de',
+  'Italian': 'it',
+  'Romainian': 'ro',
+  'Crotian': 'hr',
+  'Turkish': 'tr',
 };
 
 class Translator {

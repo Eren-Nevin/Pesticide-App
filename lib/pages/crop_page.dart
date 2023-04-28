@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:localization/localization.dart';
 import 'package:pesticide/blocs/app_state_bloc.dart';
 import 'package:pesticide/model/app_state.dart';
 import 'package:pesticide/model/models.dart';
@@ -38,8 +39,8 @@ class CropPageWidget extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsetsDirectional.all(4),
-                  child: const SegmentDetailTitleRowWidget(
-                    title: 'Crops',
+                  child: SegmentDetailTitleRowWidget(
+                    title: 'Crops'.i18n(),
                     color: 0xFFb8b8b8,
                   ),
                 ),
@@ -59,9 +60,10 @@ class CropPageWidget extends StatelessWidget {
                         if (harvestDates != null) {
                           harvestDates.asMap().forEach((i, v) {
                             harvestDatesItems.add(CardSingleItem(
-                              title: 'Harvest Date ${i + 1}:',
-                              value:
-                                  v == 0 ? 'Not Set' : convertIntTimeToDate(v),
+                              title: 'Harvest Date'.i18n() + ' ${i + 1}:',
+                              value: v == 0
+                                  ? 'Not Set'.i18n()
+                                  : convertIntTimeToDate(v),
                             ));
                           });
                         }
@@ -69,11 +71,12 @@ class CropPageWidget extends StatelessWidget {
                         List<CardSingleItem> cardItems = [
                           CardSingleItem(title: 'Name:', value: crop.name),
                           CardSingleItem(
-                            title: 'Land',
-                            value: land != null ? land.name : 'Not Available',
-                          ),
+                              title: 'Land'.i18n(),
+                              value: land != null
+                                  ? land.name
+                                  : 'Not Available'.i18n()),
                           CardSingleItem(
-                              title: 'Planting date:',
+                              title: 'Planting Date'.i18n() + ':',
                               value: convertIntTimeToDate(crop.plantingDate)),
                           ...harvestDatesItems
                         ];

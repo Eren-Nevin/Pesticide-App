@@ -1,13 +1,56 @@
 {
-    "sign-in-prompt-text": "REALLY? Germany?",
-    "sign-in-prompt-cta": "Sign in",
-    "sign-up-prompt-text": "Common",
-    "sign-up-prompt-cta": "Sign up",
-    "sign-in-button-text": "Sign in",
-    "select-language-text": "< Select Language",
+  "Already have an account?": "Sie haben bereits ein Konto?",
+  "Don't have an account?": "Sie haben kein Konto?",
+  "Sign up": "Anmeldung",
+  "Sign in": "Anmelden",
+  "Select Language": "Select Language",
 
-    "name-input-field-placeholder": "Name",
-    "email-input-field-placeholder": "Email",
-    "password-input-field-placeholder": "Password"
+  "Name": "Name",
+  "Email": "Email",
+  "Password": "Passwort",
 
+  "Select Country": "Land auswählen",
+  "Occupation": "Beruf",
+  "Education": "Ausbildung",
+  "Username": "Nutzername",
+
+  "Dashboard": "Armaturenbrett",
+  "Lands": "Länder",
+  "Land": "Land",
+  "Crops": "Getreide",
+  "Crop": "Gerte",
+  "Pesticides": "Pestizide",
+  "Unit Conversion": "Einheitenumrechnung",
+
+  "Location": "Standort",
+  "Slope": "Neigung",
+  "Area": "Gebiet",
+  "Structure": "Struktur",
+  "Texture": "Textur",
+
+  "Harvest Date": "Erntedatum",
+  "Planting Date": "Pflanzdatum",
+  "Problem": "Problem",
+  "Dose": "Dosis",
+  "Harvest Interval": "Ernteintervall",
+  "Application Date": "Antragsdatum",
+
+  "VeryThin": "Sehr dünn",
+  "Thin": "Dünn",
+  "Medium": "Mittel",
+  "Thick": "Dick",
+  "VeryThick": "Sehr dick",
+
+  "Sandy": "Sandig",
+  "Silt": "Schlick",
+  "Clay": "Ton",
+  "Loamy": "Lehmig",
+
+  "Volume": "Volumen",
+  "Calculate": "Errechnen",
+
+  "Not Available": "Nicht verfügbar",
+  "Not Set": "Nicht eingestellt",
+
+  "Report": "Bericht"
 }

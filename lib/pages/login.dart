@@ -16,6 +16,7 @@ import 'package:pesticide/blocs/authentication_bloc.dart';
 import 'package:pesticide/blocs/events/app_state_events.dart';
 import 'package:pesticide/blocs/events/authentication_events.dart';
 import 'package:pesticide/model/authentication_state.dart';
+import 'package:pesticide/utilities/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
@@ -170,7 +171,7 @@ class LoginPage extends StatelessWidget {
           BlocProvider.value(
             value: inputCubit,
           ),
-        ], child: SafeArea(child: LoginPageContents(title: 'Pesticide')));
+        ], child: SafeArea(child: LoginPageContents(title: 'CoPeFa')));
       }),
     );
   }
@@ -234,26 +235,26 @@ class LoginOrSignupPrompt extends StatelessWidget {
   List<TextSpan> getPrompt(BuildContext context, bool loggingIn) {
     if (loggingIn) {
       return [
-        const TextSpan(text: 'Dont have an account?'),
+        TextSpan(text: 'Dont have an account?'.i18n()),
         TextSpan(
             recognizer: TapGestureRecognizer()
               ..onTap = () {
                 context.read<UserLoginPageInputCubit>().reset();
                 context.read<IsLoggingInCubit>().setToSignup();
               },
-            text: ' ' 'Sign up',
+            text: ' ' + 'Sign up'.i18n(),
             style: const TextStyle(fontWeight: FontWeight.bold))
       ];
     } else {
       return [
-        const TextSpan(text: 'Already have an account?'),
+        TextSpan(text: 'Already have an account?'.i18n()),
         TextSpan(
             recognizer: TapGestureRecognizer()
               ..onTap = () {
                 context.read<UserLoginPageInputCubit>().reset();
                 context.read<IsLoggingInCubit>().setToLogin();
               },
-            text: ' ' 'Sign in',
+            text: ' ' + 'Sign in'.i18n(),
             style: const TextStyle(fontWeight: FontWeight.bold))
       ];
     }
@@ -344,7 +345,6 @@ class SignupForm extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                /* const SignupImage(), */
                 Row(
                   children: const [Expanded(child: SignupFields())],
                 ),
@@ -364,15 +364,11 @@ class SignupForm extends StatelessWidget {
                   onTap: () async {
                     context.read<IsLoggingInCubit>().setToSignup();
                     context.read<AppStateBloc>().add(UnchoseLocalEvent());
-                    /* chosenLocale: )); */
-                    /* context */
-                    /*     .read<SigningUpSelectLanguageCubit>() */
-                    /*     .goBackToLanguageSelection(); */
                   },
                   child: Container(
                     margin: EdgeInsetsDirectional.symmetric(vertical: 8),
                     alignment: AlignmentDirectional.centerStart,
-                    child: Text("< Select Language",
+                    child: Text("< Select Language".i18n(),
                         style: Theme.of(context)
                             .textTheme
                             .labelMedium!
@@ -417,13 +413,14 @@ class SelectLanguageButton extends StatelessWidget {
         height: 64,
         child: OutlinedButton(
             onPressed: (() async {
-              String? countryCode = countryCodes[language];
+              String? languageCode = languageCodes[language];
 
-              if (countryCode != null) {
+              if (languageCode != null) {
                 GetIt.I<Logger>().i("$language Button Clicked");
                 context.read<AppStateBloc>().add(ChoseLocalEvent(
-                      chosenLocale: countryCode,
+                      chosenLocale: languageCode,
                     ));
+                await setLocaleAndRestart(context, languageCode);
               } else {
                 GetIt.I<Logger>().e("""$language Button Clicked, But
                 country code not found""");
@@ -445,7 +442,7 @@ class SelectLanguageButton extends StatelessWidget {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 8),
                 child: Flag.fromString(
-                  countryCodes[language]!,
+                  languageCodes[language]!,
                   height: 48,
                   width: 48,
                   borderRadius: 12,
@@ -514,13 +511,13 @@ class SignupFields extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         child: Column(children: [
           InputField(
-            hint: 'Name',
+            hint: 'Name'.i18n(),
             onChanged: (value) {
               context.read<UserLoginPageInputCubit>().setName(value);
             },
           ),
           CountryField(
-            hint: 'Select Country',
+            hint: 'Select Country'.i18n(),
             onChanged: (String selectedCountry) {
               context
                   .read<UserLoginPageInputCubit>()
@@ -528,25 +525,25 @@ class SignupFields extends StatelessWidget {
             },
           ),
           InputField(
-            hint: 'Occupation',
+            hint: 'Occupation'.i18n(),
             onChanged: (value) {
               context.read<UserLoginPageInputCubit>().setOccupation(value);
             },
           ),
           InputField(
-            hint: 'Education',
+            hint: 'Education'.i18n(),
             onChanged: (value) {
               context.read<UserLoginPageInputCubit>().setEducation(value);
             },
           ),
           InputField(
-            hint: 'Email*',
+            hint: 'Email'.i18n() + ' *',
             onChanged: (value) {
               context.read<UserLoginPageInputCubit>().setEmail(value);
             },
           ),
           InputField(
-            hint: 'Username*',
+            hint: 'Username'.i18n() + ' *',
             onChanged: (value) {
               context.read<UserLoginPageInputCubit>().setUsername(value);
             },
@@ -565,7 +562,7 @@ class LoginFields extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         child: Column(children: [
           InputField(
-            hint: 'Email*',
+            hint: 'Email'.i18n() + ' *',
             onChanged: (value) {
               context.read<UserLoginPageInputCubit>().setEmail(value);
             },
@@ -596,7 +593,7 @@ class _PasswordFieldState extends State<PasswordField> {
           lastField: true,
           obscured: obscured,
           initialValue: context.read<UserLoginPageInputCubit>().state.password,
-          hint: 'Password*',
+          hint: 'Password'.i18n() + ' *',
           onChanged: (value) {
             context.read<UserLoginPageInputCubit>().setPassword(value);
           },
@@ -766,59 +763,6 @@ class ActionButton extends StatelessWidget {
                     .add(ReloadAuthEvent(authState));
 
                 GoRouter.of(context).go('/dashboard');
-
-                /* Uint8List? photoFile = */
-                /*     context.read<UserLoginPageInputCubit>().state.photoFile; */
-
-                /* SignupResponse? signupResponse; */
-
-                /* if (photoFile == null) { */
-                /*   signupResponse = await GetIt.I<AuthService>().signup( */
-                /*     context.read<UserLoginPageInputCubit>().state.email, */
-                /*     context.read<UserLoginPageInputCubit>().state.password, */
-                /*     context.read<UserLoginPageInputCubit>().state.name, */
-                /*   ); */
-                /* } else { */
-                /*   String filename = */
-                /*       context.read<UserLoginPageInputCubit>().state.email; */
-                /*   filename = filename.replaceAll(RegExp(r'@'), '_'); */
-                /*   filename = filename.replaceAll(RegExp(r'\.'), '_'); */
-                /*   GetIt.I<Logger>().w(filename); */
-                /*   final storageRef = FirebaseStorage.instance.ref(); */
-                /*   final imageRef = storageRef.child("profile_images/$filename"); */
-
-                /*   GetIt.I<Logger>().w(imageRef.fullPath); */
-                /*   try { */
-                /*     await imageRef.putData(photoFile); */
-                /*     String avatarUrl = await imageRef.getDownloadURL(); */
-                /*     GetIt.I<Logger>().i("Avatar uploaded:$avatarUrl"); */
-                /*     signupResponse = await GetIt.I<AuthService>().signup( */
-                /*       context.read<UserLoginPageInputCubit>().state.email, */
-                /*       context.read<UserLoginPageInputCubit>().state.password, */
-                /*       context.read<UserLoginPageInputCubit>().state.name, */
-                /*       uploadedPhotoUrl: avatarUrl, */
-                /*     ); */
-                /*   } catch (e) { */
-                /*     GetIt.I<Logger>().e(e); */
-                /*   } */
-                /* } */
-
-                /* if (signupResponse != null) { */
-                /*   if (SignupResult.InvalidUsername == signupResponse.result) { */
-                /*     showLoginPageToast(fToast, 'Invalid Username'); */
-                /*   } */
-                /*   if (SignupResult.InvalidEmail == signupResponse.result) { */
-                /*     showLoginPageToast(fToast, 'Invalid Email'); */
-                /*   } */
-                /*   if (SignupResult.InvalidPassword == signupResponse.result) { */
-                /*     showLoginPageToast(fToast, 'Invalid Password'); */
-                /*   } */
-                /*   if (SignupResult.AlreadySignedUp == signupResponse.result) { */
-                /* showLoginPageToast(fToast, 'Cant signup now'); */
-                /*     context.read<UserLoginPageInputCubit>().reset(); */
-                /*     context.read<LoggingInCubit>().loggingIn(); */
-                /*   } */
-                /* } */
               }
             }),
             style: OutlinedButton.styleFrom(
@@ -831,6 +775,6 @@ class ActionButton extends StatelessWidget {
                   fontSize: 17,
                   fontFamily: 'SF Pro Text'),
             ),
-            child: Text(loggingIn ? 'Sign in' : 'Sign up')));
+            child: Text(loggingIn ? 'Sign in'.i18n() : 'Sign up'.i18n())));
   }
 }

@@ -1,0 +1,57 @@
+{
+  "Select Language": "Select Language",
+
+  "Already have an account?": "Hai già un account?",
+  "Don't have an account?": "Non hai un account?",
+  "Sign up": "Iscrizione",
+  "Sign in": "Registrazione",
+
+  "Name": "Nome",
+  "Email": "Email",
+  "Password": "Parola d'ordine",
+
+  "Select Country": "Seleziona il paese",
+  "Occupation": "Occupazione",
+  "Education": "Formazione scolastica",
+  "Username": "nome utente",
+
+  "Dashboard": "Pannello di controllo",
+  "Lands": "Terreni",
+  "Land": "Terra",
+  "Crops": "Raccolti",
+  "Crop": "Raccolto",
+  "Pesticides": "Pesticidi",
+  "Unit Conversion": "Conversione unità",
+
+  "Location": "Posizione",
+  "Slope": "Pendenza",
+  "Area": "Area",
+  "Structure": "Struttura",
+  "Texture": "Fibra",
+
+  "Harvest Date": "Data di raccolta",
+  "Planting Date": "Data di impianto",
+  "Problem": "Problema",
+  "Dose": "Dose",
+  "Harvest Interval": "Intervallo di raccolta",
+  "Application Date": "Data di applicazione",
+
+  "VeryThin": "Molto sottile",
+  "Thin": "Magro",
+  "Medium": "Medio",
+  "Thick": "Spesso",
+  "VeryThick": "Molto spesso",
+
+  "Sandy": "Sabbioso",
+  "Silt": "Limo",
+  "Clay": "Argilla",
+  "Loamy": "Argilloso",
+
+  "Volume": "Volume",
+  "Calculate": "Calcolare",
+
+  "Not Available": "Non disponibile",
+  "Not Set": "Non impostato",
+
+  "Report": "Rapporto"
+}

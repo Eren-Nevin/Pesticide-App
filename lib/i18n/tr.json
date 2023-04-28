@@ -1,0 +1,57 @@
+{
+  "Select Language": "Select Language",
+
+  "Already have an account?": "Zaten hesabınız var mı?",
+  "Don't have an account?": "Hesabınız yok mu?",
+  "Sign up": "Üye olmak",
+  "Sign in": "Kayıt olmak",
+
+  "Name": "İsim",
+  "Email": "E-posta",
+  "Password": "Şifre",
+
+  "Select Country": "Ülke Seç",
+  "Occupation": "Meslek",
+  "Education": "Eğitim",
+  "Username": "Kullanıcı adı",
+
+  "Dashboard": "Gösterge Paneli",
+  "Lands": "Araziler",
+  "Land": "Arazi",
+  "Crops": "Mahsuller",
+  "Crop": "Mahsul",
+  "Pesticides": "Tarım ilacı",
+  "Unit Conversion": "Birim dönüştürme",
+
+  "Location": "Konum",
+  "Slope": "Eğim",
+  "Area": "Alan",
+  "Structure": "Yapı",
+  "Texture": "Doku",
+
+  "Harvest Date": "Hasat Tarihi",
+  "Planting Date": "Ekim Tarihi",
+  "Problem": "Sorun",
+  "Dose": "Doz",
+  "Harvest Interval": "Hasat Aralığı",
+  "Application Date": "Başvuru Tarihi",
+
+  "VeryThin": "Çok ince",
+  "Thin": "İnce",
+  "Medium": "Orta",
+  "Thick": "Kalın",
+  "VeryThick": "Çok kalın",
+
+  "Sandy": "Kumlu",
+  "Silt": "Alüvyon",
+  "Clay": "Kil",
+  "Loamy": "Tınlı",
+
+  "Volume": "Hacim",
+  "Calculate": "Hesapla",
+
+  "Not Available": "Mevcut değil",
+  "Not Set": "ayarlanmadı",
+
+  "Report": "Rapor"
+}

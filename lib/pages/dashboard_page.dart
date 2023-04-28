@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:localization/localization.dart';
 import 'package:pesticide/blocs/app_state_bloc.dart';
 
 import '../model/app_state.dart';
@@ -18,9 +19,9 @@ class DashboardPage extends StatelessWidget {
           child: NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) {
                 return [
-                  const CupertinoSliverNavigationBar(
+                  CupertinoSliverNavigationBar(
                     stretch: true,
-                    largeTitle: Text('Dashboard'),
+                    largeTitle: Text('Dashboard'.i18n()),
                   )
                 ];
               },
@@ -62,7 +63,7 @@ class DashboardPageContent extends StatelessWidget {
               alignment: Alignment.topCenter,
               child: DashboardRowContainerWidget(
                   color: segment.color,
-                  pageName: segment.title,
+                  pageName: segment.title.i18n(),
                   pagePath: segment.pagePath,
                   showNumber: segment.title != 'Unit Conversion',
                   numberOfItems: numberOfItems));

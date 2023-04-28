@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 
 class UnitConversionWeightWidget extends StatefulWidget {
   const UnitConversionWeightWidget({
@@ -34,10 +35,10 @@ class _UnitConversionWeightWidgetState
             child: DropdownMenu(
               initialSelection: options[0],
               dropdownMenuEntries: [
-                DropdownMenuEntry(value: options[0], label: 'Kg To Gr'),
-                DropdownMenuEntry(value: options[1], label: 'Gr To Kg'),
-                DropdownMenuEntry(value: options[2], label: 'Kg To Pound'),
-                DropdownMenuEntry(value: options[3], label: 'Pound To Kg'),
+                DropdownMenuEntry(value: options[0], label: 'Kg -> Gr'),
+                DropdownMenuEntry(value: options[1], label: 'Gr -> Kg'),
+                DropdownMenuEntry(value: options[2], label: 'Kg -> Pound'),
+                DropdownMenuEntry(value: options[3], label: 'Pound -> Kg'),
               ],
               onSelected: (v) {
                 setState(() {
@@ -92,7 +93,7 @@ class _UnitConversionWeightWidgetState
           ),
           Spacer(),
           CupertinoButton.filled(
-            child: Text("Calculate"),
+            child: Text("Calculate".i18n()),
             onPressed: () {
               double output = 0;
               if (selectedOption == options[0]) {
@@ -147,12 +148,12 @@ class _UnitConversionAreaWidgetState extends State<UnitConversionAreaWidget> {
             child: DropdownMenu(
               initialSelection: options[0],
               dropdownMenuEntries: [
-                DropdownMenuEntry(value: options[0], label: 'M2 To Decar'),
-                DropdownMenuEntry(value: options[1], label: 'M2 To Hectar'),
-                DropdownMenuEntry(value: options[2], label: 'Decar To M2'),
-                DropdownMenuEntry(value: options[3], label: 'Hectar To M2'),
-                DropdownMenuEntry(value: options[4], label: 'Decar To Hectar'),
-                DropdownMenuEntry(value: options[5], label: 'Hectar To Decar'),
+                DropdownMenuEntry(value: options[0], label: 'M2 -> Decar'),
+                DropdownMenuEntry(value: options[1], label: 'M2 -> Hectar'),
+                DropdownMenuEntry(value: options[2], label: 'Decar -> M2'),
+                DropdownMenuEntry(value: options[3], label: 'Hectar -> M2'),
+                DropdownMenuEntry(value: options[4], label: 'Decar -> Hectar'),
+                DropdownMenuEntry(value: options[5], label: 'Hectar -> Decar'),
               ],
               onSelected: (v) {
                 setState(() {
@@ -207,7 +208,7 @@ class _UnitConversionAreaWidgetState extends State<UnitConversionAreaWidget> {
           ),
           Spacer(),
           CupertinoButton.filled(
-            child: Text("Calculate"),
+            child: Text("Calculate".i18n()),
             onPressed: () {
               double output = 0;
               if (selectedOption == options[0]) {
@@ -263,8 +264,8 @@ class _UnitConversionVolumeWidgetState
             child: DropdownMenu(
               initialSelection: options[0],
               dropdownMenuEntries: [
-                DropdownMenuEntry(value: options[0], label: 'mL to L'),
-                DropdownMenuEntry(value: options[1], label: 'L to mL'),
+                DropdownMenuEntry(value: options[0], label: 'mL -> L'),
+                DropdownMenuEntry(value: options[1], label: 'L -> mL'),
               ],
               onSelected: (v) {
                 setState(() {
@@ -319,7 +320,7 @@ class _UnitConversionVolumeWidgetState
           ),
           Spacer(),
           CupertinoButton.filled(
-            child: Text("Calculate"),
+            child: Text("Calculate".i18n()),
             onPressed: () {
               double output = 0;
               if (selectedOption == options[0]) {
@@ -368,10 +369,10 @@ class _UnitConversionDoseWidgetState extends State<UnitConversionDoseWidget> {
             child: DropdownMenu(
               initialSelection: options[0],
               dropdownMenuEntries: [
-                DropdownMenuEntry(value: options[0], label: 'kg/ha To kg/da'),
-                DropdownMenuEntry(value: options[1], label: 'kg/da To kg/ha'),
-                DropdownMenuEntry(value: options[2], label: 'l/ha To l/da'),
-                DropdownMenuEntry(value: options[3], label: 'l/da To l/ha'),
+                DropdownMenuEntry(value: options[0], label: 'kg/ha -> kg/da'),
+                DropdownMenuEntry(value: options[1], label: 'kg/da -> kg/ha'),
+                DropdownMenuEntry(value: options[2], label: 'l/ha -> l/da'),
+                DropdownMenuEntry(value: options[3], label: 'l/da -> l/ha'),
               ],
               onSelected: (v) {
                 setState(() {
@@ -426,7 +427,7 @@ class _UnitConversionDoseWidgetState extends State<UnitConversionDoseWidget> {
           ),
           Spacer(),
           CupertinoButton.filled(
-            child: Text("Calculate"),
+            child: Text("Calculate".i18n()),
             onPressed: () {
               double output = 0;
               if (selectedOption == options[0]) {

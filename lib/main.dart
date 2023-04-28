@@ -17,6 +17,7 @@ import 'package:pesticide/repository.dart';
 
 import 'package:pesticide/routing.dart';
 import 'package:pesticide/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void initializeLogger() {
   final logger = Logger(
@@ -51,9 +52,13 @@ void main() async {
   GetIt.I<Logger>().i("App Start");
   await initializeRepository();
   await createAndAddGoRouterToGetIt();
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+
   WidgetsFlutterBinding.ensureInitialized();
   setTestData();
-  runApp(MyApp());
+  runApp(
+    RestartWidget(child: MyApp(prefs)),
+  );
 }
 
 CupertinoThemeData appTheme = getMainTheme();
@@ -118,11 +123,17 @@ void setTestData() {
 class MyApp extends StatelessWidget {
   MyLifecycleObserver observer = MyLifecycleObserver();
 
-  MyApp({super.key});
+  SharedPreferences prefs;
+
+  Locale _locale = const Locale.fromSubtags(languageCode: 'en_US');
+
+  MyApp(this.prefs);
 
   @override
   Widget build(BuildContext context) {
     LocalJsonLocalization.delegate.directories = ['lib/i18n'];
+    final String localeString = prefs.getString('locale') ?? 'en';
+    _locale = Locale.fromSubtags(languageCode: localeString);
     MyLifecycleObserver observer = MyLifecycleObserver();
     observer.start();
 
@@ -139,8 +150,9 @@ class MyApp extends StatelessWidget {
         Locale('tr'),
       ],
       debugShowCheckedModeBanner: false,
-      title: 'Pesticide-App',
+      title: 'Pesticide'.i18n(),
       theme: appTheme,
+      locale: _locale,
       localizationsDelegates: [
         LocalJsonLocalization.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -202,5 +214,35 @@ class MyLifecycleObserver with WidgetsBindingObserver {
         GetIt.I<Logger>().i("App Inactive");
         break;
     }
+  }
+}
+
+class RestartWidget extends StatefulWidget {
+  final Widget child;
+  const RestartWidget({super.key, required this.child});
+
+  static void restartApp(BuildContext context) {
+    context.findAncestorStateOfType<_RestartWidgetState>()?.restartApp();
+  }
+
+  @override
+  _RestartWidgetState createState() => _RestartWidgetState();
+}
+
+class _RestartWidgetState extends State<RestartWidget> {
+  Key key = UniqueKey();
+
+  void restartApp() {
+    setState(() {
+      key = UniqueKey();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(
+      key: key,
+      child: widget.child,
+    );
   }
 }

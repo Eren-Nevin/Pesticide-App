@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:localization/localization.dart';
 import 'package:pesticide/theme.dart';
 import 'package:pesticide/view/add_fab.dart';
 import 'package:pesticide/routing.dart';
@@ -121,27 +122,18 @@ class MainScaffold extends StatelessWidget {
                 case 2:
                   GoRouter.of(context).go('/report');
                   break;
-                /* case 3: */
-                /*   // TODO: Create a new page for this */
-                /*   GoRouter.of(context).go('/task_sheets'); */
-                /*   break; */
-                /* case 4: */
-                /*   GoRouter.of(context).go('/settings'); */
-                /*   break; */
-                /* default: */
-                /*   GoRouter.of(context).go('/task_sheets'); */
               }
             },
             items: [
-              const BottomNavigationBarItem(
-                  label: 'Dashboard', icon: Icon(Icons.home)),
+              BottomNavigationBarItem(
+                  label: 'Dashboard'.i18n(), icon: const Icon(Icons.home)),
               BottomNavigationBarItem(icon: Container()),
               /* const BottomNavigationBarItem( */
               /*     label: 'Home', icon: Icon(Icons.home)), */
               /* /1* const BottomNavigationBarItem( *1/ */
               /*     label: 'Finance', icon: Icon(Icons.attach_money)), */
-              const BottomNavigationBarItem(
-                  label: 'Report', icon: Icon(Icons.pie_chart))
+              BottomNavigationBarItem(
+                  label: 'Report'.i18n(), icon: const Icon(Icons.pie_chart))
             ]),
       ),
     );
