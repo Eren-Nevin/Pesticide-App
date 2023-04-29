@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:localization/localization.dart';
 import 'package:logger/logger.dart';
 
 /* import 'package:tab_container/tab_container.dart'; */
@@ -118,7 +119,7 @@ Future<void> showAddStuffDialog(
               ],
               child: AddStuffDialogContent(
                 editing: false,
-                title: 'Add',
+                title: 'Add'.i18n(),
                 scrollController: ModalScrollController.of(context),
               )),
         );
@@ -156,7 +157,7 @@ class AddStuffDialog extends StatelessWidget {
   late final String title;
   final bool editing;
   AddStuffDialog({super.key, required this.editing}) {
-    title = editing ? 'Edit' : 'Add';
+    title = editing ? 'Edit'.i18n() : 'Add'.i18n();
   }
 
   @override
@@ -219,7 +220,7 @@ class AddDialogTitleRow extends StatelessWidget {
     String titleSuffix =
         context.select<ModalInputCubit, String>((value) => value.state.segment);
 
-    String title = 'Add $titleSuffix';
+    String title = 'Add'.i18n() + '$titleSuffix';
 
     return SimpleDialogTitleRowWidget(
         title: title,
@@ -288,7 +289,7 @@ class SimpleDialogTitleRowWidget extends StatelessWidget {
               child: Container(
                 margin: const EdgeInsetsDirectional.symmetric(horizontal: 8),
                 child: Text(
-                  confirmTitle ?? 'Save',
+                  confirmTitle ?? 'Save'.i18n(),
                   style: Theme.of(context).textTheme.labelLarge!.apply(
                         color: Theme.of(context).primaryColor,
                         fontSizeFactor: 1.1,
@@ -372,7 +373,7 @@ class LandFieldsColumnWidget extends StatelessWidget {
           height: 48,
           // TODO: Force accepted to using input filters
           child: TitleWithTextFieldRow(
-              title: 'Name',
+              title: 'Name'.i18n(),
               editing: false,
               numberOnly: false,
               callback: (v) async {
@@ -387,7 +388,7 @@ class LandFieldsColumnWidget extends StatelessWidget {
           height: 48,
           // TODO: Force accepted to using input filters
           child: TitleWithTextFieldRow(
-              title: 'Latitude',
+              title: 'Latitude'.i18n(),
               editing: false,
               numberOnly: true,
               callback: (v) async {
@@ -402,7 +403,7 @@ class LandFieldsColumnWidget extends StatelessWidget {
           alignment: AlignmentDirectional.centerStart,
           height: 48,
           child: TitleWithTextFieldRow(
-              title: 'Longitude',
+              title: 'Longitude'.i18n(),
               editing: false,
               numberOnly: true,
               callback: (v) async {
@@ -417,7 +418,7 @@ class LandFieldsColumnWidget extends StatelessWidget {
           alignment: AlignmentDirectional.centerStart,
           height: 48,
           child: TitleWithTextFieldRow(
-              title: 'Location',
+              title: 'Location'.i18n(),
               editing: false,
               callback: (v) async {
                 Land currentLand = inputCubit.state.land;
@@ -430,7 +431,7 @@ class LandFieldsColumnWidget extends StatelessWidget {
           alignment: AlignmentDirectional.centerStart,
           height: 48,
           child: TitleWithTextFieldRow(
-              title: 'Area',
+              title: 'Area'.i18n(),
               editing: false,
               numberOnly: true,
               callback: (v) async {
@@ -444,7 +445,7 @@ class LandFieldsColumnWidget extends StatelessWidget {
           alignment: AlignmentDirectional.centerStart,
           height: 48,
           child: TitleWithTextFieldRow(
-              title: 'Slope',
+              title: 'Slope'.i18n(),
               editing: false,
               numberOnly: true,
               callback: (v) async {
@@ -458,7 +459,7 @@ class LandFieldsColumnWidget extends StatelessWidget {
           alignment: AlignmentDirectional.centerStart,
           height: 48,
           child: TitleWithMenuFieldRow(
-              title: 'Soil Structure',
+              title: 'Soil Structure'.i18n(),
               callback: (v) async {
                 print(v);
                 return;
@@ -476,7 +477,7 @@ class LandFieldsColumnWidget extends StatelessWidget {
           alignment: AlignmentDirectional.centerStart,
           height: 48,
           child: TitleWithMenuFieldRow(
-            title: 'Soil Texture',
+            title: 'Soil Texture'.i18n(),
             callback: (v) async {
               print(v);
               return;
@@ -513,7 +514,7 @@ class CropFieldsColumnWidget extends StatelessWidget {
         height: 48,
         // TODO: Force accepted to using input filters
         child: TitleWithMenuFieldRow(
-          title: 'Land',
+          title: 'Land'.i18n(),
           callback: (v) async {
             Crop currentCrop = inputCubit.state.crop;
             Crop updatedCrop = currentCrop.apply(landId: int.parse(v));
@@ -529,7 +530,7 @@ class CropFieldsColumnWidget extends StatelessWidget {
           height: 48,
           // TODO: Force accepted to using input filters
           child: TitleWithTextFieldRow(
-              title: 'Crop Name',
+              title: 'Crop'.i18n(),
               editing: false,
               callback: (v) async {
                 Crop currentCrop = inputCubit.state.crop;
@@ -543,7 +544,7 @@ class CropFieldsColumnWidget extends StatelessWidget {
           height: 48,
           // TODO: Make this pick date
           child: TitleWithDateFieldRow(
-              title: 'Planting Date',
+              title: 'Planting Date'.i18n(),
               callback: (v) async {
                 Crop currentCrop = inputCubit.state.crop;
                 Crop updatedCrop = currentCrop.apply(plantingDate: v);
@@ -556,7 +557,7 @@ class CropFieldsColumnWidget extends StatelessWidget {
           height: 48,
           // TODO: Make this pick dates instead of one day
           child: TitleWithDateFieldRow(
-              title: 'Harvest Day',
+              title: 'Harvest Day'.i18n(),
               callback: (v) async {
                 Crop currentCrop = inputCubit.state.crop;
                 Crop updatedCrop = currentCrop.apply(harvestDates: [v]);
@@ -589,7 +590,7 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
           height: 48,
           // TODO: Force accepted to using input filters
           child: TitleWithMenuFieldRow(
-              title: 'Land',
+              title: 'Land'.i18n(),
               callback: (v) async {
                 Pesticide currentPesticide = inputCubit.state.pesticide;
                 Pesticide updatedPesticide =
@@ -604,7 +605,7 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
           height: 48,
           // TODO: Force accepted to using input filters
           child: TitleWithMenuFieldRow(
-            title: 'Crop',
+            title: 'Crop'.i18n(),
             callback: (v) async {
               Pesticide currentPesticide = inputCubit.state.pesticide;
               Pesticide updatedPesticide =
@@ -620,7 +621,7 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
           height: 48,
           // TODO: Force accepted to using input filters
           child: TitleWithMenuFieldRow(
-              title: 'Problem',
+              title: 'Problem'.i18n(),
               callback: (v) async {},
               options: [
                 {
@@ -640,7 +641,7 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
           height: 48,
           // TODO: Force accepted to using input filters
           child: TitleWithTextFieldRow(
-              title: 'Pesticide',
+              title: 'Pesticide'.i18n(),
               editing: false,
               callback: (v) async {
                 Pesticide currentPesticide = inputCubit.state.pesticide;
@@ -655,7 +656,7 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
           height: 48,
           // TODO: Force accepted to using input filters
           child: TitleWithTextFieldRow(
-              title: 'Dose',
+              title: 'Dose'.i18n(),
               numberOnly: true,
               editing: false,
               callback: (v) async {
@@ -687,7 +688,7 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
           height: 48,
           // TODO: Force accepted to using input filters
           child: TitleWithDateFieldRow(
-              title: 'Application Date',
+              title: 'Application Date'.i18n(),
               callback: (v) async {
                 Pesticide currentPesticide = inputCubit.state.pesticide;
                 Pesticide updatedPesticide =
@@ -718,9 +719,10 @@ class SelectWhichToAdd extends StatelessWidget {
               /*   menuStyle: MenuStyle(padding: EdgeInsets.all(4)), */
               initialSelection: addOptions[0],
               dropdownMenuEntries: [
-                DropdownMenuEntry(value: addOptions[0], label: 'Land'),
-                DropdownMenuEntry(value: addOptions[1], label: 'Crop'),
-                DropdownMenuEntry(value: addOptions[2], label: 'Pesticide'),
+                DropdownMenuEntry(value: addOptions[0], label: 'Land'.i18n()),
+                DropdownMenuEntry(value: addOptions[1], label: 'Crop'.i18n()),
+                DropdownMenuEntry(
+                    value: addOptions[2], label: 'Pesticide'.i18n()),
               ],
               onSelected: (v) {
                 print(v);
@@ -816,9 +818,12 @@ class TitleWithMenuFieldRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<DropdownMenuEntry> dropdownMenuEntries = options
-        .map((e) =>
-            DropdownMenuEntry(label: e.keys.first, value: e.values.first))
+        .map((e) => DropdownMenuEntry(
+            label: e.keys.first.i18n(), value: e.values.first))
         .toList();
+
+    /* final List<Map<String, String>> localOptions = [...options]; */
+
     return Row(textBaseline: TextBaseline.alphabetic, children: [
       DialogFormRowTitles(title: title),
       Flexible(
@@ -882,7 +887,7 @@ class _TitleWithDateFieldRowState extends State<TitleWithDateFieldRow> {
               alignment: AlignmentDirectional.centerStart,
               height: 48,
               child: Text(selectedDate == null
-                  ? "Select date:"
+                  ? "Select Date".i18n()
                   : convertIntTimeToDate(selectedDate!.millisecondsSinceEpoch)),
             ),
           );
@@ -904,26 +909,5 @@ class DialogFormRowTitles extends StatelessWidget {
           title,
           style: Theme.of(context).textTheme.titleSmall,
         ));
-  }
-}
-
-class TaskDialogFormTaskPriorityRow extends StatelessWidget {
-  const TaskDialogFormTaskPriorityRow({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(children: [
-      Container(
-        margin: const EdgeInsets.only(right: 8),
-        child: const DialogFormRowTitles(title: 'Priority'),
-      ),
-      /* const Spacer(), */
-      Expanded(
-          child: Container(
-        alignment: AlignmentDirectional.centerEnd,
-        /* child: TaskDialogFormTaskPriorityWidget(), */
-        child: const Text('Priority'),
-      )),
-    ]);
   }
 }

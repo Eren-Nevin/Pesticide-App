@@ -51,6 +51,16 @@
   "Weight": "Težina",
   "Calculate": "Izračunati",
 
+  "Add": "Dodati",
+  "Edit": "Uredi",
+  "Save": "Uštedjeti",
+
+  "Latitude": "Zemljopisna širina",
+  "Longitude": "Zemljopisna dužina",
+  "Soil Structure": "Struktura tla",
+  "Soil Texture": "Tekstura tla",
+  "Select Date": "Odaberite Datum",
+
   "Not Available": "Nije dostupno",
   "Not Set": "Nespreman",
 

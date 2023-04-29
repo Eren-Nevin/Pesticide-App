@@ -50,6 +50,16 @@
   "Weight": "Gewicht",
   "Calculate": "Errechnen",
 
+  "Add": "Hinzufügen",
+  "Edit": "Bearbeiten",
+  "Save": "Speichern",
+
+  "Latitude": "Breite",
+  "Longitude": "Längengrad",
+  "Soil Structure": "Bodenstruktur",
+  "Soil Texture": "Bodentextur",
+  "Select Date": "Datum auswählen",
+
   "Not Available": "Nicht verfügbar",
   "Not Set": "Nicht eingestellt",
 

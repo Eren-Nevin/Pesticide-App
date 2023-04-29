@@ -6,7 +6,7 @@
   "Sign up": "Üye olmak",
   "Sign in": "Kayıt olmak",
 
-  "Name": "İsim",
+  "Name": "Ad",
   "Email": "E-posta",
   "Password": "Şifre",
 
@@ -50,6 +50,16 @@
   "Volume": "Hacim",
   "Weight": "Ağırlık",
   "Calculate": "Hesapla",
+
+  "Add": "Ekle",
+  "Edit": "Düzenle",
+  "Save": "Kaydet",
+
+  "Latitude": "Enlem",
+  "Longitude": "Boylam",
+  "Soil Structure": "Toprak Yapısı",
+  "Soil Texture": "Toprak dokusu",
+  "Select Date": "Tarih seç",
 
   "Not Available": "Mevcut değil",
   "Not Set": "ayarlanmadı",

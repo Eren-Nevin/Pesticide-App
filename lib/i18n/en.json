@@ -51,6 +51,16 @@
   "Weight": "Weight",
   "Calculate": "Calculate",
 
+  "Add": "Add",
+  "Edit": "Edit",
+  "Save": "Save",
+
+  "Latitude": "Latitude",
+  "Longitude": "Longitude",
+  "Soil Structure": "Soil Structure",
+  "Soil Texture": "Soil Texture",
+  "Select Date": "Select Date",
+
   "Not Available": "Not Available",
   "Not Set": "Not Set",
 

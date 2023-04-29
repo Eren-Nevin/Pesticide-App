@@ -51,6 +51,16 @@
   "Weight": "Greutate",
   "Calculate": "Calculati",
 
+  "Add": "Adăuga",
+  "Edit": "Editați",
+  "Save": "Salvați",
+
+  "Latitude": "Latitudine",
+  "Longitude": "Longitudine",
+  "Soil Structure": "Structura solului",
+  "Soil Texture": "Textura solului",
+  "Select Date": "Selectați Data",
+
   "Not Available": "Nu este disponibil",
   "Not Set": "Nu setat",
 

@@ -69,7 +69,8 @@ class CropPageWidget extends StatelessWidget {
                         }
 
                         List<CardSingleItem> cardItems = [
-                          CardSingleItem(title: 'Name:', value: crop.name),
+                          CardSingleItem(
+                              title: 'Name'.i18n() + ':', value: crop.name),
                           CardSingleItem(
                               title: 'Land'.i18n(),
                               value: land != null

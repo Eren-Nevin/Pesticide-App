@@ -51,6 +51,16 @@
   "Weight": "Peso",
   "Calculate": "Calcolare",
 
+  "Add": "Aggiungere",
+  "Edit": "Modificare",
+  "Save": "Salva",
+
+  "Latitude": "Latitudine",
+  "Longitude": "Longitudine",
+  "Soil Structure": "Struttura del suolo",
+  "Soil Texture": "Fibra del suolo",
+  "Select Date": "Seleziona Data",
+
   "Not Available": "Non disponibile",
   "Not Set": "Non impostato",
 
