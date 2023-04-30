@@ -49,12 +49,12 @@ Future<void> createAndAddGoRouterToGetIt() async {
 
 void main() async {
   initializeLogger();
+  WidgetsFlutterBinding.ensureInitialized();
   GetIt.I<Logger>().i("App Start");
   await initializeRepository();
   await createAndAddGoRouterToGetIt();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  WidgetsFlutterBinding.ensureInitialized();
   setTestData();
   runApp(
     RestartWidget(child: MyApp(prefs)),

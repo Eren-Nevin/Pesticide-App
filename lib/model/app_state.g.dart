@@ -7,7 +7,7 @@ part of 'app_state.dart';
 // **************************************************************************
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
 extension GetAppStateCollection on Isar {
   IsarCollection<AppState> get appStates => this.collection();
@@ -48,6 +48,12 @@ const AppStateSchema = CollectionSchema(
       name: r'lands',
       type: IsarType.objectList,
       target: r'Land',
+    ),
+    r'pesticides': PropertySchema(
+      id: 6,
+      name: r'pesticides',
+      type: IsarType.objectList,
+      target: r'Pesticide',
     )
   },
   estimateSize: _appStateEstimateSize,
@@ -57,11 +63,15 @@ const AppStateSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {},
-  embeddedSchemas: {r'Land': LandSchema, r'Crop': CropSchema},
+  embeddedSchemas: {
+    r'Land': LandSchema,
+    r'Crop': CropSchema,
+    r'Pesticide': PesticideSchema
+  },
   getId: _appStateGetId,
   getLinks: _appStateGetLinks,
   attach: _appStateAttach,
-  version: '3.0.5',
+  version: '3.1.0+1',
 );
 
 int _appStateEstimateSize(
@@ -85,6 +95,14 @@ int _appStateEstimateSize(
     for (var i = 0; i < object.lands.length; i++) {
       final value = object.lands[i];
       bytesCount += LandSchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
+  bytesCount += 3 + object.pesticides.length * 3;
+  {
+    final offsets = allOffsets[Pesticide]!;
+    for (var i = 0; i < object.pesticides.length; i++) {
+      final value = object.pesticides[i];
+      bytesCount += PesticideSchema.estimateSize(value, offsets, allOffsets);
     }
   }
   return bytesCount;
@@ -112,6 +130,12 @@ void _appStateSerialize(
     LandSchema.serialize,
     object.lands,
   );
+  writer.writeObjectList<Pesticide>(
+    offsets[6],
+    allOffsets,
+    PesticideSchema.serialize,
+    object.pesticides,
+  );
 }
 
 AppState _appStateDeserialize(
@@ -138,6 +162,13 @@ AppState _appStateDeserialize(
         LandSchema.deserialize,
         allOffsets,
         Land(),
+      ) ??
+      [];
+  object.pesticides = reader.readObjectList<Pesticide>(
+        offsets[6],
+        PesticideSchema.deserialize,
+        allOffsets,
+        Pesticide(),
       ) ??
       [];
   return object;
@@ -172,6 +203,14 @@ P _appStateDeserializeProp<P>(
             LandSchema.deserialize,
             allOffsets,
             Land(),
+          ) ??
+          []) as P;
+    case 6:
+      return (reader.readObjectList<Pesticide>(
+            offset,
+            PesticideSchema.deserialize,
+            allOffsets,
+            Pesticide(),
           ) ??
           []) as P;
     default:
@@ -696,6 +735,94 @@ extension AppStateQueryFilter
       );
     });
   }
+
+  QueryBuilder<AppState, AppState, QAfterFilterCondition>
+      pesticidesLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'pesticides',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppState, AppState, QAfterFilterCondition> pesticidesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'pesticides',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppState, AppState, QAfterFilterCondition>
+      pesticidesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'pesticides',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppState, AppState, QAfterFilterCondition>
+      pesticidesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'pesticides',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<AppState, AppState, QAfterFilterCondition>
+      pesticidesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'pesticides',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppState, AppState, QAfterFilterCondition>
+      pesticidesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'pesticides',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
 }
 
 extension AppStateQueryObject
@@ -711,6 +838,13 @@ extension AppStateQueryObject
       FilterQuery<Land> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'lands');
+    });
+  }
+
+  QueryBuilder<AppState, AppState, QAfterFilterCondition> pesticidesElement(
+      FilterQuery<Pesticide> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'pesticides');
     });
   }
 }
@@ -900,6 +1034,13 @@ extension AppStateQueryProperty
   QueryBuilder<AppState, List<Land>, QQueryOperations> landsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lands');
+    });
+  }
+
+  QueryBuilder<AppState, List<Pesticide>, QQueryOperations>
+      pesticidesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'pesticides');
     });
   }
 }

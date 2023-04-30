@@ -445,7 +445,7 @@ class SelectLanguageButton extends StatelessWidget {
                   languageCodes[language]!,
                   height: 48,
                   width: 48,
-                  borderRadius: 12,
+                  /* borderRadius: 12, */
                 ),
               ),
               Expanded(child: Text(language)),

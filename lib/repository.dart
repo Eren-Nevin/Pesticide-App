@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -197,9 +198,10 @@ class Repository {
   }
 
   Future<void> _openDatabase() async {
+    final dir = await getApplicationDocumentsDirectory();
     GetIt.I<Logger>().i("Openning database");
     localDatabase = await Isar.open([AuthenticationStateSchema, AppStateSchema],
-        inspector: false);
+        directory: dir.path, inspector: false);
   }
 
   Future<AuthenticationState> readAuthenticationFromDatabase() async {
