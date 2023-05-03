@@ -1,6 +1,10 @@
+import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
+import 'package:logger/logger.dart';
 import 'package:pesticide/model/app_state.dart';
 part 'models.g.dart';
+
+// Each land has one crop but can have multiple pesticide applications
 
 class Segment {
   String title;
@@ -135,7 +139,6 @@ class Crop {
   String name = '';
   int cropId;
   int plantingDate = 0;
-  // TODO: Should it be list or single?
   List<int>? harvestDates = [];
   int landId = 0;
 
@@ -149,6 +152,7 @@ class Crop {
     if (cropId == 0) {
       cropId = DateTime.now().millisecondsSinceEpoch;
     }
+    harvestDates ??= [];
   }
 
   Crop apply({
@@ -178,7 +182,7 @@ class Crop {
 }
 
 @embedded
-class Pesticide {
+class PesticideApplication {
   int pesticideId = 0;
   int landId = 0;
   int cropId = 0;
@@ -189,7 +193,7 @@ class Pesticide {
   int applicationDate = 0;
   int harvestIntervalDays = 0;
 
-  Pesticide({
+  PesticideApplication({
     this.pesticideId = 0,
     this.landId = 0,
     this.cropId = 0,
@@ -204,7 +208,7 @@ class Pesticide {
     }
   }
 
-  Pesticide apply({
+  PesticideApplication apply({
     int? landId,
     int? cropId,
     String? problem,
@@ -213,7 +217,7 @@ class Pesticide {
     int? applicationDate,
     int? harvestIntervalDays,
   }) {
-    Pesticide newPesticide = Pesticide(
+    PesticideApplication newPesticide = PesticideApplication(
       landId: landId ?? this.landId,
       cropId: cropId ?? this.cropId,
       problem: problem ?? this.problem,
@@ -237,6 +241,39 @@ class Pesticide {
   }
 }
 
+Land? findACropsLand(AppState appState, Crop crop) {
+  List<Land> possibleLands =
+      appState.lands.where((land) => land.landId == crop.landId).toList();
+
+  if (possibleLands.isEmpty) {
+    return null;
+  }
+
+  return possibleLands[0];
+}
+
+Crop? findALandCrop(AppState appState, Land land) {
+  List<Crop> crops = appState.crops.where((crop) {
+    return crop.landId == land.landId;
+  }).toList();
+
+  if (crops.isEmpty) {
+    return null;
+  }
+
+  return crops[0];
+}
+
+List<PesticideApplication> findALandCropPairPesiticdeApplications(
+    AppState appState, Land land, Crop crop) {
+  List<PesticideApplication> pesticideApplications = appState.pesticides
+      .where((PesticideApplication pesticide) =>
+          pesticide.landId == land.landId && pesticide.cropId == crop.cropId)
+      .toList();
+
+  return pesticideApplications;
+}
+
 Land? getLandById(AppState appState, int id) {
   List<Land> possibleLands =
       appState.lands.where((land) => land.landId == id).toList();
@@ -257,8 +294,8 @@ Crop? getCropById(AppState appState, int id) {
   return possibleCrops[0];
 }
 
-Pesticide? getPesiticideById(AppState appState, int id) {
-  List<Pesticide> possiblePesticides =
+PesticideApplication? getPesiticideById(AppState appState, int id) {
+  List<PesticideApplication> possiblePesticides =
       appState.pesticides.where((pesticide) => pesticide.cropId == id).toList();
   if (possiblePesticides.isEmpty) {
     return null;

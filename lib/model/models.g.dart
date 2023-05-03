@@ -1550,9 +1550,9 @@ extension CropQueryObject on QueryBuilder<Crop, Crop, QFilterCondition> {}
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-const PesticideSchema = Schema(
-  name: r'Pesticide',
-  id: -525179504933645722,
+const PesticideApplicationSchema = Schema(
+  name: r'PesticideApplication',
+  id: 3956757869090554005,
   properties: {
     r'applicationDate': PropertySchema(
       id: 0,
@@ -1595,14 +1595,14 @@ const PesticideSchema = Schema(
       type: IsarType.string,
     )
   },
-  estimateSize: _pesticideEstimateSize,
-  serialize: _pesticideSerialize,
-  deserialize: _pesticideDeserialize,
-  deserializeProp: _pesticideDeserializeProp,
+  estimateSize: _pesticideApplicationEstimateSize,
+  serialize: _pesticideApplicationSerialize,
+  deserialize: _pesticideApplicationDeserialize,
+  deserializeProp: _pesticideApplicationDeserializeProp,
 );
 
-int _pesticideEstimateSize(
-  Pesticide object,
+int _pesticideApplicationEstimateSize(
+  PesticideApplication object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -1612,8 +1612,8 @@ int _pesticideEstimateSize(
   return bytesCount;
 }
 
-void _pesticideSerialize(
-  Pesticide object,
+void _pesticideApplicationSerialize(
+  PesticideApplication object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -1628,13 +1628,13 @@ void _pesticideSerialize(
   writer.writeString(offsets[7], object.problem);
 }
 
-Pesticide _pesticideDeserialize(
+PesticideApplication _pesticideApplicationDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Pesticide(
+  final object = PesticideApplication(
     applicationDate: reader.readLongOrNull(offsets[0]) ?? 0,
     cropId: reader.readLongOrNull(offsets[1]) ?? 0,
     dose: reader.readDoubleOrNull(offsets[2]) ?? 0,
@@ -1647,7 +1647,7 @@ Pesticide _pesticideDeserialize(
   return object;
 }
 
-P _pesticideDeserializeProp<P>(
+P _pesticideApplicationDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -1675,10 +1675,10 @@ P _pesticideDeserializeProp<P>(
   }
 }
 
-extension PesticideQueryFilter
-    on QueryBuilder<Pesticide, Pesticide, QFilterCondition> {
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition>
-      applicationDateEqualTo(int value) {
+extension PesticideApplicationQueryFilter on QueryBuilder<PesticideApplication,
+    PesticideApplication, QFilterCondition> {
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> applicationDateEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'applicationDate',
@@ -1687,8 +1687,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition>
-      applicationDateGreaterThan(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> applicationDateGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -1701,8 +1701,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition>
-      applicationDateLessThan(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> applicationDateLessThan(
     int value, {
     bool include = false,
   }) {
@@ -1715,8 +1715,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition>
-      applicationDateBetween(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> applicationDateBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -1733,8 +1733,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> cropIdEqualTo(
-      int value) {
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> cropIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'cropId',
@@ -1743,7 +1743,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> cropIdGreaterThan(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> cropIdGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -1756,7 +1757,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> cropIdLessThan(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> cropIdLessThan(
     int value, {
     bool include = false,
   }) {
@@ -1769,7 +1771,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> cropIdBetween(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> cropIdBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -1786,7 +1789,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> doseEqualTo(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> doseEqualTo(
     double value, {
     double epsilon = Query.epsilon,
   }) {
@@ -1799,7 +1803,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> doseGreaterThan(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> doseGreaterThan(
     double value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -1814,7 +1819,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> doseLessThan(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> doseLessThan(
     double value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -1829,7 +1835,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> doseBetween(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> doseBetween(
     double lower,
     double upper, {
     bool includeLower = true,
@@ -1848,8 +1855,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition>
-      harvestIntervalDaysEqualTo(int value) {
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> harvestIntervalDaysEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'harvestIntervalDays',
@@ -1858,8 +1865,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition>
-      harvestIntervalDaysGreaterThan(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> harvestIntervalDaysGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -1872,8 +1879,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition>
-      harvestIntervalDaysLessThan(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> harvestIntervalDaysLessThan(
     int value, {
     bool include = false,
   }) {
@@ -1886,8 +1893,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition>
-      harvestIntervalDaysBetween(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> harvestIntervalDaysBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -1904,8 +1911,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> landIdEqualTo(
-      int value) {
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> landIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'landId',
@@ -1914,7 +1921,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> landIdGreaterThan(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> landIdGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -1927,7 +1935,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> landIdLessThan(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> landIdLessThan(
     int value, {
     bool include = false,
   }) {
@@ -1940,7 +1949,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> landIdBetween(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> landIdBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -1957,7 +1967,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> pesticideEqualTo(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> pesticideEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1970,8 +1981,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition>
-      pesticideGreaterThan(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> pesticideGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1986,7 +1997,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> pesticideLessThan(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> pesticideLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -2001,7 +2013,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> pesticideBetween(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> pesticideBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -2020,7 +2033,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> pesticideStartsWith(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> pesticideStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -2033,7 +2047,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> pesticideEndsWith(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> pesticideEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -2046,9 +2061,9 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> pesticideContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<PesticideApplication, PesticideApplication,
+          QAfterFilterCondition>
+      pesticideContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'pesticide',
@@ -2058,9 +2073,9 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> pesticideMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<PesticideApplication, PesticideApplication,
+          QAfterFilterCondition>
+      pesticideMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'pesticide',
@@ -2070,7 +2085,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> pesticideIsEmpty() {
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> pesticideIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'pesticide',
@@ -2079,8 +2095,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition>
-      pesticideIsNotEmpty() {
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> pesticideIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'pesticide',
@@ -2089,8 +2105,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> pesticideIdEqualTo(
-      int value) {
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> pesticideIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'pesticideId',
@@ -2099,8 +2115,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition>
-      pesticideIdGreaterThan(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> pesticideIdGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -2113,7 +2129,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> pesticideIdLessThan(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> pesticideIdLessThan(
     int value, {
     bool include = false,
   }) {
@@ -2126,7 +2143,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> pesticideIdBetween(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> pesticideIdBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -2143,7 +2161,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> problemEqualTo(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> problemEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -2156,7 +2175,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> problemGreaterThan(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> problemGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -2171,7 +2191,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> problemLessThan(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> problemLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -2186,7 +2207,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> problemBetween(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> problemBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -2205,7 +2227,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> problemStartsWith(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> problemStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -2218,7 +2241,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> problemEndsWith(
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> problemEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -2231,9 +2255,9 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> problemContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<PesticideApplication, PesticideApplication,
+          QAfterFilterCondition>
+      problemContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'problem',
@@ -2243,9 +2267,9 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> problemMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<PesticideApplication, PesticideApplication,
+          QAfterFilterCondition>
+      problemMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'problem',
@@ -2255,7 +2279,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition> problemIsEmpty() {
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> problemIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'problem',
@@ -2264,8 +2289,8 @@ extension PesticideQueryFilter
     });
   }
 
-  QueryBuilder<Pesticide, Pesticide, QAfterFilterCondition>
-      problemIsNotEmpty() {
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> problemIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'problem',
@@ -2275,5 +2300,5 @@ extension PesticideQueryFilter
   }
 }
 
-extension PesticideQueryObject
-    on QueryBuilder<Pesticide, Pesticide, QFilterCondition> {}
+extension PesticideApplicationQueryObject on QueryBuilder<PesticideApplication,
+    PesticideApplication, QFilterCondition> {}

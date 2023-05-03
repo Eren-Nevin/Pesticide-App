@@ -26,7 +26,7 @@ class PesticidePageWidget extends StatelessWidget {
 
     AppState appState = context.read<AppStateBloc>().state;
 
-    List<Pesticide> pesticides = appState.pesticides;
+    List<PesticideApplication> pesticides = appState.pesticides;
 
     return SafeArea(
       child: Stack(
@@ -53,7 +53,7 @@ class PesticidePageWidget extends StatelessWidget {
                   child: ListView.builder(
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        Pesticide pesticide = pesticides[index];
+                        PesticideApplication pesticide = pesticides[index];
 
                         Land? land = getLandById(appState, pesticide.landId);
                         Crop? crop = getCropById(appState, pesticide.cropId);

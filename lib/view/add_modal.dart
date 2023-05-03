@@ -18,6 +18,9 @@ import 'package:pesticide/utilities/utils.dart';
 import '../../blocs/authentication_bloc.dart';
 import '../blocs/app_state_bloc.dart';
 
+// TODO: Add modal for adding harvest date. Extract harvest date from crop modal
+// itself.
+
 const addOptions = ['Land', 'Crop', 'Pesticide'];
 
 const InputDecorationTheme dropdownMenuTheme = InputDecorationTheme(
@@ -35,7 +38,7 @@ class InputAppState {
   String segment = 'Land';
   Land land = Land();
   Crop crop = Crop();
-  Pesticide pesticide = Pesticide();
+  PesticideApplication pesticide = PesticideApplication();
 
   InputAppState();
 
@@ -91,7 +94,7 @@ class ModalInputCubit extends Cubit<InputAppState> {
   /*   state.crop = null; */
   /* } */
 
-  void setPesticide(Pesticide pesticide) {
+  void setPesticide(PesticideApplication pesticide) {
     InputAppState newState = InputAppState.clone(state);
     newState.pesticide = pesticide;
     emit(newState);
@@ -581,7 +584,7 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
     List<Map<String, String>> cropOptions = appState.crops
         .map((crop) => {crop.name: crop.cropId.toString()})
         .toList();
-    inputCubit.setPesticide(Pesticide());
+    inputCubit.setPesticide(PesticideApplication());
     // TODO: implement build
     return Column(children: [
       Container(
@@ -592,8 +595,9 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
           child: TitleWithMenuFieldRow(
               title: 'Land'.i18n(),
               callback: (v) async {
-                Pesticide currentPesticide = inputCubit.state.pesticide;
-                Pesticide updatedPesticide =
+                PesticideApplication currentPesticide =
+                    inputCubit.state.pesticide;
+                PesticideApplication updatedPesticide =
                     currentPesticide.apply(landId: int.parse(v));
                 inputCubit.setPesticide(updatedPesticide);
               },
@@ -607,8 +611,9 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
           child: TitleWithMenuFieldRow(
             title: 'Crop'.i18n(),
             callback: (v) async {
-              Pesticide currentPesticide = inputCubit.state.pesticide;
-              Pesticide updatedPesticide =
+              PesticideApplication currentPesticide =
+                  inputCubit.state.pesticide;
+              PesticideApplication updatedPesticide =
                   currentPesticide.apply(cropId: int.parse(v));
               inputCubit.setPesticide(updatedPesticide);
             },
@@ -644,8 +649,9 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
               title: 'Pesticide'.i18n(),
               editing: false,
               callback: (v) async {
-                Pesticide currentPesticide = inputCubit.state.pesticide;
-                Pesticide updatedPesticide =
+                PesticideApplication currentPesticide =
+                    inputCubit.state.pesticide;
+                PesticideApplication updatedPesticide =
                     currentPesticide.apply(pesticide: v);
                 inputCubit.setPesticide(updatedPesticide);
               })),
@@ -660,8 +666,9 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
               numberOnly: true,
               editing: false,
               callback: (v) async {
-                Pesticide currentPesticide = inputCubit.state.pesticide;
-                Pesticide updatedPesticide =
+                PesticideApplication currentPesticide =
+                    inputCubit.state.pesticide;
+                PesticideApplication updatedPesticide =
                     currentPesticide.apply(dose: double.parse(v));
                 inputCubit.setPesticide(updatedPesticide);
               })),
@@ -676,8 +683,9 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
               numberOnly: true,
               editing: false,
               callback: (v) async {
-                Pesticide currentPesticide = inputCubit.state.pesticide;
-                Pesticide updatedPesticide =
+                PesticideApplication currentPesticide =
+                    inputCubit.state.pesticide;
+                PesticideApplication updatedPesticide =
                     currentPesticide.apply(harvestIntervalDays: int.parse(v));
                 inputCubit.setPesticide(updatedPesticide);
               })),
@@ -690,8 +698,9 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
           child: TitleWithDateFieldRow(
               title: 'Application Date'.i18n(),
               callback: (v) async {
-                Pesticide currentPesticide = inputCubit.state.pesticide;
-                Pesticide updatedPesticide =
+                PesticideApplication currentPesticide =
+                    inputCubit.state.pesticide;
+                PesticideApplication updatedPesticide =
                     currentPesticide.apply(applicationDate: v);
                 inputCubit.setPesticide(updatedPesticide);
               })),

@@ -14,7 +14,7 @@ class AppState {
 
   List<Land> lands = [];
   List<Crop> crops = [];
-  List<Pesticide> pesticides = [];
+  List<PesticideApplication> pesticides = [];
 
   AppState(
       {required this.everythingIsGood,

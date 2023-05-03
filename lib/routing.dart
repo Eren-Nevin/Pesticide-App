@@ -45,9 +45,6 @@ GoRouter createAppRouter(bool isLoggedIn) {
                 routes: [
                   GoRoute(
                       path: 'crops',
-                      /* pageBuilder: (context, state) { */
-                      /*   return const NoTransitionPage(child: Text("Crop")); */
-                      /* }, */
                       builder: (context, state) {
                         return MultiBlocProvider(
                             providers: GetIt.I<Repository>().getBlocProviders(),
@@ -55,9 +52,6 @@ GoRouter createAppRouter(bool isLoggedIn) {
                       }),
                   GoRoute(
                       path: 'lands',
-                      /* pageBuilder: (context, state) { */
-                      /*   return const NoTransitionPage(child: Text("Land")); */
-                      /* }, */
                       builder: (context, state) {
                         return MultiBlocProvider(
                             providers: GetIt.I<Repository>().getBlocProviders(),
@@ -65,9 +59,6 @@ GoRouter createAppRouter(bool isLoggedIn) {
                       }),
                   GoRoute(
                       path: 'pesticides',
-                      /* pageBuilder: (context, state) { */
-                      /*   return const NoTransitionPage(child: Text("Land")); */
-                      /* }, */
                       builder: (context, state) {
                         return MultiBlocProvider(
                             providers: GetIt.I<Repository>().getBlocProviders(),
@@ -75,29 +66,20 @@ GoRouter createAppRouter(bool isLoggedIn) {
                       }),
                   GoRoute(
                       path: 'unit_conversion',
-                      /* pageBuilder: (context, state) { */
-                      /*   return const NoTransitionPage(child: Text("Land")); */
-                      /* }, */
                       builder: (context, state) {
                         return MultiBlocProvider(
                             providers: GetIt.I<Repository>().getBlocProviders(),
                             child: const SegmentDetailPage(
                                 page: 'unit_conversion'));
                       }),
-                  /* GoRoute( */
-                  /*   path: 'pesticide', */
-                  /*   pageBuilder: (context, state) { */
-                  /*     return const NoTransitionPage(child: Text("Pesticide")); */
-                  /*   }, */
-                  /* ), */
                 ]),
             GoRoute(
-              path: '/report',
-              pageBuilder: (context, state) {
-                return NoTransitionPage(
-                    child: Container(child: Text("Report")));
-              },
-            ),
+                path: '/report',
+                builder: (context, state) {
+                  return MultiBlocProvider(
+                      providers: GetIt.I<Repository>().getBlocProviders(),
+                      child: const SegmentDetailPage(page: 'report'));
+                }),
           ]),
     ],
   );

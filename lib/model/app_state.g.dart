@@ -53,7 +53,7 @@ const AppStateSchema = CollectionSchema(
       id: 6,
       name: r'pesticides',
       type: IsarType.objectList,
-      target: r'Pesticide',
+      target: r'PesticideApplication',
     )
   },
   estimateSize: _appStateEstimateSize,
@@ -66,7 +66,7 @@ const AppStateSchema = CollectionSchema(
   embeddedSchemas: {
     r'Land': LandSchema,
     r'Crop': CropSchema,
-    r'Pesticide': PesticideSchema
+    r'PesticideApplication': PesticideApplicationSchema
   },
   getId: _appStateGetId,
   getLinks: _appStateGetLinks,
@@ -99,10 +99,11 @@ int _appStateEstimateSize(
   }
   bytesCount += 3 + object.pesticides.length * 3;
   {
-    final offsets = allOffsets[Pesticide]!;
+    final offsets = allOffsets[PesticideApplication]!;
     for (var i = 0; i < object.pesticides.length; i++) {
       final value = object.pesticides[i];
-      bytesCount += PesticideSchema.estimateSize(value, offsets, allOffsets);
+      bytesCount +=
+          PesticideApplicationSchema.estimateSize(value, offsets, allOffsets);
     }
   }
   return bytesCount;
@@ -130,10 +131,10 @@ void _appStateSerialize(
     LandSchema.serialize,
     object.lands,
   );
-  writer.writeObjectList<Pesticide>(
+  writer.writeObjectList<PesticideApplication>(
     offsets[6],
     allOffsets,
-    PesticideSchema.serialize,
+    PesticideApplicationSchema.serialize,
     object.pesticides,
   );
 }
@@ -164,11 +165,11 @@ AppState _appStateDeserialize(
         Land(),
       ) ??
       [];
-  object.pesticides = reader.readObjectList<Pesticide>(
+  object.pesticides = reader.readObjectList<PesticideApplication>(
         offsets[6],
-        PesticideSchema.deserialize,
+        PesticideApplicationSchema.deserialize,
         allOffsets,
-        Pesticide(),
+        PesticideApplication(),
       ) ??
       [];
   return object;
@@ -206,11 +207,11 @@ P _appStateDeserializeProp<P>(
           ) ??
           []) as P;
     case 6:
-      return (reader.readObjectList<Pesticide>(
+      return (reader.readObjectList<PesticideApplication>(
             offset,
-            PesticideSchema.deserialize,
+            PesticideApplicationSchema.deserialize,
             allOffsets,
-            Pesticide(),
+            PesticideApplication(),
           ) ??
           []) as P;
     default:
@@ -842,7 +843,7 @@ extension AppStateQueryObject
   }
 
   QueryBuilder<AppState, AppState, QAfterFilterCondition> pesticidesElement(
-      FilterQuery<Pesticide> q) {
+      FilterQuery<PesticideApplication> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'pesticides');
     });
@@ -1037,7 +1038,7 @@ extension AppStateQueryProperty
     });
   }
 
-  QueryBuilder<AppState, List<Pesticide>, QQueryOperations>
+  QueryBuilder<AppState, List<PesticideApplication>, QQueryOperations>
       pesticidesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'pesticides');

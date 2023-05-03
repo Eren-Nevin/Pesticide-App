@@ -1,263 +1,264 @@
-String reportHTML = '''
-<table class="ab" border="1" cellspacing="0" cellpadding="0" width="601" style="border-collapse:collapse;mso-table-layout-alt:fixed;border:none;
- mso-border-alt:solid black .5pt;mso-yfti-tbllook:1024;mso-padding-alt:0in 5.4pt 0in 5.4pt;
- mso-border-insideh:.5pt solid black;mso-border-insidev:.5pt solid black">
- <tbody><tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;height:42.75pt">
-  <td width="65" rowspan="2" style="width:48.55pt;border:solid black 1.0pt;
-  mso-border-alt:solid black .5pt;background:#92D050;padding:0in 5.4pt 0in 5.4pt;
-  height:42.75pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><b style="mso-bidi-font-weight:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">Parcel</span><span lang="EN-GB"><o:p></o:p></span></b></p>
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:get_it/get_it.dart';
+import 'package:localization/localization.dart';
+import 'package:logger/logger.dart';
+import 'package:pesticide/blocs/app_state_bloc.dart';
+import 'package:pesticide/utilities/utils.dart';
+
+import '../model/app_state.dart';
+import '../model/models.dart';
+import '../view/add_fab.dart';
+import '../view/common_widgets.dart';
+
+class ReportPageWidget extends StatelessWidget {
+  const ReportPageWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final ScrollController scrollController = ScrollController();
+    // TODO: Should have used select to prevent updating on overal models
+    // change
+    /* GetIt.I<AddFABController>().setOnPressed(AppPages.Crop, (context) async {}); */
+
+    AppStateBloc appStateBloc = context.watch<AppStateBloc>();
+
+    return SafeArea(
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsetsDirectional.all(4),
+                  child: SegmentDetailTitleRowWidget(
+                    title: 'Report'.i18n(),
+                    color: 0xFFb8b8b8,
+                  ),
+                ),
+                const Divider(
+                  thickness: 2,
+                  color: Color(0xFFE4E4E4),
+                  height: 12,
+                ),
+                Expanded(
+                  child: InteractiveViewer(
+                      constrained: false,
+                      child: Html(
+                        data: generateReportHTML(appStateBloc.state),
+                        shrinkWrap: true,
+                      )),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+String generateSingleTD(int rowSpan, String content) {
+  return '''
+<td rowspan="$rowSpan" style="border-collapse: collapse; border:solid black 1.0pt;text-align: center; vertical-align: middle;
+  background:#92D050;padding:0in 5.4pt 0in 5.4pt;">
+  <p align="center"
+  style="margin-bottom:0in;text-align:center;line-height:normal;">
+    $content
+  </p>
   </td>
-  <td width="81" rowspan="2" style="width:60.4pt;border:solid black 1.0pt;
-  border-left:none;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:42.75pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><b style="mso-bidi-font-weight:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">Product</span><span lang="EN-GB"><o:p></o:p></span></b></p>
+  ''';
+}
+
+String generateReportHTML(AppState appState) {
+  String generateLandReportsHTML(AppState appState) {
+    String generateSingleLandHTML(AppState appState, Land land) {
+      Crop? crop = findALandCrop(appState, land);
+      if (crop == null) {
+        return '';
+      }
+      int totalRows =
+          crop.harvestDates!.isNotEmpty ? crop.harvestDates!.length : 1;
+
+      List<PesticideApplication> pesticides =
+          findALandCropPairPesiticdeApplications(appState, land, crop);
+
+      GetIt.I<Logger>().e(land);
+      GetIt.I<Logger>().e(crop);
+      GetIt.I<Logger>().e(pesticides);
+      /* GetIt.I<Logger>().e(appState.pesticides); */
+
+      /* String generateSingleCropHTML( */
+      /*     AppState appState, Crop crop, List<PesticideApplication> pesticides) { */
+      /*   String generateSinglePesticideHTML( */
+      /*       PesticideApplication pesticide, int harvestDate) { */
+      /*     return ''' */
+      /*           ${generateSingleTD(1, pesticide.pesticide)} */
+      /*           ${generateSingleTD(1, pesticide.dose.toString())} */
+      /*           ${generateSingleTD(1, convertIntTimeToDate(pesticide.applicationDate))} */
+      /*           ${generateSingleTD(1, convertIntTimeToDate(harvestDate))} */
+      /*       '''; */
+      /*   } */
+
+      /*   List<String> pesticidesHTML = []; */
+      /*   for (int i = 0; i < pesticides.length; i++) { */
+      /*     String singlePesticideHTML = */
+      /*         generateSinglePesticideHTML(pesticides[i], crop.harvestDates![i]); */
+
+      /*     pesticidesHTML.add(singlePesticideHTML); */
+      /*   } */
+
+      /*   String result = ''' */
+      /*       ${generateSingleTD(pesticides.length, crop.name)} */
+      /*       ${generateSingleTD(pesticides.length, convertIntTimeToDate(crop.plantingDate))} */
+      /*       ${pesticidesHTML.join('\n')} */
+      /*     '''; */
+
+      /*   return result; */
+      /* } */
+
+      /* List<String> cropsHTML = []; */
+
+      /* for (Crop crop in pesticideMap.keys) { */
+      /*   cropsHTML */
+      /*       .add(generateSingleCropHTML(appState, crop, pesticideMap[crop]!)); */
+      /* } */
+
+      String generateSinglePesticideHTML(
+          int harvestDate, PesticideApplication pesticide) {
+        return '''
+                ${generateSingleTD(1, pesticide.pesticide)}
+                ${generateSingleTD(1, pesticide.dose.toString())}
+                ${generateSingleTD(1, convertIntTimeToDate(pesticide.applicationDate))}
+                ${generateSingleTD(1, convertIntTimeToDate(harvestDate))}
+            ''';
+      }
+
+      String generateNthPesticideHTML(int i) {
+        return generateSinglePesticideHTML(
+            crop.harvestDates![i], pesticides[i]);
+      }
+
+      String firstPesticideRow =
+          crop.harvestDates!.isNotEmpty ? generateNthPesticideHTML(0) : '';
+
+      /* GetIt.I<Logger>().w(totalRows); */
+
+      List<String> otherPesticideRowsList = [];
+
+      for (int i = 1; i < crop.harvestDates!.length; i++) {
+        String row = '''
+            <tr>
+                ${generateNthPesticideHTML(i)}
+            </tr>
+        ''';
+        otherPesticideRowsList.add(row);
+      }
+
+      String otherPesticideRows = otherPesticideRowsList.join('\n');
+
+      String result = '''
+<tr>
+${generateSingleTD(totalRows, land.name)}
+${generateSingleTD(totalRows, crop.name)}
+${generateSingleTD(totalRows, convertIntTimeToDate(crop.plantingDate))}
+$firstPesticideRow
+</tr>
+$otherPesticideRows
+  ''';
+
+      return result;
+    }
+
+    List<Land> lands = appState.lands;
+    String landsHTML = lands
+        /* .where((Land land) => land.landId == 1) */
+        .map((Land land) => generateSingleLandHTML(appState, land))
+        .join('\n');
+
+    /* GetIt.I<Logger>().w(landsHTML); */
+
+    return landsHTML;
+  }
+
+  String reportTemplate = '''
+<table class="ab" border="1" cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr>
+  <td rowspan="2" style="border-collapse: collapse; border:solid black 1.0pt;text-align: center; vertical-align: middle;
+  background:#92D050;padding:0in 5.4pt 0in 5.4pt">
+  <p 
+  style="margin-bottom:0in;text-align:center;line-height:normal;">
+  Parcel
+  </p>
   </td>
-  <td width="87" rowspan="2" style="width:65.55pt;border:solid black 1.0pt;
-  border-left:none;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:42.75pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><b style="mso-bidi-font-weight:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">Sowing Date</span><span lang="EN-GB"><o:p></o:p></span></b></p>
+<td rowspan="2" style="border-collapse: collapse; border:solid black 1.0pt;text-align: center; vertical-align: middle;
+  background:#92D050;padding:0in 5.4pt 0in 5.4pt;">
+  <p 
+  style="margin-bottom:0in;text-align:center;line-height:normal;">
+  ${"Crop".i18n()}
+  </p>
   </td>
-  <td width="266" colspan="3" style="width:199.45pt;border:solid black 1.0pt;
-  border-left:none;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:42.75pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><b style="mso-bidi-font-weight:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">Pesticide Applications</span><span lang="EN-GB"><o:p></o:p></span></b></p>
+<td rowspan="2" style="border-collapse: collapse; border:solid black 1.0pt;text-align: center; vertical-align: middle;
+  background:#92D050;padding:0in 5.4pt 0in 5.4pt;">
+  <p 
+  style="margin-bottom:0in;text-align:center;line-height:normal;">
+  ${"Planting Date".i18n()}
+  </p>
   </td>
-  <td width="102" rowspan="2" style="width:76.45pt;border:solid black 1.0pt;
-  border-left:none;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:42.75pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><b style="mso-bidi-font-weight:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">Date of Harvest</span><span lang="EN-GB"><o:p></o:p></span></b></p>
+
+<td rowspan="1" colspan="3" style="border-collapse: collapse; border:solid black 1.0pt;text-align: center; vertical-align: middle; background:#92D050;padding:0in 5.4pt 0in 5.4pt;">
+  <p align="center"
+  style="margin-bottom:0in;text-align:center;line-height:normal;">
+  Pesticide Applications
+  </p>
   </td>
- </tr>
- <tr style="mso-yfti-irow:1;height:51.7pt">
-  <td width="83" style="width:62.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:51.7pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><b style="mso-bidi-font-weight:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">Pesticide</span><span lang="EN-GB"><o:p></o:p></span></b></p>
+
+<td rowspan="2" style="border-collapse: collapse; border:solid black 1.0pt;text-align: center; vertical-align: middle;
+  background:#92D050;padding:0in 5.4pt 0in 5.4pt;">
+  <p align="center"
+  style="margin-bottom:0in;text-align:center;line-height:normal;">
+  ${"Harvest Date".i18n()}
+  </p>
   </td>
-  <td width="95" style="width:71.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:51.7pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><b style="mso-bidi-font-weight:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">Dose</span><span lang="EN-GB"><o:p></o:p></span></b></p>
+
+  </tr>
+  <tr>
+<td rowspan="1" style="border-collapse: collapse; border:solid black 1.0pt;text-align: center; vertical-align: middle;
+  background:#92D050;padding:0in 5.4pt 0in 5.4pt;">
+  <p align="center"
+  style="margin-bottom:0in;text-align:center;line-height:normal;">
+  ${"Pesticide".i18n()}
+  </p>
   </td>
-  <td width="87" style="width:65.55pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:51.7pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><b style="mso-bidi-font-weight:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">Date of Spraying</span></b></p>
+<td rowspan="1" style="border-collapse: collapse; border:solid black 1.0pt;text-align: center; vertical-align: middle;
+  background:#92D050;padding:0in 5.4pt 0in 5.4pt;">
+  <p align="center"
+  style="margin-bottom:0in;text-align:center;line-height:normal;">
+  ${"Dose".i18n()}
+  </p>
   </td>
- </tr>
- <tr style="mso-yfti-irow:2;height:42.75pt">
-  <td width="65" rowspan="6" style="width:48.55pt;border:solid black 1.0pt;
-  border-top:none;mso-border-top-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:42.75pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">A</span></p>
+<td rowspan="1" style="border-collapse: collapse; border:solid black 1.0pt;text-align: center; vertical-align: middle;
+  background:#92D050;padding:0in 5.4pt 0in 5.4pt;">
+  <p align="center"
+  style="margin-bottom:0in;text-align:center;line-height:normal;">
+    Spraying Date
+  </p>
   </td>
-  <td width="81" rowspan="6" style="width:60.4pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:42.75pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">Tomato</span></p>
-  </td>
-  <td width="87" rowspan="6" style="width:65.55pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:42.75pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">15.05.2022</span></p>
-  </td>
-  <td width="83" style="width:62.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:42.75pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">Spinosad</span></p>
-  </td>
-  <td width="95" style="width:71.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:42.75pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">50
-  ml/100 l</span></p>
-  </td>
-  <td width="87" style="width:65.55pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:42.75pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">25.05.2022</span></p>
-  </td>
-  <td width="102" style="width:76.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:42.75pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">25.07.2022</span></p>
-  </td>
- </tr>
- <tr style="mso-yfti-irow:3;height:43.6pt">
-  <td width="83" style="width:62.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:43.6pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">Mancozeb</span></p>
-  </td>
-  <td width="95" style="width:71.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:43.6pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">300gr/100
-  l</span></p>
-  </td>
-  <td width="87" style="width:65.55pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:43.6pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">30.05.2022</span></p>
-  </td>
-  <td width="102" style="width:76.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:43.6pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">10.08.2022</span></p>
-  </td>
- </tr>
- <tr style="mso-yfti-irow:4;height:43.6pt">
-  <td width="83" style="width:62.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:43.6pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB"><o:p>&nbsp;</o:p></span></p>
-  </td>
-  <td width="95" style="width:71.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:43.6pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB"><o:p>&nbsp;</o:p></span></p>
-  </td>
-  <td width="87" style="width:65.55pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:43.6pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB"><o:p>&nbsp;</o:p></span></p>
-  </td>
-  <td width="102" style="width:76.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:43.6pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">30.08.2022</span></p>
-  </td>
- </tr>
- <tr style="mso-yfti-irow:5;height:43.6pt">
-  <td width="83" style="width:62.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:43.6pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB"><o:p>&nbsp;</o:p></span></p>
-  </td>
-  <td width="95" style="width:71.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:43.6pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB"><o:p>&nbsp;</o:p></span></p>
-  </td>
-  <td width="87" style="width:65.55pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:43.6pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB"><o:p>&nbsp;</o:p></span></p>
-  </td>
-  <td width="102" style="width:76.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:43.6pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">15.09.2022</span></p>
-  </td>
- </tr>
- <tr style="mso-yfti-irow:6;height:42.75pt">
-  <td width="83" style="width:62.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:42.75pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB"><o:p>&nbsp;</o:p></span></p>
-  </td>
-  <td width="95" style="width:71.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:42.75pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB"><o:p>&nbsp;</o:p></span></p>
-  </td>
-  <td width="87" style="width:65.55pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:42.75pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB"><o:p>&nbsp;</o:p></span></p>
-  </td>
-  <td width="102" style="width:76.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:42.75pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">30.09.2022</span></p>
-  </td>
- </tr>
- <tr style="mso-yfti-irow:7;mso-yfti-lastrow:yes;height:43.6pt">
-  <td width="83" style="width:62.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:43.6pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB"><o:p>&nbsp;</o:p></span></p>
-  </td>
-  <td width="95" style="width:71.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:43.6pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB"><o:p>&nbsp;</o:p></span></p>
-  </td>
-  <td width="87" style="width:65.55pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:43.6pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB"><o:p>&nbsp;</o:p></span></p>
-  </td>
-  <td width="102" style="width:76.45pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:
-  solid black .5pt;mso-border-left-alt:solid black .5pt;mso-border-alt:solid black .5pt;
-  background:#92D050;padding:0in 5.4pt 0in 5.4pt;height:43.6pt">
-  <p class="MsoNormal" align="center" style="margin-bottom:0in;text-align:center;
-  line-height:normal"><span lang="EN-GB" style="color:black;mso-color-alt:windowtext">25.07.2022</span></p>
-  </td>
- </tr>
+  </tr>
+
+
+    ${generateLandReportsHTML(appState)}
+
+
 </tbody></table>
 ''';
+  return reportTemplate;
+}

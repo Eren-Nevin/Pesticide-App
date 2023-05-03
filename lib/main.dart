@@ -54,6 +54,12 @@ void main() async {
   await initializeRepository();
   await createAndAddGoRouterToGetIt();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+    /* DeviceOrientation.landscapeLeft, */
+    /* DeviceOrientation.landscapeRight */
+  ]);
 
   setTestData();
   runApp(
@@ -86,32 +92,55 @@ void setTestData() {
   ];
   newState.crops = [
     Crop(
-        cropId: 1,
-        name: 'Tomato',
-        plantingDate:
-            DateTime.now().subtract(Duration(days: 40)).millisecondsSinceEpoch,
-        landId: 1),
+      cropId: 1,
+      name: 'Tomato',
+      plantingDate:
+          DateTime.now().subtract(Duration(days: 40)).millisecondsSinceEpoch,
+      landId: 1,
+      harvestDates: [
+        DateTime.now().add(Duration(days: 20)).millisecondsSinceEpoch,
+        DateTime.now().add(Duration(days: 30)).millisecondsSinceEpoch,
+      ],
+    ),
     Crop(
         cropId: 2,
         name: 'Potato',
         plantingDate:
             DateTime.now().subtract(Duration(days: 10)).millisecondsSinceEpoch,
         harvestDates: [
-          DateTime.now().millisecondsSinceEpoch,
+          /* DateTime.now().millisecondsSinceEpoch, */
           DateTime.now().add(Duration(days: 10)).millisecondsSinceEpoch,
         ],
-        landId: 1),
+        landId: 2),
   ];
 
   newState.pesticides = [
-    Pesticide(
+    PesticideApplication(
       pesticide: 'Argon',
-      cropId: 2,
+      cropId: 1,
       landId: 1,
       problem: 'Ants',
       dose: 3,
       applicationDate: DateTime.now().millisecondsSinceEpoch,
       harvestIntervalDays: 21,
+    ),
+    PesticideApplication(
+      pesticide: 'Mayonaise',
+      cropId: 1,
+      landId: 1,
+      problem: 'Ants',
+      dose: 22,
+      applicationDate: DateTime.now().millisecondsSinceEpoch,
+      harvestIntervalDays: 11,
+    ),
+    PesticideApplication(
+      pesticide: 'Depismin',
+      cropId: 2,
+      landId: 2,
+      problem: 'Dogs',
+      dose: 16,
+      applicationDate: DateTime.now().millisecondsSinceEpoch,
+      harvestIntervalDays: 14,
     ),
   ];
 
@@ -136,9 +165,6 @@ class MyApp extends StatelessWidget {
     _locale = Locale.fromSubtags(languageCode: localeString);
     MyLifecycleObserver observer = MyLifecycleObserver();
     observer.start();
-
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
     return CupertinoApp.router(
       supportedLocales: const [

@@ -7,6 +7,7 @@ import 'package:logger/logger.dart';
 import 'package:pesticide/pages/crop_page.dart';
 import 'package:pesticide/pages/land_page.dart';
 import 'package:pesticide/pages/pesticide_page.dart';
+import 'package:pesticide/pages/report_page.dart';
 import 'package:pesticide/pages/segment_detail_page.dart';
 import 'package:pesticide/pages/unit_conversion_page.dart';
 
@@ -20,10 +21,6 @@ class SegmentDetailPage extends StatelessWidget {
 
     Widget pageWidget = const SegmentDetailWidget();
 
-    print(page);
-    print(page);
-    print(page);
-
     if (page == 'lands') {
       pageWidget = const LandPageWidget();
     } else if (page == 'crops') {
@@ -32,14 +29,16 @@ class SegmentDetailPage extends StatelessWidget {
       pageWidget = const PesticidePageWidget();
     } else if (page == 'unit_conversion') {
       pageWidget = const UnitConversionPageWidget();
+    } else if (page == 'report') {
+      pageWidget = const ReportPageWidget();
     }
 
     return CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(
+        navigationBar: const CupertinoNavigationBar(
           /* heroTag: 'HERO TAG', */
           border: null,
           backgroundColor: Colors.white,
-          leading: const GoBackToSheetsTabButton(),
+          leading: GoBackToSheetsTabButton(),
         ),
         child: Container(
           padding: const EdgeInsets.only(top: 4),
