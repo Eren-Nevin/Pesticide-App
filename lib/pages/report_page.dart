@@ -84,15 +84,14 @@ String generateReportHTML(AppState appState) {
       if (crop == null) {
         return '';
       }
-      int totalRows =
-          crop.harvestDates!.isNotEmpty ? crop.harvestDates!.length : 1;
-
-      List<PesticideApplication> pesticides =
+      List<PesticideApplication> thisCropPesticides =
           findALandCropPairPesiticdeApplications(appState, land, crop);
+      int totalRows =
+          crop.harvestDates!.isNotEmpty ? thisCropPesticides.length : 1;
 
       GetIt.I<Logger>().e(land);
       GetIt.I<Logger>().e(crop);
-      GetIt.I<Logger>().e(pesticides);
+      GetIt.I<Logger>().e(thisCropPesticides);
       /* GetIt.I<Logger>().e(appState.pesticides); */
 
       /* String generateSingleCropHTML( */
@@ -137,13 +136,16 @@ String generateReportHTML(AppState appState) {
                 ${generateSingleTD(1, pesticide.pesticide)}
                 ${generateSingleTD(1, pesticide.dose.toString())}
                 ${generateSingleTD(1, convertIntTimeToDate(pesticide.applicationDate))}
-                ${generateSingleTD(1, convertIntTimeToDate(harvestDate))}
+                ${generateSingleTD(1, harvestDate == 0 ? '-' : convertIntTimeToDate(harvestDate))}
             ''';
       }
 
       String generateNthPesticideHTML(int i) {
-        return generateSinglePesticideHTML(
-            crop.harvestDates![i], pesticides[i]);
+        int harvestDate = 0;
+        if (i < crop.harvestDates!.length) {
+          harvestDate = crop.harvestDates![i];
+        }
+        return generateSinglePesticideHTML(harvestDate, thisCropPesticides[i]);
       }
 
       String firstPesticideRow =
@@ -153,7 +155,7 @@ String generateReportHTML(AppState appState) {
 
       List<String> otherPesticideRowsList = [];
 
-      for (int i = 1; i < crop.harvestDates!.length; i++) {
+      for (int i = 1; i < thisCropPesticides.length; i++) {
         String row = '''
             <tr>
                 ${generateNthPesticideHTML(i)}

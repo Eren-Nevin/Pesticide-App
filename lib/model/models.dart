@@ -70,6 +70,7 @@ class Land {
   final double area;
   final double slope;
 
+// TODO: Make these nullable so that we know if user has choosen one
   @Enumerated(EnumType.name)
   final SoilStructure structure;
   @Enumerated(EnumType.name)
@@ -155,14 +156,14 @@ class Crop {
     harvestDates ??= [];
   }
 
-  Crop apply({
-    String? name,
-    int? plantingDate,
-    int? landId,
-    List<int>? harvestDates,
-  }) {
+  Crop apply(
+      {String? name,
+      int? plantingDate,
+      int? landId,
+      List<int>? harvestDates,
+      bool useSameId = false}) {
     Crop newCrop = Crop(
-      cropId: 0,
+      cropId: useSameId ? cropId : 0,
       name: name ?? this.name,
       plantingDate: plantingDate ?? this.plantingDate,
       landId: landId ?? this.landId,

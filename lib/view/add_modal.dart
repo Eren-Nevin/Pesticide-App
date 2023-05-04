@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:localization/localization.dart';
 import 'package:logger/logger.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 /* import 'package:tab_container/tab_container.dart'; */
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -21,7 +22,7 @@ import '../blocs/app_state_bloc.dart';
 // TODO: Add modal for adding harvest date. Extract harvest date from crop modal
 // itself.
 
-const addOptions = ['Land', 'Crop', 'Pesticide'];
+const addOptions = ['Land', 'Crop', 'Pesticide', 'Harvest'];
 
 const InputDecorationTheme dropdownMenuTheme = InputDecorationTheme(
   border: InputBorder.none,
@@ -80,29 +81,24 @@ class ModalInputCubit extends Cubit<InputAppState> {
     emit(newState);
   }
 
-  /* void clearLand() { */
-  /*   state.land = null; */
-  /* } */
-
   void setCrop(Crop crop) {
     InputAppState newState = InputAppState.clone(state);
     newState.crop = crop;
     emit(newState);
   }
 
-  /* void clearCrop() { */
-  /*   state.crop = null; */
-  /* } */
+  void setLandAndCrop(Land land, Crop crop) {
+    InputAppState newState = InputAppState.clone(state);
+    newState.crop = crop;
+    newState.land = land;
+    emit(newState);
+  }
 
   void setPesticide(PesticideApplication pesticide) {
     InputAppState newState = InputAppState.clone(state);
     newState.pesticide = pesticide;
     emit(newState);
   }
-
-  /* void clearPesticide() { */
-  /*   state.pesticide = null; */
-  /* } */
 }
 
 Future<void> showAddStuffDialog(
@@ -204,7 +200,7 @@ class AddStuffDialogContent extends StatelessWidget {
             Container(
               margin: const EdgeInsetsDirectional.only(
                   start: 24, end: 24, bottom: 36),
-              child: TaskDialogTabularForm(editing: editing),
+              child: AddStuffDialogForm(editing: editing),
             )
           ],
         ),
@@ -213,6 +209,14 @@ class AddStuffDialogContent extends StatelessWidget {
   }
 }
 
+void showToast(String message) {
+  Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM);
+}
+
+// TODO: Add proper translations for toast messages
 class AddDialogTitleRow extends StatelessWidget {
   final String title;
 
@@ -223,7 +227,7 @@ class AddDialogTitleRow extends StatelessWidget {
     String titleSuffix =
         context.select<ModalInputCubit, String>((value) => value.state.segment);
 
-    String title = 'Add'.i18n() + '$titleSuffix';
+    String title = 'Add'.i18n() + ' $titleSuffix';
 
     return SimpleDialogTitleRowWidget(
         title: title,
@@ -233,16 +237,86 @@ class AddDialogTitleRow extends StatelessWidget {
           AppState currentState = context.read<AppStateBloc>().state;
           AppState newState = AppState.clone(currentState);
           if (segment == 'Land') {
+            if (inputAppState.land.name.isEmpty) {
+              showToast('Enter Land Name');
+              return;
+            }
+            if (inputAppState.land.location.isEmpty) {
+              showToast('Enter Land Location');
+              return;
+            }
+            if (inputAppState.land.lattitude == 0) {
+              showToast('Enter Land Lattitude');
+              return;
+            }
+            if (inputAppState.land.longitude == 0) {
+              showToast('Enter Land Longitude');
+              return;
+            }
+            if (inputAppState.land.area == 0) {
+              showToast('Enter Land Area');
+              return;
+            }
+            if (inputAppState.land.slope == 0) {
+              showToast('Enter Land Slope');
+              return;
+            }
             newState.lands = [...newState.lands, inputAppState.land];
           }
           if (segment == 'Crop') {
+            if (inputAppState.crop.landId == 0) {
+              showToast('Select Land');
+              return;
+            }
+            if (inputAppState.crop.name.isEmpty) {
+              showToast('Enter Crop Name');
+              return;
+            }
+            if (inputAppState.crop.plantingDate == 0) {
+              showToast('Enter Planting Date');
+              return;
+            }
             newState.crops = [...newState.crops, inputAppState.crop];
           }
           if (segment == 'Pesticide') {
+            if (inputAppState.pesticide.landId == 0) {
+              showToast('Select Land');
+              return;
+            }
+            if (inputAppState.pesticide.pesticide.isEmpty) {
+              showToast('Enter Pesticide Name');
+              return;
+            }
+            if (inputAppState.pesticide.dose == 0) {
+              showToast('Enter Proper Dose');
+              return;
+            }
+            if (inputAppState.pesticide.applicationDate == 0) {
+              showToast('Enter Proper Application Date');
+              return;
+            }
+            if (inputAppState.pesticide.harvestIntervalDays == 0) {
+              showToast('Enter Proper Harvest Interval Date');
+              return;
+            }
+            if (inputAppState.pesticide.problem.isEmpty) {
+              showToast('Enter Proper Problem');
+              return;
+            }
             newState.pesticides = [
               ...newState.pesticides,
               inputAppState.pesticide
             ];
+          }
+          if (segment == 'Harvest') {
+            if (inputAppState.crop.landId == 0) {
+              showToast('Select Land');
+              return;
+            }
+            Crop editedCrop = inputAppState.crop;
+            int editedIndex = newState.crops
+                .indexWhere((crop) => crop.cropId == editedCrop.cropId);
+            newState.crops[editedIndex] = editedCrop;
           }
 
           context.read<AppStateBloc>().add(ReloadAppStateEvent(newState));
@@ -329,9 +403,9 @@ class DialogCloseButton extends StatelessWidget {
   }
 }
 
-class TaskDialogTabularForm extends StatelessWidget {
+class AddStuffDialogForm extends StatelessWidget {
   final bool editing;
-  const TaskDialogTabularForm({super.key, required this.editing});
+  const AddStuffDialogForm({super.key, required this.editing});
 
   @override
   Widget build(BuildContext context) {
@@ -352,8 +426,10 @@ class TaskDialogTabularForm extends StatelessWidget {
             return const LandFieldsColumnWidget();
           } else if (selectedSegment == addOptions[1]) {
             return const CropFieldsColumnWidget();
-          } else {
+          } else if (selectedSegment == addOptions[2]) {
             return const PesticideFieldsColumnWidget();
+          } else {
+            return const HarvestDayFieldsColumnWidget();
           }
         }),
       ],
@@ -464,8 +540,10 @@ class LandFieldsColumnWidget extends StatelessWidget {
           child: TitleWithMenuFieldRow(
               title: 'Soil Structure'.i18n(),
               callback: (v) async {
-                print(v);
-                return;
+                Land currentLand = inputCubit.state.land;
+                Land updatedLand = currentLand.apply(
+                    soilStructure: SoilStructure.values.byName(v));
+                inputCubit.setLand(updatedLand);
               },
               options: [
                 {SoilStructure.VeryThin.name: SoilStructure.VeryThin.name},
@@ -482,7 +560,10 @@ class LandFieldsColumnWidget extends StatelessWidget {
           child: TitleWithMenuFieldRow(
             title: 'Soil Texture'.i18n(),
             callback: (v) async {
-              print(v);
+              Land currentLand = inputCubit.state.land;
+              Land updatedLand =
+                  currentLand.apply(soilTexture: SoilTexture.values.byName(v));
+              inputCubit.setLand(updatedLand);
               return;
             },
             options: [
@@ -554,20 +635,144 @@ class CropFieldsColumnWidget extends StatelessWidget {
                 inputCubit.setCrop(updatedCrop);
               })),
       const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
-      Container(
-          margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-          alignment: AlignmentDirectional.centerStart,
-          height: 48,
-          // TODO: Make this pick dates instead of one day
-          child: TitleWithDateFieldRow(
-              title: 'Harvest Day'.i18n(),
-              callback: (v) async {
-                Crop currentCrop = inputCubit.state.crop;
-                Crop updatedCrop = currentCrop.apply(harvestDates: [v]);
-                inputCubit.setCrop(updatedCrop);
-              })),
-      const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
+      /* Container( */
+      /*     margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0), */
+      /*     alignment: AlignmentDirectional.centerStart, */
+      /*     height: 48, */
+      /*     // TODO: Make this pick dates instead of one day */
+      /*     child: TitleWithDateFieldRow( */
+      /*         title: 'Harvest Day'.i18n(), */
+      /*         callback: (v) async { */
+      /*           Crop currentCrop = inputCubit.state.crop; */
+      /*           Crop updatedCrop = currentCrop.apply(harvestDates: [v]); */
+      /*           inputCubit.setCrop(updatedCrop); */
+      /*         })), */
+      /* const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)), */
     ]);
+  }
+}
+
+class HarvestDayFieldsColumnWidget extends StatelessWidget {
+  const HarvestDayFieldsColumnWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    ModalInputCubit inputCubit = context.watch<ModalInputCubit>();
+    AppState appState = context.read<AppStateBloc>().state;
+    List<Map<String, String>> options = appState.lands
+        .map((land) => {land.name: land.landId.toString()})
+        .toList();
+
+    /* inputCubit.setLand(appState.lands[0]); */
+    /* inputCubit.setCrop(findALandCrop(appState, appState.lands[0]) ?? Crop()); */
+    return Column(children: [
+      Container(
+        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+        alignment: AlignmentDirectional.centerStart,
+        height: 48,
+        // TODO: Force accepted to using input filters
+        child: TitleWithMenuFieldRow(
+          title: 'Land'.i18n(),
+          callback: (v) async {
+            Land? selectedLand = getLandById(appState, int.parse(v));
+            Crop? corrospondingCrop = findALandCrop(appState, selectedLand!);
+            if (corrospondingCrop != null) {
+              /* print("HELLO WORLD"); */
+              inputCubit.setLandAndCrop(selectedLand, corrospondingCrop);
+            }
+          },
+          options: options,
+        ),
+      ),
+      const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
+      Container(
+        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+        alignment: AlignmentDirectional.centerStart,
+        height: 48,
+        // TODO: Force accepted to using input filters
+        child: Builder(builder: (context) {
+          ModalInputCubit inputCubit = context.watch<ModalInputCubit>();
+          Crop crop = inputCubit.state.crop;
+          return TitleWithStaticTextRow(
+            title: 'Crop'.i18n(),
+            content: crop.name,
+          );
+        }),
+      ),
+      const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
+      HarvestDatesWidgets(key: UniqueKey()),
+    ]);
+  }
+}
+
+class HarvestDatesWidgets extends StatelessWidget {
+  const HarvestDatesWidgets({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    /* return Builder(builder: (context) { */
+
+    /* }) */
+    ModalInputCubit inputCubit = context.read<ModalInputCubit>();
+    AppState appState = context.read<AppStateBloc>().state;
+    List<int> harvestDates = inputCubit.state.crop.harvestDates!;
+
+    Widget getSingleHarvestWidget(int i) {
+      DateTime harvestTime =
+          DateTime.fromMillisecondsSinceEpoch(harvestDates[i]);
+
+      return Column(
+        children: [
+          Container(
+              margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+              alignment: AlignmentDirectional.centerStart,
+              height: 48,
+              // TODO: Make this pick dates instead of one day
+              child: TitleWithDateFieldRow(
+                  title: 'Harvest Day'.i18n() + ': ${i + 1}',
+                  initialSelectedDate: harvestTime,
+                  callback: (v) async {
+                    Crop currentCrop = inputCubit.state.crop;
+                    List<int> currentCropHarvestDates =
+                        currentCrop.harvestDates!;
+                    currentCropHarvestDates[i] = v;
+                    Crop updatedCrop = currentCrop.apply(
+                        useSameId: true, harvestDates: currentCropHarvestDates);
+                    inputCubit.setCrop(updatedCrop);
+                  })),
+          const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
+        ],
+      );
+    }
+
+    List<Widget> harvestWidgetList = [];
+
+    for (int i = 0; i < harvestDates.length; i++) {
+      harvestWidgetList.add(getSingleHarvestWidget(i));
+    }
+
+    Widget newHarvestDateWidget = Column(
+      children: [
+        Container(
+            margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+            alignment: AlignmentDirectional.centerStart,
+            height: 48,
+            // TODO: Make this pick dates instead of one day
+            child: TitleWithDateFieldRow(
+                title: 'Add'.i18n() + ' ' + 'Harvest Day'.i18n(),
+                callback: (v) async {
+                  Crop currentCrop = inputCubit.state.crop;
+                  List<int> currentCropHarvestDates = currentCrop.harvestDates!;
+                  currentCropHarvestDates.add(v);
+                  Crop updatedCrop = currentCrop.apply(
+                      useSameId: true, harvestDates: currentCropHarvestDates);
+                  inputCubit.setCrop(updatedCrop);
+                })),
+        const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
+      ],
+    );
+
+    return Column(children: [...harvestWidgetList, newHarvestDateWidget]);
   }
 }
 
@@ -581,11 +786,18 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
     List<Map<String, String>> landOptions = appState.lands
         .map((land) => {land.name: land.landId.toString()})
         .toList();
-    List<Map<String, String>> cropOptions = appState.crops
-        .map((crop) => {crop.name: crop.cropId.toString()})
-        .toList();
+    /* List<Map<String, String>> cropOptions = appState.crops */
+    /*     .map((crop) => {crop.name: crop.cropId.toString()}) */
+    /* .toList(); */
     inputCubit.setPesticide(PesticideApplication());
+    inputCubit.setCrop(Crop());
     // TODO: implement build
+    /* Land defaultLand = appState.lands[0]; */
+    /* inputCubit.setLand(defaultLand); */
+    /* Crop? corrospondingCrop = findALandCrop(appState, defaultLand); */
+    /* if (corrospondingCrop != null) { */
+    /*   inputCubit.setLandAndCrop(defaultLand, corrospondingCrop); */
+    /* } */
     return Column(children: [
       Container(
           margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
@@ -593,33 +805,65 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
           height: 48,
           // TODO: Force accepted to using input filters
           child: TitleWithMenuFieldRow(
-              title: 'Land'.i18n(),
-              callback: (v) async {
+            title: 'Land'.i18n(),
+            callback: (v) async {
+              Land? selectedLand = getLandById(appState, int.parse(v));
+              Crop? corrospondingCrop = findALandCrop(appState, selectedLand!);
+              if (corrospondingCrop != null) {
+                inputCubit.setLandAndCrop(selectedLand, corrospondingCrop);
                 PesticideApplication currentPesticide =
                     inputCubit.state.pesticide;
-                PesticideApplication updatedPesticide =
-                    currentPesticide.apply(landId: int.parse(v));
+                PesticideApplication updatedPesticide = currentPesticide.apply(
+                    cropId: corrospondingCrop.cropId,
+                    landId: selectedLand.landId);
                 inputCubit.setPesticide(updatedPesticide);
-              },
-              options: landOptions)),
+              }
+            },
+            options: landOptions,
+          )),
+      /* child: TitleWithMenuFieldRow( */
+      /*     title: 'Land'.i18n(), */
+      /*     callback: (v) async { */
+      /*       PesticideApplication currentPesticide = */
+      /*           inputCubit.state.pesticide; */
+      /*       PesticideApplication updatedPesticide = */
+      /*           currentPesticide.apply(landId: int.parse(v)); */
+      /*       inputCubit.setPesticide(updatedPesticide); */
+      /*     }, */
+      /*     options: landOptions)), */
       const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
       Container(
-          margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-          alignment: AlignmentDirectional.centerStart,
-          height: 48,
-          // TODO: Force accepted to using input filters
-          child: TitleWithMenuFieldRow(
+        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+        alignment: AlignmentDirectional.centerStart,
+        height: 48,
+        // TODO: Force accepted to using input filters
+        child: Builder(builder: (context) {
+          ModalInputCubit inputCubit = context.watch<ModalInputCubit>();
+          Crop crop = inputCubit.state.crop;
+          return TitleWithStaticTextRow(
             title: 'Crop'.i18n(),
-            callback: (v) async {
-              PesticideApplication currentPesticide =
-                  inputCubit.state.pesticide;
-              PesticideApplication updatedPesticide =
-                  currentPesticide.apply(cropId: int.parse(v));
-              inputCubit.setPesticide(updatedPesticide);
-            },
-            options: cropOptions,
-          )),
+            content: crop.name,
+          );
+        }),
+      ),
       const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
+      /* Container( */
+      /*     margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0), */
+      /*     alignment: AlignmentDirectional.centerStart, */
+      /*     height: 48, */
+      /*     // TODO: Force accepted to using input filters */
+      /*     child: TitleWithMenuFieldRow( */
+      /*       title: 'Crop'.i18n(), */
+      /*       callback: (v) async { */
+      /*         PesticideApplication currentPesticide = */
+      /*             inputCubit.state.pesticide; */
+      /*         PesticideApplication updatedPesticide = */
+      /*             currentPesticide.apply(cropId: int.parse(v)); */
+      /*         inputCubit.setPesticide(updatedPesticide); */
+      /*       }, */
+      /*       options: cropOptions, */
+      /*     )), */
+      /* const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)), */
       Container(
           margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
           alignment: AlignmentDirectional.centerStart,
@@ -627,7 +871,13 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
           // TODO: Force accepted to using input filters
           child: TitleWithMenuFieldRow(
               title: 'Problem'.i18n(),
-              callback: (v) async {},
+              callback: (v) async {
+                PesticideApplication currentPesticide =
+                    inputCubit.state.pesticide;
+                PesticideApplication updatedPesticide =
+                    currentPesticide.apply(problem: v);
+                inputCubit.setPesticide(updatedPesticide);
+              },
               options: [
                 {
                   PesticideProblems.ProblemA.name:
@@ -732,6 +982,8 @@ class SelectWhichToAdd extends StatelessWidget {
                 DropdownMenuEntry(value: addOptions[1], label: 'Crop'.i18n()),
                 DropdownMenuEntry(
                     value: addOptions[2], label: 'Pesticide'.i18n()),
+                DropdownMenuEntry(
+                    value: addOptions[3], label: 'Harvest'.i18n()),
               ],
               onSelected: (v) {
                 print(v);
@@ -843,7 +1095,7 @@ class TitleWithMenuFieldRow extends StatelessWidget {
               inputDecorationTheme: dropdownMenuTheme,
               /* menuHeight: 36, */
               /*   menuStyle: MenuStyle(padding: EdgeInsets.all(4)), */
-              initialSelection: dropdownMenuEntries[0].value,
+              /* initialSelection: dropdownMenuEntries[0].value, */
               dropdownMenuEntries: dropdownMenuEntries,
               onSelected: (v) {
                 print(v);
@@ -863,18 +1115,26 @@ class TitleWithMenuFieldRow extends StatelessWidget {
 class TitleWithDateFieldRow extends StatefulWidget {
   final String title;
   final intCallback callback;
+  final DateTime? initialSelectedDate;
   const TitleWithDateFieldRow({
     super.key,
     required this.title,
     required this.callback,
+    this.initialSelectedDate,
   });
 
   @override
-  State<TitleWithDateFieldRow> createState() => _TitleWithDateFieldRowState();
+  State<TitleWithDateFieldRow> createState() =>
+      _TitleWithDateFieldRowState(initialSelectedDate);
 }
 
 class _TitleWithDateFieldRowState extends State<TitleWithDateFieldRow> {
   DateTime? selectedDate;
+
+  _TitleWithDateFieldRowState(DateTime? initialSelectedDate) {
+    selectedDate = initialSelectedDate;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(textBaseline: TextBaseline.alphabetic, children: [
@@ -901,6 +1161,26 @@ class _TitleWithDateFieldRowState extends State<TitleWithDateFieldRow> {
             ),
           );
         }),
+      )
+    ]);
+  }
+}
+
+class TitleWithStaticTextRow extends StatelessWidget {
+  final String title;
+  final String content;
+  const TitleWithStaticTextRow({
+    super.key,
+    required this.title,
+    required this.content,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(textBaseline: TextBaseline.alphabetic, children: [
+      DialogFormRowTitles(title: title),
+      Expanded(
+        child: Text(content),
       )
     ]);
   }
