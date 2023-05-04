@@ -13,6 +13,88 @@ import '../model/models.dart';
 import '../view/add_fab.dart';
 import '../view/common_widgets.dart';
 
+/* class DashboardPage extends StatelessWidget { */
+/*   const DashboardPage({super.key}); */
+
+/*   @override */
+/*   Widget build(BuildContext context) { */
+/*     return CupertinoPageScaffold( */
+/*       backgroundColor: Colors.white, */
+/*       child: SafeArea( */
+/*           child: NestedScrollView( */
+/*               headerSliverBuilder: (context, innerBoxIsScrolled) { */
+/*                 return [ */
+/*                   CupertinoSliverNavigationBar( */
+/*                     stretch: true, */
+/*                     largeTitle: Text('Dashboard'.i18n()), */
+/*                   ) */
+/*                 ]; */
+/*               }, */
+/*               body: Container( */
+/*                 color: Colors.white, */
+/*                 constraints: const BoxConstraints.expand(), */
+/*                 child: const DashboardPageContent(), */
+/*               ))), */
+/*     ); */
+/*   } */
+/* } */
+class ReportPage extends StatelessWidget {
+  const ReportPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      backgroundColor: Colors.white,
+      child: SafeArea(
+          child: NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
+                return [
+                  CupertinoSliverNavigationBar(
+                    stretch: true,
+                    largeTitle: Text('Report'.i18n()),
+                  )
+                ];
+              },
+              body: Container(
+                color: Colors.white,
+                constraints: const BoxConstraints.expand(),
+                child: const ReportPageWidget(),
+              ))),
+    );
+  }
+}
+
+/* class GoBackToSheetsTabButton extends StatelessWidget { */
+/*   const GoBackToSheetsTabButton({ */
+/*     super.key, */
+/*   }); */
+
+/*   @override */
+/*   Widget build(BuildContext context) { */
+/*     return GestureDetector( */
+/*       onTap: () async { */
+/*         GoRouter.of(context).go('/dashboard'); */
+/*       }, */
+/*       child: Row(children: [ */
+/*         Container( */
+/*           child: Icon( */
+/*             Icons.arrow_back_ios_new, */
+/*             size: 24, */
+/*             color: CupertinoTheme.of(context).primaryColor, */
+/*           ), */
+/*         ), */
+/*         Flexible( */
+/*           child: Text('Dashboard'.i18n(), */
+/*               style: TextStyle( */
+/*                 fontSize: 18, */
+/*                 color: CupertinoTheme.of(context).primaryColor, */
+/*               )), */
+/*         ), */
+/*       ]), */
+/*     ); */
+/*   } */
+/* } */
+
 class ReportPageWidget extends StatelessWidget {
   const ReportPageWidget({
     super.key,
@@ -31,23 +113,23 @@ class ReportPageWidget extends StatelessWidget {
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(
-                  padding: const EdgeInsetsDirectional.all(4),
-                  child: SegmentDetailTitleRowWidget(
-                    title: 'Report'.i18n(),
-                    color: 0xFFb8b8b8,
-                  ),
-                ),
-                const Divider(
-                  thickness: 2,
-                  color: Color(0xFFE4E4E4),
-                  height: 12,
-                ),
+                /* Container( */
+                /*   padding: const EdgeInsetsDirectional.all(4), */
+                /*   child: SegmentDetailTitleRowWidget( */
+                /*     title: 'Report'.i18n(), */
+                /*     color: 0xFFb8b8b8, */
+                /*   ), */
+                /* ), */
+                /* const Divider( */
+                /*   thickness: 2, */
+                /*   color: Color(0xFFE4E4E4), */
+                /*   height: 12, */
+                /* ), */
                 Expanded(
                   child: InteractiveViewer(
                       constrained: false,

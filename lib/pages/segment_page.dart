@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:localization/localization.dart';
 import 'package:logger/logger.dart';
 import 'package:pesticide/pages/crop_page.dart';
 import 'package:pesticide/pages/land_page.dart';
@@ -29,9 +30,10 @@ class SegmentDetailPage extends StatelessWidget {
       pageWidget = const PesticidePageWidget();
     } else if (page == 'unit_conversion') {
       pageWidget = const UnitConversionPageWidget();
-    } else if (page == 'report') {
-      pageWidget = const ReportPageWidget();
     }
+    /* else if (page == 'report') { */
+    /*   pageWidget = const ReportPageWidget(); */
+    /* } */
 
     return CupertinoPageScaffold(
         navigationBar: const CupertinoNavigationBar(
@@ -69,7 +71,7 @@ class GoBackToSheetsTabButton extends StatelessWidget {
           ),
         ),
         Flexible(
-          child: Text('Dashboard',
+          child: Text('Dashboard'.i18n(),
               style: TextStyle(
                 fontSize: 18,
                 color: CupertinoTheme.of(context).primaryColor,

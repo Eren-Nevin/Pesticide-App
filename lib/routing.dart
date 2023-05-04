@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pesticide/pages/report_page.dart';
 import 'package:pesticide/pages/segment_page.dart';
 import 'package:pesticide/repository.dart';
 
@@ -78,7 +79,7 @@ GoRouter createAppRouter(bool isLoggedIn) {
                 builder: (context, state) {
                   return MultiBlocProvider(
                       providers: GetIt.I<Repository>().getBlocProviders(),
-                      child: const SegmentDetailPage(page: 'report'));
+                      child: const ReportPage());
                 }),
           ]),
     ],
