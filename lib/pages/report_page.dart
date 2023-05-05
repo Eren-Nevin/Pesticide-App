@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:get_it/get_it.dart';
 import 'package:localization/localization.dart';
 import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pesticide/blocs/app_state_bloc.dart';
 import 'package:pesticide/utilities/utils.dart';
 
@@ -12,6 +15,8 @@ import '../model/app_state.dart';
 import '../model/models.dart';
 import '../view/add_fab.dart';
 import '../view/common_widgets.dart';
+
+import 'package:share_plus/share_plus.dart';
 
 /* class DashboardPage extends StatelessWidget { */
 /*   const DashboardPage({super.key}); */
@@ -52,6 +57,34 @@ class ReportPage extends StatelessWidget {
                   CupertinoSliverNavigationBar(
                     stretch: true,
                     largeTitle: Text('Report'.i18n()),
+                    trailing: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        child: Container(
+                            height: 64,
+                            alignment: AlignmentDirectional.bottomEnd,
+                            padding: const EdgeInsetsDirectional.symmetric(
+                                horizontal: 8),
+                            child: Text(
+                              "Share",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(
+                                    color: Colors.green,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            )),
+                        onTap: () async {
+                          String htmlReport = generateHTMLReport(
+                              context.read<AppStateBloc>().state);
+                          Directory directory =
+                              await getApplicationDocumentsDirectory();
+                          await writeReportToFile(htmlReport);
+                          Share.shareXFiles(
+                            [XFile('${directory.path}/report.html')],
+                          );
+                        }),
                   )
                 ];
               },
@@ -63,37 +96,6 @@ class ReportPage extends StatelessWidget {
     );
   }
 }
-
-/* class GoBackToSheetsTabButton extends StatelessWidget { */
-/*   const GoBackToSheetsTabButton({ */
-/*     super.key, */
-/*   }); */
-
-/*   @override */
-/*   Widget build(BuildContext context) { */
-/*     return GestureDetector( */
-/*       onTap: () async { */
-/*         GoRouter.of(context).go('/dashboard'); */
-/*       }, */
-/*       child: Row(children: [ */
-/*         Container( */
-/*           child: Icon( */
-/*             Icons.arrow_back_ios_new, */
-/*             size: 24, */
-/*             color: CupertinoTheme.of(context).primaryColor, */
-/*           ), */
-/*         ), */
-/*         Flexible( */
-/*           child: Text('Dashboard'.i18n(), */
-/*               style: TextStyle( */
-/*                 fontSize: 18, */
-/*                 color: CupertinoTheme.of(context).primaryColor, */
-/*               )), */
-/*         ), */
-/*       ]), */
-/*     ); */
-/*   } */
-/* } */
 
 class ReportPageWidget extends StatelessWidget {
   const ReportPageWidget({
@@ -109,6 +111,8 @@ class ReportPageWidget extends StatelessWidget {
 
     AppStateBloc appStateBloc = context.watch<AppStateBloc>();
 
+    String htmlReport = generateHTMLReport(appStateBloc.state);
+
     return SafeArea(
       child: Stack(
         children: [
@@ -118,23 +122,11 @@ class ReportPageWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                /* Container( */
-                /*   padding: const EdgeInsetsDirectional.all(4), */
-                /*   child: SegmentDetailTitleRowWidget( */
-                /*     title: 'Report'.i18n(), */
-                /*     color: 0xFFb8b8b8, */
-                /*   ), */
-                /* ), */
-                /* const Divider( */
-                /*   thickness: 2, */
-                /*   color: Color(0xFFE4E4E4), */
-                /*   height: 12, */
-                /* ), */
                 Expanded(
                   child: InteractiveViewer(
                       constrained: false,
                       child: Html(
-                        data: generateReportHTML(appStateBloc.state),
+                        data: htmlReport,
                         shrinkWrap: true,
                       )),
                 ),
@@ -145,6 +137,12 @@ class ReportPageWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> writeReportToFile(String reportHTML) async {
+  final Directory directory = await getApplicationDocumentsDirectory();
+  final File file = File('${directory.path}/report.html');
+  await file.writeAsString(reportHTML, flush: true);
 }
 
 String generateSingleTD(int rowSpan, String content) {
@@ -159,7 +157,7 @@ String generateSingleTD(int rowSpan, String content) {
   ''';
 }
 
-String generateReportHTML(AppState appState) {
+String generateHTMLReport(AppState appState) {
   String generateLandReportsHTML(AppState appState) {
     String generateSingleLandHTML(AppState appState, Land land) {
       Crop? crop = findALandCrop(appState, land);

@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:localization/localization.dart';
 import 'package:logger/logger.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:location/location.dart';
 
 /* import 'package:tab_container/tab_container.dart'; */
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -442,7 +443,10 @@ class LandFieldsColumnWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GetIt.I<Logger>().e('Rebuilding');
     ModalInputCubit inputCubit = context.read<ModalInputCubit>();
+    TextEditingController lattitudeController = TextEditingController();
+    TextEditingController longitudeController = TextEditingController();
     inputCubit.setLand(Land());
     // TODO: implement build
     return Column(children: [
@@ -451,15 +455,69 @@ class LandFieldsColumnWidget extends StatelessWidget {
           alignment: AlignmentDirectional.centerStart,
           height: 48,
           // TODO: Force accepted to using input filters
-          child: TitleWithTextFieldRow(
-              title: 'Name'.i18n(),
-              editing: false,
-              numberOnly: false,
-              callback: (v) async {
-                Land currentLand = inputCubit.state.land;
-                Land updatedLand = currentLand.apply(name: v);
-                inputCubit.setLand(updatedLand);
-              })),
+          child: Row(
+            children: [
+              Expanded(
+                child: TitleWithTextFieldRow(
+                    title: 'Name'.i18n(),
+                    editing: false,
+                    numberOnly: false,
+                    callback: (v) async {
+                      Land currentLand = inputCubit.state.land;
+                      Land updatedLand = currentLand.apply(name: v);
+                      inputCubit.setLand(updatedLand);
+                    }),
+              ),
+              CupertinoButton.filled(
+                padding: EdgeInsets.all(4),
+                child: Container(
+                    alignment: AlignmentDirectional.center,
+                    width: 96,
+                    height: 36,
+                    child: Text("Get Location")),
+                onPressed: () async {
+                  Location location = Location();
+
+                  bool _serviceEnabled;
+                  PermissionStatus _permissionGranted;
+                  LocationData _locationData;
+
+                  _serviceEnabled = await location.serviceEnabled();
+                  if (!_serviceEnabled) {
+                    _serviceEnabled = await location.requestService();
+                    if (!_serviceEnabled) {
+                      return;
+                    }
+                  }
+
+                  _permissionGranted = await location.hasPermission();
+                  if (_permissionGranted == PermissionStatus.denied) {
+                    _permissionGranted = await location.requestPermission();
+                    if (_permissionGranted != PermissionStatus.granted) {
+                      return;
+                    }
+                  }
+
+                  _locationData = await location.getLocation();
+
+                  final lattitude = _locationData.latitude ?? 0;
+                  final longitude = _locationData.longitude ?? 0;
+
+                  GetIt.I<Logger>().w(lattitude);
+
+                  lattitudeController.value =
+                      TextEditingValue(text: lattitude.toString());
+                  longitudeController.value =
+                      TextEditingValue(text: longitude.toString());
+
+                  Land currentLand = inputCubit.state.land;
+                  Land updatedLand = currentLand.apply(
+                      lattitude: lattitude, longitude: longitude);
+                  inputCubit.setLand(updatedLand);
+                },
+              ),
+            ],
+          )),
       const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
       Container(
           margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
@@ -468,6 +526,7 @@ class LandFieldsColumnWidget extends StatelessWidget {
           // TODO: Force accepted to using input filters
           child: TitleWithTextFieldRow(
               title: 'Latitude'.i18n(),
+              controller: lattitudeController,
               editing: false,
               numberOnly: true,
               callback: (v) async {
@@ -483,6 +542,7 @@ class LandFieldsColumnWidget extends StatelessWidget {
           height: 48,
           child: TitleWithTextFieldRow(
               title: 'Longitude'.i18n(),
+              controller: longitudeController,
               editing: false,
               numberOnly: true,
               callback: (v) async {
@@ -1007,11 +1067,13 @@ class TitleWithTextFieldRow extends StatelessWidget {
   final bool editing;
   final String title;
   final bool numberOnly;
+  final TextEditingController? controller;
   final StringCallback callback;
   /* final void Function(String); */
   const TitleWithTextFieldRow(
       {super.key,
       this.numberOnly = false,
+      this.controller,
       required this.editing,
       required this.title,
       required this.callback});
@@ -1027,6 +1089,7 @@ class TitleWithTextFieldRow extends StatelessWidget {
             child: Builder(builder: (context) {
               return numberOnly
                   ? CupertinoTextField(
+                      controller: controller,
                       keyboardType: TextInputType.number,
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
@@ -1047,6 +1110,7 @@ class TitleWithTextFieldRow extends StatelessWidget {
                       ),
                       onChanged: callback)
                   : CupertinoTextField(
+                      controller: controller,
                       decoration: const BoxDecoration(),
                       padding: EdgeInsets.zero,
                       style: const TextStyle(

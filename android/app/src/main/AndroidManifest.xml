@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.pesticide">
    <application
-        android:label="pesticide"
+        android:label="COPEFA - Pesticide"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
