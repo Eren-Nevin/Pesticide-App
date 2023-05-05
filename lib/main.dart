@@ -53,7 +53,7 @@ void main() async {
   GetIt.I<Logger>().i("App Start");
   await initializeRepository();
   await createAndAddGoRouterToGetIt();
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  /* final SharedPreferences prefs = await SharedPreferences.getInstance(); */
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -63,8 +63,9 @@ void main() async {
 
   setTestData();
   runApp(
-    RestartWidget(child: MyApp(prefs)),
-  );
+      /* RestartWidget(child: MyApp(prefs)), */
+      BlocProvider.value(
+          value: GetIt.I<Repository>().getAppStateBloc(), child: MyApp()));
 }
 
 CupertinoThemeData appTheme = getMainTheme();
@@ -152,21 +153,24 @@ void setTestData() {
 class MyApp extends StatelessWidget {
   MyLifecycleObserver observer = MyLifecycleObserver();
 
-  SharedPreferences prefs;
-
   Locale _locale = const Locale.fromSubtags(languageCode: 'en_US');
 
-  MyApp(this.prefs);
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     LocalJsonLocalization.delegate.directories = ['lib/i18n'];
-    final String localeString = prefs.getString('locale') ?? 'en';
+
+    final String localeString = context
+        .select<AppStateBloc, String>((value) => value.state.chosenLocale);
+
     _locale = Locale.fromSubtags(languageCode: localeString);
+    GetIt.I<Logger>().w(_locale);
     MyLifecycleObserver observer = MyLifecycleObserver();
     observer.start();
 
     return CupertinoApp.router(
+      key: UniqueKey(),
       supportedLocales: const [
         Locale('en'),
         Locale('de'),
@@ -240,35 +244,5 @@ class MyLifecycleObserver with WidgetsBindingObserver {
         GetIt.I<Logger>().i("App Inactive");
         break;
     }
-  }
-}
-
-class RestartWidget extends StatefulWidget {
-  final Widget child;
-  const RestartWidget({super.key, required this.child});
-
-  static void restartApp(BuildContext context) {
-    context.findAncestorStateOfType<_RestartWidgetState>()?.restartApp();
-  }
-
-  @override
-  _RestartWidgetState createState() => _RestartWidgetState();
-}
-
-class _RestartWidgetState extends State<RestartWidget> {
-  Key key = UniqueKey();
-
-  void restartApp() {
-    setState(() {
-      key = UniqueKey();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return KeyedSubtree(
-      key: key,
-      child: widget.child,
-    );
   }
 }

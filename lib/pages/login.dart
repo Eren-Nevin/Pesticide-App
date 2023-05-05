@@ -164,14 +164,17 @@ class LoginPage extends StatelessWidget {
       body: Builder(builder: (context) {
         UserLoginPageInputCubit inputCubit = UserLoginPageInputCubit();
         IsLoggingInCubit loggingInCubit = IsLoggingInCubit();
-        return MultiBlocProvider(providers: [
-          BlocProvider.value(
-            value: loggingInCubit,
-          ),
-          BlocProvider.value(
-            value: inputCubit,
-          ),
-        ], child: SafeArea(child: LoginPageContents(title: 'CoPeFa')));
+        return MultiBlocProvider(
+            providers: [
+              BlocProvider.value(
+                value: loggingInCubit,
+              ),
+              BlocProvider.value(
+                value: inputCubit,
+              ),
+            ],
+            child:
+                SafeArea(child: LoginPageContents(title: 'CoPeFa Pesticide')));
       }),
     );
   }
@@ -407,7 +410,8 @@ class SelectLanguageButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    String country = language == 'English' ? 'us' : languageCodes[language]!;
+
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         height: 64,
@@ -420,13 +424,10 @@ class SelectLanguageButton extends StatelessWidget {
                 context.read<AppStateBloc>().add(ChoseLocalEvent(
                       chosenLocale: languageCode,
                     ));
-                await setLocaleAndRestart(context, languageCode);
               } else {
                 GetIt.I<Logger>().e("""$language Button Clicked, But
                 country code not found""");
               }
-              /* context.read<LocaleCubit>().setLocale(Locale('de')); */
-              /* context.read<SigningUpSelectLanguageCubit>().languageSelected(); */
             }),
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.black,
@@ -442,65 +443,15 @@ class SelectLanguageButton extends StatelessWidget {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 8),
                 child: Flag.fromString(
-                  languageCodes[language]!,
+                  country,
                   height: 48,
                   width: 48,
-                  /* borderRadius: 12, */
                 ),
               ),
               Expanded(child: Text(language)),
             ])));
   }
 }
-/* class SignupImage extends StatefulWidget { */
-/*   const SignupImage({super.key}); */
-
-/*   @override */
-/*   State<SignupImage> createState() => _SignupImageState(); */
-/* } */
-
-/* class _SignupImageState extends State<SignupImage> { */
-/*   XFile? _image; */
-
-/*   @override */
-/*   Widget build(BuildContext context) { */
-/*     return GestureDetector( */
-/*       onTap: () async { */
-/*         final ImagePicker picker = ImagePicker(); */
-
-/*         final XFile? image = */
-/*             await picker.pickImage(source: ImageSource.gallery); */
-
-/*         if (image != null) { */
-/*           context */
-/*               .read<UserLoginPageInputCubit>() */
-/*               .setPhotoFile(await image.readAsBytes()); */
-
-/*           setState(() { */
-/*             _image = image; */
-/*           }); */
-/*         } else { */
-/*           GetIt.I<Logger>().e("Error selecting photo"); */
-/*         } */
-/*       }, */
-/*       child: Container( */
-/*         height: 100, */
-/*         width: 100, */
-/*         margin: const EdgeInsets.only(bottom: 48), */
-/*         child: CircleAvatarWithBorder( */
-/*             borderThickness: 2.0, */
-/*             borderColor: Color(loginButtonColor), */
-/*             overalRadius: 50, */
-/*             imageProvider: _image != null */
-/*                 ? Image.file( */
-/*                     File(_image!.path), */
-/*                     /1* width: 200, height: 200, fit: BoxFit.fitHeight *1/ */
-/*                   ).image */
-/*                 : Image.asset('assets/profile_pic_silhouette.png').image), */
-/*       ), */
-/*     ); */
-/*   } */
-/* } */
 
 class SignupFields extends StatelessWidget {
   const SignupFields({super.key});
