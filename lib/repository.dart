@@ -15,6 +15,8 @@ import 'package:pesticide/blocs/app_state_bloc.dart';
 import 'package:pesticide/blocs/authentication_bloc.dart';
 import 'package:pesticide/pages/report_page.dart';
 
+import 'model/models.dart';
+
 class SigningUpSelectLanguageCubit extends Cubit<bool> {
   SigningUpSelectLanguageCubit() : super(true);
 
@@ -150,55 +152,130 @@ class Repository {
     _authenticationBlocSubscription =
         _authenticationBloc.stream.listen((auth) async {
       await _saveAuthStateToDatabase(auth);
+      /* int uid = auth.loggedInUserGlobalId; */
+      /* if (auth.loggedIn) { */
+      /*   AppState appState = _appStateBloc.state; */
+      /*   await sendStateToServer(uid, appState); */
+      /*   await sendReportToServer(uid, appState); */
+      /* } */
     });
 
     _appStateBlocSubscription = _appStateBloc.stream.listen((appState) async {
       await _saveAppStateToDatabase(appState);
-      Dio client = Dio();
-
       int uid = _authenticationBloc.state.loggedInUserGlobalId;
 
-      dynamic sent_data = {
-        'payload': {
-          'uid': uid,
-          'app_state': appState.toJson(),
-        }
-      };
+      await sendStateToServer(uid, appState);
 
-      GetIt.I<Logger>().w("Sending state to server $sent_data");
-      Response response = await client.post("$serverAddress/api/save_state",
-          data: sent_data,
-          options: Options().copyWith(responseType: ResponseType.json));
-
-      GetIt.I<Logger>().d("Returned response from server rest api $response");
-
-      GetIt.I<Logger>().w(response.data);
-
-      Response reportResponse =
-          await client.post("$serverAddress/api/save_report",
-              queryParameters: {'uid': uid},
-              data: generateHTMLReport(appState),
-              options: Options().copyWith(
-                contentType: 'text/html',
-              ));
-
-      GetIt.I<Logger>().w(reportResponse.data);
+      await sendReportToServer(uid, appState);
 
       /* // TODO: Make  proper  success and error handling */
-      /* if (response.data['uid'] != 0) { */
-      /*   AuthenticationState newState = AuthenticationState.getEmptyAuthState(); */
-      /*   newState.loggedInUserGlobalId = response.data['uid']; */
-      /*   newState.name = response.data['name']; */
-      /*   newState.email = response.data['email']; */
-      /*   newState.username = response.data['username']; */
-      /*   newState.password = response.data['password']; */
-      /*   newState.occupation = response.data['occupation']; */
-      /*   newState.education = response.data['education']; */
-      /*   newState.country = response.data['country']; */
-      /*   newState.loggedIn = true; */
-
-      /*   emit(newState); */
     });
+  }
+
+  Future<void> sendStateToServer(int uid, AppState appState) async {
+    Dio client = Dio();
+    dynamic sentData = {
+      'payload': {
+        'uid': uid,
+        'app_state': appState.toJson(),
+      }
+    };
+
+    GetIt.I<Logger>().w("Sending state to server $sentData");
+    Response response = await client.post("$serverAddress/api/save_state",
+        data: sentData,
+        options: Options().copyWith(responseType: ResponseType.json));
+
+    GetIt.I<Logger>().d("Returned response from server rest api $response");
+
+    GetIt.I<Logger>().w(response.data);
+    client.close();
+  }
+
+  Future<void> sendReportToServer(int uid, AppState appState) async {
+    Dio client = Dio();
+    Response reportResponse =
+        await client.post("$serverAddress/api/save_report",
+            queryParameters: {'uid': uid},
+            data: generateHTMLReport(appState),
+            options: Options().copyWith(
+              contentType: 'text/html',
+            ));
+
+    client.close();
+  }
+
+  Future<void> getStateFromServer(int uid) async {
+    GetIt.I<Logger>().w("Getting State from Server");
+    Dio client = Dio();
+    dynamic sentData = {
+      'payload': {
+        'uid': uid,
+      }
+    };
+    Response reportResponse = await client.post("$serverAddress/api/load_state",
+        data: sentData,
+        options: Options().copyWith(responseType: ResponseType.json));
+
+    Map<String, dynamic> appStateJson = reportResponse.data['app_state'];
+
+    List<Land> lands = [];
+    List<Crop> crops = [];
+    List<PesticideApplication> pesticides = [];
+
+    for (dynamic landRaw in appStateJson['lands']) {
+      String soilStructure = "${landRaw['soilStructure']}".split('.')[1];
+      String soilTexture = "${landRaw['soilTexture']}".split('.')[1];
+      print(soilStructure);
+      print(soilTexture);
+      Land land = Land(
+        name: landRaw['name'],
+        landId: landRaw['landId'],
+        lattitude: landRaw['lattitude'],
+        longitude: landRaw['longitude'],
+        area: landRaw['area'],
+        slope: landRaw['slope'],
+        location: landRaw['location'],
+        structure: SoilStructure.values.byName(soilStructure),
+        texture: SoilTexture.values.byName(soilTexture),
+      );
+      lands.add(land);
+    }
+
+    for (dynamic cropRaw in appStateJson['crops']) {
+      Crop crop = Crop(
+        name: cropRaw['name'],
+        landId: cropRaw['landId'],
+        cropId: cropRaw['cropId'],
+        plantingDate: cropRaw['planting_date'],
+        harvestDates: List<int>.from(cropRaw['harvest_dates']),
+      );
+      crops.add(crop);
+    }
+
+    for (dynamic pesticideRaw in appStateJson['pesticides']) {
+      PesticideApplication pesticide = PesticideApplication(
+        pesticide: pesticideRaw['pesticide'],
+        pesticideId: pesticideRaw['pesticide_id'],
+        landId: pesticideRaw['land_id'],
+        cropId: pesticideRaw['crop_id'],
+        dose: pesticideRaw['dose'],
+        problem: pesticideRaw['problem'],
+        applicationDate: pesticideRaw['application_date'],
+        harvestIntervalDays: pesticideRaw['harvest_interval_days'],
+      );
+      pesticides.add(pesticide);
+    }
+
+    AppState newState = AppState.clone(_appStateBloc.state);
+    newState.hasChosenLocale = appStateJson['has_chosen_locale'];
+    newState.chosenLocale = appStateJson['chosen_locale'];
+    newState.lands = lands;
+    newState.crops = crops;
+    newState.pesticides = pesticides;
+
+    _appStateBloc.add(ReloadAppStateEvent(newState));
+    client.close();
   }
 
   Future<void> _saveAuthStateToDatabase(AuthenticationState auth) async {

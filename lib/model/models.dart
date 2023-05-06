@@ -133,7 +133,7 @@ class Land {
         'area': area,
         'slope': slope,
         'location': location,
-        'soil_texture': texture.toString(),
+        'soilTexture': texture.toString(),
         'soilStructure': structure.toString(),
       };
 }

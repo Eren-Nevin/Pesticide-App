@@ -16,6 +16,7 @@ import 'package:pesticide/blocs/authentication_bloc.dart';
 import 'package:pesticide/blocs/events/app_state_events.dart';
 import 'package:pesticide/blocs/events/authentication_events.dart';
 import 'package:pesticide/model/authentication_state.dart';
+import 'package:pesticide/repository.dart';
 import 'package:pesticide/utilities/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -691,6 +692,7 @@ class ActionButton extends StatelessWidget {
                       username: loginPageInput.username,
                       password: loginPageInput.password,
                     ));
+
                 /* } else if (response.result == LoginResult.UserNotFound) { */
                 /*   showLoginPageToast(fToast, 'Email Not Found'); */
                 /* } else if (response.result == LoginResult.WrongPassword) { */

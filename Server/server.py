@@ -142,7 +142,8 @@ class Server:
             uid = payload.get('uid', None)
             with open(f'./data/app_state_{uid}.json') as f:
                 app_state_dict = standard_json.load(f)
-                return json(app_state_dict)
+                return json({'status': 'OK', 'app_state': app_state_dict})
+        return json({'status': 'Failed'})
 
     async def show_report(self, request: Request):
         if uid := int(request.get_args().get('uid')):

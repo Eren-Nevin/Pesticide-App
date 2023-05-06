@@ -12,6 +12,7 @@ import 'package:pesticide/model/authentication_state.dart';
 // This refers to a task or task sheet that is committed by user.
 
 import 'package:dio/dio.dart';
+import 'package:pesticide/repository.dart';
 
 // TODO: Add error handling
 
@@ -50,6 +51,11 @@ class AuthenticationBloc
         newState.education = response.data['education'];
         newState.country = response.data['country'];
         newState.loggedIn = true;
+
+        if (newState.loggedIn) {
+          await GetIt.I<Repository>()
+              .getStateFromServer(newState.loggedInUserGlobalId);
+        }
 
         emit(newState);
       }
