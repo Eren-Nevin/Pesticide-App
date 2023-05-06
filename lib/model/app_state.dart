@@ -12,8 +12,8 @@ class AppState {
   bool hasChosenLocale = false;
   String chosenLocale = '';
 
-  List<Land> lands = [];
   List<Crop> crops = [];
+  List<Land> lands = [];
   List<PesticideApplication> pesticides = [];
 
   AppState(
@@ -65,4 +65,12 @@ class AppState {
         crops,
         pesticides,
       );
+
+  Map<String, dynamic> toJson() => {
+        'has_chosen_locale': hasChosenLocale,
+        'chosen_locale': chosenLocale,
+        'lands': lands,
+        'crops': crops,
+        'pesticides': pesticides,
+      };
 }

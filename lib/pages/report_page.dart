@@ -18,6 +18,7 @@ import '../view/common_widgets.dart';
 
 import 'package:share_plus/share_plus.dart';
 
+// TODO: Add "Pesticide"
 /* class DashboardPage extends StatelessWidget { */
 /*   const DashboardPage({super.key}); */
 
@@ -278,7 +279,7 @@ $otherPesticideRows
   background:#92D050;padding:0in 5.4pt 0in 5.4pt">
   <p 
   style="margin-bottom:0in;text-align:center;line-height:normal;">
-  Parcel
+  ${"Land".i18n()}
   </p>
   </td>
 <td rowspan="2" style="border-collapse: collapse; border:solid black 1.0pt;text-align: center; vertical-align: middle;
@@ -331,7 +332,7 @@ $otherPesticideRows
   background:#92D050;padding:0in 5.4pt 0in 5.4pt;">
   <p align="center"
   style="margin-bottom:0in;text-align:center;line-height:normal;">
-    Spraying Date
+    ${"Application Date".i18n()}
   </p>
   </td>
   </tr>

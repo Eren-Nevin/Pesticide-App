@@ -124,6 +124,18 @@ class Land {
     soilStructure: $structure, soilTexture: $texture
   """;
   }
+
+  Map<String, dynamic> toJson() => {
+        'landId': landId,
+        'name': name,
+        'lattitude': lattitude,
+        'longitude': longitude,
+        'area': area,
+        'slope': slope,
+        'location': location,
+        'soil_texture': texture.toString(),
+        'soilStructure': structure.toString(),
+      };
 }
 
 List<String> knownCropNames = [
@@ -171,6 +183,14 @@ class Crop {
     );
     return newCrop;
   }
+
+  Map<String, dynamic> toJson() => {
+        'cropId': cropId,
+        'landId': landId,
+        'name': name,
+        'planting_date': plantingDate,
+        'harvest_dates': harvestDates,
+      };
 
   @override
   String toString() {
@@ -230,6 +250,16 @@ class PesticideApplication {
     return newPesticide;
   }
 
+  Map<String, dynamic> toJson() => {
+        'pesticide_id': pesticideId,
+        'crop_id': cropId,
+        'land_id': landId,
+        'pesticide': pesticide,
+        'dose': dose,
+        'problem': problem,
+        'application_date': applicationDate,
+        'harvest_interval_days': harvestIntervalDays
+      };
   @override
   String toString() {
     return """

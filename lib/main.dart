@@ -61,7 +61,7 @@ void main() async {
     /* DeviceOrientation.landscapeRight */
   ]);
 
-  setTestData();
+  /* setTestData(); */
   runApp(
       /* RestartWidget(child: MyApp(prefs)), */
       BlocProvider.value(
@@ -163,6 +163,12 @@ class MyApp extends StatelessWidget {
 
     final String localeString = context
         .select<AppStateBloc, String>((value) => value.state.chosenLocale);
+
+    GetIt.I<Repository>().getAuthenticationBloc().stream.listen((event) {
+      if (event.loggedIn) {
+        GetIt.I<GoRouter>().go('/dashboard');
+      }
+    });
 
     _locale = Locale.fromSubtags(languageCode: localeString);
     GetIt.I<Logger>().w(_locale);

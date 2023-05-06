@@ -20,8 +20,7 @@ import 'package:pesticide/utilities/utils.dart';
 import '../../blocs/authentication_bloc.dart';
 import '../blocs/app_state_bloc.dart';
 
-// TODO: Add modal for adding harvest date. Extract harvest date from crop modal
-// itself.
+// TODO: Check if menus are shown when software keyboard is shown
 
 const addOptions = ['Land', 'Crop', 'Pesticide', 'Harvest'];
 

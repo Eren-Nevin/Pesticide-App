@@ -11,16 +11,81 @@ import 'package:pesticide/model/authentication_state.dart';
 
 // This refers to a task or task sheet that is committed by user.
 
+import 'package:dio/dio.dart';
+
+// TODO: Add error handling
+
+String serverAddress = 'http://localhost:3004';
+
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationBloc({required AuthenticationState initialState})
       : super(initialState) {
-    on<AttemptLoginEvent>((event, emit) {
+    on<AttemptLoginEvent>((event, emit) async {
       GetIt.I<Logger>().i("AttemptLoginEvent $event");
+      /* GetIt.I<Logger>().i("AttempSignupEvent $event"); */
 
-      AuthenticationState result =
-          Authenticator().login(event.username, event.password);
-      emit(result);
+      Dio client = Dio();
+
+      GetIt.I<Logger>().w(event);
+      Response response = await client.post("$serverAddress/api/login",
+          data: {
+            'payload': {'login_info': event.toJson()}
+          },
+          options: Options().copyWith(responseType: ResponseType.json));
+
+      GetIt.I<Logger>().d("Returned response from server rest api $response");
+
+      GetIt.I<Logger>().w(response.data);
+
+      /* // TODO: Make  proper  success and error handling */
+      if (response.data['uid'] != 0) {
+        AuthenticationState newState = AuthenticationState.getEmptyAuthState();
+        newState.loggedInUserGlobalId = response.data['uid'];
+        newState.name = response.data['name'];
+        newState.email = response.data['email'];
+        newState.username = response.data['username'];
+        newState.password = response.data['password'];
+        newState.occupation = response.data['occupation'];
+        newState.education = response.data['education'];
+        newState.country = response.data['country'];
+        newState.loggedIn = true;
+
+        emit(newState);
+      }
+    });
+
+    on<AttempSignupEvent>((event, emit) async {
+      GetIt.I<Logger>().i("AttempSignupEvent $event");
+
+      Dio client = Dio();
+
+      GetIt.I<Logger>().w(event);
+      Response response = await client.post("$serverAddress/api/signup",
+          data: {
+            'payload': {'signup_info': event.toJson()}
+          },
+          options: Options().copyWith(responseType: ResponseType.json));
+
+      GetIt.I<Logger>().d("Returned response from server rest api $response");
+
+      GetIt.I<Logger>().w(response.data);
+
+      /* // TODO: Make  proper  success and error handling */
+      if (response.data['uid'] != 0) {
+        AuthenticationState newState = AuthenticationState.getEmptyAuthState();
+        newState.loggedInUserGlobalId = response.data['uid'];
+        newState.name = response.data['name'];
+        newState.email = response.data['email'];
+        newState.username = response.data['username'];
+        newState.password = response.data['password'];
+        newState.occupation = response.data['occupation'];
+        newState.education = response.data['education'];
+        newState.country = response.data['country'];
+        newState.loggedIn = true;
+
+        emit(newState);
+      }
     });
 
     on<ReloadAuthEvent>((event, emit) {
@@ -31,20 +96,20 @@ class AuthenticationBloc
   }
 }
 
-class Authenticator {
-  AuthenticationState login(String username, String password) {
-    return AuthenticationState(
-        loggedIn: false,
-        language: 'en',
-        loggedInUserGlobalId: 0,
-        firebaseToken: '',
-        token: '',
-        occupation: '',
-        education: '',
-        name: '',
-        username: '',
-        email: '',
-        password: '',
-        profileImageUrl: '');
-  }
-}
+/* class Authenticator { */
+/*   AuthenticationState login(String username, String password) { */
+/*     return AuthenticationState( */
+/*         loggedIn: false, */
+/*         country: 'en', */
+/*         loggedInUserGlobalId: 0, */
+/*         firebaseToken: '', */
+/*         token: '', */
+/*         occupation: '', */
+/*         education: '', */
+/*         name: '', */
+/*         username: '', */
+/*         email: '', */
+/*         password: '', */
+/*         profileImageUrl: ''); */
+/*   } */
+/* } */

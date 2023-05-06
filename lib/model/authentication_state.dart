@@ -11,10 +11,9 @@ class AuthenticationState {
   String email;
   String username;
   String password;
-  String language;
-  String education;
+  String country;
   String occupation;
-  String profileImageUrl;
+  String education;
 
   int loggedInUserGlobalId;
   bool loggedIn;
@@ -27,26 +26,25 @@ class AuthenticationState {
       required this.name,
       required this.email,
       required this.password,
-      required this.education,
       required this.occupation,
-      required this.language,
-      required this.profileImageUrl,
+      required this.education,
+      required this.country,
       this.loggedIn = false});
 
   static AuthenticationState getEmptyAuthState() {
     return AuthenticationState(
-        loggedIn: false,
-        language: 'en',
-        loggedInUserGlobalId: 0,
-        firebaseToken: '',
-        token: '',
-        occupation: '',
-        education: '',
-        name: '',
-        username: '',
-        email: '',
-        password: '',
-        profileImageUrl: '');
+      loggedIn: false,
+      country: 'en',
+      loggedInUserGlobalId: 0,
+      firebaseToken: '',
+      token: '',
+      occupation: '',
+      education: '',
+      name: '',
+      username: '',
+      email: '',
+      password: '',
+    );
   }
 
   int? getLoggedInUserGlobalId() {
@@ -64,17 +62,16 @@ class AuthenticationState {
   }
 
   Map<String, dynamic> toJson() => {
-        'user_id': loggedInUserGlobalId,
+        'uid': loggedInUserGlobalId,
         'token': token,
         'firebase_token': firebaseToken,
         'username': username,
         'name': name,
         'email': email,
         'password': password,
-        'language': language,
+        'country': country,
         'occupation': occupation,
         'education': education,
-        'profileImageUrl': profileImageUrl,
       };
 
   @override

@@ -64,8 +64,8 @@ const AppStateSchema = CollectionSchema(
   indexes: {},
   links: {},
   embeddedSchemas: {
-    r'Land': LandSchema,
     r'Crop': CropSchema,
+    r'Land': LandSchema,
     r'PesticideApplication': PesticideApplicationSchema
   },
   getId: _appStateGetId,

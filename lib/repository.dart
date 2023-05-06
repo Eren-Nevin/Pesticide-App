@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:pesticide/model/authentication_state.dart';
 import 'package:pesticide/model/app_state.dart';
 import 'package:pesticide/blocs/app_state_bloc.dart';
 import 'package:pesticide/blocs/authentication_bloc.dart';
+import 'package:pesticide/pages/report_page.dart';
 
 class SigningUpSelectLanguageCubit extends Cubit<bool> {
   SigningUpSelectLanguageCubit() : super(true);
@@ -151,8 +153,51 @@ class Repository {
     });
 
     _appStateBlocSubscription = _appStateBloc.stream.listen((appState) async {
-      print(appState.toString());
       await _saveAppStateToDatabase(appState);
+      Dio client = Dio();
+
+      int uid = _authenticationBloc.state.loggedInUserGlobalId;
+
+      dynamic sent_data = {
+        'payload': {
+          'uid': uid,
+          'app_state': appState.toJson(),
+        }
+      };
+
+      GetIt.I<Logger>().w("Sending state to server $sent_data");
+      Response response = await client.post("$serverAddress/api/save_state",
+          data: sent_data,
+          options: Options().copyWith(responseType: ResponseType.json));
+
+      GetIt.I<Logger>().d("Returned response from server rest api $response");
+
+      GetIt.I<Logger>().w(response.data);
+
+      Response reportResponse =
+          await client.post("$serverAddress/api/save_report",
+              queryParameters: {'uid': uid},
+              data: generateHTMLReport(appState),
+              options: Options().copyWith(
+                contentType: 'text/html',
+              ));
+
+      GetIt.I<Logger>().w(reportResponse.data);
+
+      /* // TODO: Make  proper  success and error handling */
+      /* if (response.data['uid'] != 0) { */
+      /*   AuthenticationState newState = AuthenticationState.getEmptyAuthState(); */
+      /*   newState.loggedInUserGlobalId = response.data['uid']; */
+      /*   newState.name = response.data['name']; */
+      /*   newState.email = response.data['email']; */
+      /*   newState.username = response.data['username']; */
+      /*   newState.password = response.data['password']; */
+      /*   newState.occupation = response.data['occupation']; */
+      /*   newState.education = response.data['education']; */
+      /*   newState.country = response.data['country']; */
+      /*   newState.loggedIn = true; */
+
+      /*   emit(newState); */
     });
   }
 
@@ -227,7 +272,7 @@ class Repository {
   Future<AppState> readAppStateFromDatabase() async {
     AppState? returnedAppState =
         await localDatabase.appStates.where().findFirst();
-    GetIt.I<Logger>().d("Read app state from database: $returnedAppState");
+    GetIt.I<Logger>().w("Read app state from database: $returnedAppState");
     return returnedAppState ?? emptyAppState;
   }
 

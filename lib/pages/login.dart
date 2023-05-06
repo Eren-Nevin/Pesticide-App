@@ -513,9 +513,9 @@ class LoginFields extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         child: Column(children: [
           InputField(
-            hint: 'Email'.i18n() + ' *',
+            hint: 'Username'.i18n() + ' *',
             onChanged: (value) {
-              context.read<UserLoginPageInputCubit>().setEmail(value);
+              context.read<UserLoginPageInputCubit>().setUsername(value);
             },
           ),
           const PasswordField(),
@@ -678,6 +678,8 @@ class ActionButton extends StatelessWidget {
         height: 56,
         child: OutlinedButton(
             onPressed: (() async {
+              UserLoginPageInput loginPageInput =
+                  context.read<UserLoginPageInputCubit>().state;
               if (loggingIn) {
                 GetIt.I<Logger>().i("Logging in");
                 /* LoginResponse? response = await GetIt.I<AuthService>().login( */
@@ -685,7 +687,10 @@ class ActionButton extends StatelessWidget {
                 /*   context.read<UserLoginPageInputCubit>().state.password, */
                 /* ); */
                 /* if (response == null) { */
-                showLoginPageToast(fToast, 'Login Error');
+                context.read<AuthenticationBloc>().add(AttemptLoginEvent(
+                      username: loginPageInput.username,
+                      password: loginPageInput.password,
+                    ));
                 /* } else if (response.result == LoginResult.UserNotFound) { */
                 /*   showLoginPageToast(fToast, 'Email Not Found'); */
                 /* } else if (response.result == LoginResult.WrongPassword) { */
@@ -693,27 +698,34 @@ class ActionButton extends StatelessWidget {
                 /* } */
               } else {
                 GetIt.I<Logger>().i("Signing up");
-                UserLoginPageInput loginPageInput =
-                    context.read<UserLoginPageInputCubit>().state;
-                AuthenticationState authState = AuthenticationState(
-                    token: '',
-                    firebaseToken: '',
-                    profileImageUrl: '',
-                    loggedInUserGlobalId: 0,
-                    name: loginPageInput.name,
-                    email: loginPageInput.email,
-                    username: loginPageInput.username,
-                    password: loginPageInput.password,
-                    language: loginPageInput.language,
-                    education: loginPageInput.education,
-                    occupation: loginPageInput.occupation,
-                    loggedIn: true);
+                /* AuthenticationState authState = AuthenticationState( */
+                /*     token: '', */
+                /*     firebaseToken: '', */
+                /*     loggedInUserGlobalId: 0, */
+                /*     name: loginPageInput.name, */
+                /*     email: loginPageInput.email, */
+                /*     username: loginPageInput.username, */
+                /*     password: loginPageInput.password, */
+                /*     country: loginPageInput.language, */
+                /*     education: loginPageInput.education, */
+                /*     occupation: loginPageInput.occupation, */
+                /*     loggedIn: true); */
 
-                context
-                    .read<AuthenticationBloc>()
-                    .add(ReloadAuthEvent(authState));
+                /* context */
+                /*     .read<AuthenticationBloc>() */
+                /*     .add(ReloadAuthEvent(authState)); */
 
-                GoRouter.of(context).go('/dashboard');
+                context.read<AuthenticationBloc>().add(AttempSignupEvent(
+                      name: loginPageInput.name,
+                      email: loginPageInput.email,
+                      username: loginPageInput.username,
+                      password: loginPageInput.password,
+                      country: loginPageInput.country,
+                      education: loginPageInput.education,
+                      occupation: loginPageInput.occupation,
+                    ));
+
+                /* GoRouter.of(context).go('/dashboard'); */
               }
             }),
             style: OutlinedButton.styleFrom(
