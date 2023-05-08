@@ -194,6 +194,7 @@ class Repository {
 
   Future<void> sendReportToServer(int uid, AppState appState) async {
     Dio client = Dio();
+    GetIt.I<Logger>().w("Sending report to server");
     Response reportResponse =
         await client.post("$serverAddress/api/save_report",
             queryParameters: {'uid': uid},
@@ -270,9 +271,9 @@ class Repository {
     AppState newState = AppState.clone(_appStateBloc.state);
     newState.hasChosenLocale = appStateJson['has_chosen_locale'];
     newState.chosenLocale = appStateJson['chosen_locale'];
-    newState.lands = lands;
-    newState.crops = crops;
-    newState.pesticides = pesticides;
+    newState.lands = [...lands];
+    newState.crops = [...crops];
+    newState.pesticides = [...pesticides];
 
     _appStateBloc.add(ReloadAppStateEvent(newState));
     client.close();

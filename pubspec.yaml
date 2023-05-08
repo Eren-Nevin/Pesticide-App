@@ -63,6 +63,8 @@ dependencies:
   location: ^4.4.0
   share_plus: ^6.3.4
   dio: ^5.1.1
+  autocomplete_textfield: ^2.0.1
+  flutter_typeahead: ^4.3.8
   # modal_bottom_sheet:
   #    git:
   #      url: https://github.com/followthemoney1/modal_bottom_sheet.git

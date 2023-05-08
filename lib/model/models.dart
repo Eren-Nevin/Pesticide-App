@@ -1,7 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
+import 'package:localization/localization.dart';
 import 'package:logger/logger.dart';
 import 'package:pesticide/model/app_state.dart';
+
+import 'pesticides_db.dart';
 part 'models.g.dart';
 
 // Each land has one crop but can have multiple pesticide applications
@@ -138,14 +141,59 @@ class Land {
       };
 }
 
-List<String> knownCropNames = [
-  "Wheat",
-  "Corn",
-  "Grape",
-  "Tomato",
-  "Pepper",
-  "Apple",
-];
+List<String> getKnownCropNames() => [
+      "Wheat".i18n(),
+      "Corn".i18n(),
+      "Grape".i18n(),
+      "Tomato".i18n(),
+      "Pepper".i18n(),
+      "Apple".i18n(),
+    ];
+
+class ShownPesticide {
+  String name;
+  double dose;
+  int phi;
+
+  ShownPesticide(this.name, this.dose, this.phi);
+}
+
+var string = '''
+''';
+
+List<String> getShownProblems(String country, String crop) {
+  Map<String, Map<String, List<Map<String, List<ShownPesticide>>>>> res =
+      getCropProblemPesticideMap();
+
+  List<Map<String, List<ShownPesticide>>> problemsPesticidesMap =
+      res[crop]?[country] ?? [];
+
+  List<String> problems =
+      problemsPesticidesMap.map((e) => e.keys.first).toList();
+
+  return problems;
+}
+
+List<ShownPesticide> getShownPesticides(
+    String country, String crop, String problem) {
+  Map<String, Map<String, List<Map<String, List<ShownPesticide>>>>> res =
+      getCropProblemPesticideMap();
+
+  List<Map<String, List<ShownPesticide>>> problemsPesticidesList =
+      res[crop]?[country] ?? [];
+
+  List<ShownPesticide> specificProblemPesticides = [];
+
+  for (Map<String, List<ShownPesticide>> pesticidesForProblem
+      in problemsPesticidesList) {
+    if (pesticidesForProblem.keys.contains(problem)) {
+      specificProblemPesticides = [...pesticidesForProblem.values.first];
+      break;
+    }
+  }
+
+  return specificProblemPesticides;
+}
 
 @embedded
 class Crop {

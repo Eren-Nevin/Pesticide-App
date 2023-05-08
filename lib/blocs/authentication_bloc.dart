@@ -16,7 +16,7 @@ import 'package:pesticide/repository.dart';
 
 // TODO: Add error handling
 
-String serverAddress = 'http://localhost:3004';
+String serverAddress = 'https://dwb.software:3004';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {

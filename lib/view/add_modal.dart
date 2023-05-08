@@ -9,6 +9,8 @@ import 'package:localization/localization.dart';
 import 'package:logger/logger.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:location/location.dart';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 /* import 'package:tab_container/tab_container.dart'; */
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -32,7 +34,6 @@ const InputDecorationTheme dropdownMenuTheme = InputDecorationTheme(
   fillColor: Colors.transparent,
   outlineBorder: BorderSide.none,
   activeIndicatorBorder: BorderSide.none,
-  /* contentPadding: EdgeInsets.all(8), */
 );
 
 class InputAppState {
@@ -650,6 +651,7 @@ class CropFieldsColumnWidget extends StatelessWidget {
 
     inputCubit.setCrop(Crop());
     // TODO: implement build
+    /* return Container(height: 1000, color: Colors.red); */
     return Column(children: [
       Container(
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
@@ -672,14 +674,24 @@ class CropFieldsColumnWidget extends StatelessWidget {
           alignment: AlignmentDirectional.centerStart,
           height: 48,
           // TODO: Force accepted to using input filters
-          child: TitleWithTextFieldRow(
-              title: 'Crop'.i18n(),
-              editing: false,
-              callback: (v) async {
-                Crop currentCrop = inputCubit.state.crop;
-                Crop updatedCrop = currentCrop.apply(name: v);
-                inputCubit.setCrop(updatedCrop);
-              })),
+          /* child: TitleWithTextFieldRow( */
+          /*     title: 'Crop'.i18n(), */
+          /*     editing: false, */
+          /*     callback: (v) async { */
+          /*       Crop currentCrop = inputCubit.state.crop; */
+          /*       Crop updatedCrop = currentCrop.apply(name: v); */
+          /*       inputCubit.setCrop(updatedCrop); */
+          /*     })), */
+          child: TitleWithAutoCompleteTextFieldRow(
+            title: 'Crop'.i18n(),
+            suggestions: getKnownCropNames(),
+            callback: (v) async {
+              print(v);
+              Crop currentCrop = inputCubit.state.crop;
+              Crop updatedCrop = currentCrop.apply(name: v);
+              inputCubit.setCrop(updatedCrop);
+            },
+          )),
       const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
       Container(
           margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
@@ -694,6 +706,7 @@ class CropFieldsColumnWidget extends StatelessWidget {
                 inputCubit.setCrop(updatedCrop);
               })),
       const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
+      const SizedBox(height: 200),
       /* Container( */
       /*     margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0), */
       /*     alignment: AlignmentDirectional.centerStart, */
@@ -821,7 +834,8 @@ class HarvestDatesWidgets extends StatelessWidget {
                 title: 'Add'.i18n() + ' ' + 'Harvest Day'.i18n(),
                 callback: (v) async {
                   Crop currentCrop = inputCubit.state.crop;
-                  List<int> currentCropHarvestDates = currentCrop.harvestDates!;
+                  List<int> currentCropHarvestDates =
+                      List.from(currentCrop.harvestDates!);
                   currentCropHarvestDates.add(v);
                   Crop updatedCrop = currentCrop.apply(
                       useSameId: true, harvestDates: currentCropHarvestDates);
@@ -928,7 +942,31 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
           alignment: AlignmentDirectional.centerStart,
           height: 48,
           // TODO: Force accepted to using input filters
-          child: TitleWithMenuFieldRow(
+          /* child: TitleWithMenuFieldRow( */
+          /*     title: 'Problem'.i18n(), */
+          /*     callback: (v) async { */
+          /*       PesticideApplication currentPesticide = */
+          /*           inputCubit.state.pesticide; */
+          /*       PesticideApplication updatedPesticide = */
+          /*           currentPesticide.apply(problem: v); */
+          /*       inputCubit.setPesticide(updatedPesticide); */
+          /*     }, */
+          /*     options: [ */
+          /*       { */
+          /*         PesticideProblems.ProblemA.name: */
+          /*             PesticideProblems.ProblemA.name */
+          /*       }, */
+          /*       { */
+          /*         PesticideProblems.ProblemB.name: */
+          /*             PesticideProblems.ProblemB.name */
+          /*       }, */
+          /*       {PesticideProblems.Other.name: PesticideProblems.Other.name}, */
+          /*     ])), */
+          child: Builder(builder: (context) {
+            Crop crop = context.select<ModalInputCubit, Crop>((value) {
+              return value.state.crop;
+            });
+            return TitleWithAutoCompleteTextFieldRow(
               title: 'Problem'.i18n(),
               callback: (v) async {
                 PesticideApplication currentPesticide =
@@ -937,67 +975,136 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
                     currentPesticide.apply(problem: v);
                 inputCubit.setPesticide(updatedPesticide);
               },
-              options: [
-                {
-                  PesticideProblems.ProblemA.name:
-                      PesticideProblems.ProblemA.name
-                },
-                {
-                  PesticideProblems.ProblemB.name:
-                      PesticideProblems.ProblemB.name
-                },
-                {PesticideProblems.Other.name: PesticideProblems.Other.name},
-              ])),
+              /* suggestions: _getStandardCropProblemsMap()[crop.name] ?? [], */
+              suggestions: getShownProblems('Turkey', crop.name),
+            );
+          })),
       const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
       Container(
           margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
           alignment: AlignmentDirectional.centerStart,
           height: 48,
           // TODO: Force accepted to using input filters
-          child: TitleWithTextFieldRow(
+          /* child: TitleWithTextFieldRow( */
+          /*     title: 'Pesticide'.i18n(), */
+          /*     editing: false, */
+          /*     callback: (v) async { */
+          /*       PesticideApplication currentPesticide = */
+          /*           inputCubit.state.pesticide; */
+          /*       PesticideApplication updatedPesticide = */
+          /*           currentPesticide.apply(pesticide: v); */
+          /*       inputCubit.setPesticide(updatedPesticide); */
+          /*     })), */
+          child: Builder(builder: (context) {
+            String pesticideProblem =
+                context.select<ModalInputCubit, String>((value) {
+              return value.state.pesticide.problem;
+            });
+
+            ModalInputCubit modalInputCubit = context.read<ModalInputCubit>();
+
+            return TitleWithAutoCompleteTextFieldRow(
               title: 'Pesticide'.i18n(),
-              editing: false,
               callback: (v) async {
                 PesticideApplication currentPesticide =
                     inputCubit.state.pesticide;
                 PesticideApplication updatedPesticide =
                     currentPesticide.apply(pesticide: v);
                 inputCubit.setPesticide(updatedPesticide);
-              })),
+              },
+              suggestions: getShownPesticides('Turkey',
+                      modalInputCubit.state.crop.name, pesticideProblem)
+                  .map((e) => e.name)
+                  .toList(),
+              /* suggestions: [], */
+            );
+          })),
       const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
-      Container(
-          margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-          alignment: AlignmentDirectional.centerStart,
-          height: 48,
-          // TODO: Force accepted to using input filters
-          child: TitleWithTextFieldRow(
-              title: 'Dose'.i18n(),
-              numberOnly: true,
-              editing: false,
-              callback: (v) async {
-                PesticideApplication currentPesticide =
-                    inputCubit.state.pesticide;
-                PesticideApplication updatedPesticide =
-                    currentPesticide.apply(dose: double.parse(v));
-                inputCubit.setPesticide(updatedPesticide);
-              })),
+      Builder(builder: (context) {
+        String pesticideName = context.select<ModalInputCubit, String>((value) {
+          return value.state.pesticide.pesticide;
+        });
+        ModalInputCubit modalInputCubit = context.read<ModalInputCubit>();
+        String problemName = modalInputCubit.state.pesticide.problem;
+        List<ShownPesticide> shownPesticides = getShownPesticides(
+                'Turkey', modalInputCubit.state.crop.name, problemName)
+            .where((e) => e.name == modalInputCubit.state.pesticide.pesticide)
+            .toList();
+
+        ShownPesticide? shownPesticide =
+            shownPesticides.length == 1 ? shownPesticides[0] : null;
+        /* modalInputCubit */
+        /* modalInputCubit.state.pesticide.pesticide */
+        print(shownPesticide);
+        TextEditingController controller = TextEditingController();
+        if (shownPesticide != null) {
+          controller.text = shownPesticide.dose.toString();
+          PesticideApplication currentPesticide = inputCubit.state.pesticide;
+          PesticideApplication updatedPesticide =
+              currentPesticide.apply(dose: shownPesticide.dose);
+          inputCubit.setPesticide(updatedPesticide);
+        }
+        return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+            alignment: AlignmentDirectional.centerStart,
+            height: 48,
+            // TODO: Force accepted to using input filters
+            child: TitleWithTextFieldRow(
+                controller: controller,
+                title: 'Dose'.i18n(),
+                numberOnly: true,
+                editing: false,
+                callback: (v) async {
+                  PesticideApplication currentPesticide =
+                      inputCubit.state.pesticide;
+                  PesticideApplication updatedPesticide =
+                      currentPesticide.apply(dose: double.parse(v));
+                  inputCubit.setPesticide(updatedPesticide);
+                }));
+      }),
       const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
-      Container(
-          margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-          alignment: AlignmentDirectional.centerStart,
-          height: 48,
-          // TODO: Force accepted to using input filters
-          child: TitleWithTextFieldRow(
-              title: 'PHI',
-              numberOnly: true,
-              editing: false,
-              callback: (v) async {
-                PesticideApplication currentPesticide =
-                    inputCubit.state.pesticide;
-                PesticideApplication updatedPesticide =
-                    currentPesticide.apply(harvestIntervalDays: int.parse(v));
-                inputCubit.setPesticide(updatedPesticide);
-              })),
+      Builder(builder: (context) {
+        String pesticideName = context.select<ModalInputCubit, String>((value) {
+          return value.state.pesticide.pesticide;
+        });
+        ModalInputCubit modalInputCubit = context.read<ModalInputCubit>();
+        String problemName = modalInputCubit.state.pesticide.problem;
+        List<ShownPesticide> shownPesticides = getShownPesticides(
+                'Turkey', modalInputCubit.state.crop.name, problemName)
+            .where((e) => e.name == modalInputCubit.state.pesticide.pesticide)
+            .toList();
+
+        ShownPesticide? shownPesticide =
+            shownPesticides.length == 1 ? shownPesticides[0] : null;
+        /* modalInputCubit */
+        /* modalInputCubit.state.pesticide.pesticide */
+        print(shownPesticide);
+        TextEditingController controller = TextEditingController();
+        if (shownPesticide != null) {
+          controller.text = shownPesticide.phi.toString();
+          PesticideApplication currentPesticide = inputCubit.state.pesticide;
+          PesticideApplication updatedPesticide =
+              currentPesticide.apply(harvestIntervalDays: shownPesticide.phi);
+          inputCubit.setPesticide(updatedPesticide);
+        }
+        return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+            alignment: AlignmentDirectional.centerStart,
+            height: 48,
+            // TODO: Force accepted to using input filters
+            child: TitleWithTextFieldRow(
+                title: 'PHI',
+                controller: controller,
+                numberOnly: true,
+                editing: false,
+                callback: (v) async {
+                  PesticideApplication currentPesticide =
+                      inputCubit.state.pesticide;
+                  PesticideApplication updatedPesticide =
+                      currentPesticide.apply(harvestIntervalDays: int.parse(v));
+                  inputCubit.setPesticide(updatedPesticide);
+                }));
+      }),
       const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
       Container(
           margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
@@ -1126,6 +1233,76 @@ class TitleWithTextFieldRow extends StatelessWidget {
             }),
           )
         ]);
+  }
+}
+
+class TitleWithAutoCompleteTextFieldRow extends StatelessWidget {
+  final String title;
+  final List<String> suggestions;
+  final TextEditingController? controller;
+  final StringCallback callback;
+  TitleWithAutoCompleteTextFieldRow(
+      {super.key,
+      this.controller,
+      required this.title,
+      required this.suggestions,
+      required this.callback});
+
+  @override
+  Widget build(BuildContext context) {
+    GlobalKey<AutoCompleteTextFieldState<String>> key = GlobalKey();
+    TextEditingController controller =
+        this.controller ?? TextEditingController();
+    return Row(textBaseline: TextBaseline.alphabetic, children: [
+      DialogFormRowTitles(title: title),
+      Flexible(
+        child: Builder(builder: (context) {
+          return TypeAheadField(
+            textFieldConfiguration: TextFieldConfiguration(
+              autofocus: false,
+              style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black),
+              onChanged: callback,
+              controller: controller,
+              /* decoration: InputDecoration( */
+              /*   border: OutlineInputBorder(), */
+              /* ), */
+            ),
+            suggestionsCallback: (pattern) => suggestions,
+            itemBuilder: (context, suggestion) {
+              return ListTile(
+                title: Text(suggestion),
+              );
+            },
+            onSuggestionSelected: (String suggestion) {
+              controller.text = suggestion;
+              callback(suggestion);
+            },
+          );
+          /* return SimpleAutoCompleteTextField( */
+          /*     key: key, */
+          /*     suggestions: suggestions, */
+          /*     controller: controller, */
+          /*     /1* decoration: const BoxDecoration(), *1/ */
+          /*     /1* padding: EdgeInsets.zero, *1/ */
+          /*     submitOnSuggestionTap: false, */
+          /*     clearOnSubmit: false, */
+          /*     style: const TextStyle( */
+          /*         fontSize: 15, */
+          /*         fontWeight: FontWeight.w400, */
+          /*         color: Colors.black), */
+          /*     textCapitalization: TextCapitalization.sentences, */
+          /*     /1* placeholderStyle: const TextStyle( *1/ */
+          /*     /1*   color: Color(0xFF8C8C8C), *1/ */
+          /*     /1*   fontWeight: FontWeight.w400, *1/ */
+          /*     /1*   fontSize: 15, *1/ */
+          /*     /1* ), *1/ */
+          /*     textChanged: callback); */
+        }),
+      )
+    ]);
   }
 }
 

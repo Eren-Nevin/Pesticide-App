@@ -43,6 +43,7 @@ class UserLoginPageInput {
   String username = '';
   String email = '';
   String password = '';
+  String rePassword = '';
   String language = '';
   String education = '';
   String occupation = '';
@@ -57,6 +58,7 @@ class UserLoginPageInput {
     username = source.username;
     email = source.email;
     password = source.password;
+    rePassword = source.rePassword;
     language = source.language;
     education = source.education;
     occupation = source.occupation;
@@ -71,6 +73,7 @@ class UserLoginPageInput {
           username == other.username &&
           email == other.email &&
           password == other.password &&
+          rePassword == other.rePassword &&
           photoFile == other.photoFile &&
           country == other.country &&
           language == other.language &&
@@ -109,6 +112,12 @@ class UserLoginPageInputCubit extends Cubit<UserLoginPageInput> {
   void setPassword(String password) {
     UserLoginPageInput currentState = state;
     currentState.password = password;
+    emit(currentState);
+  }
+
+  void setrePassword(String rePassword) {
+    UserLoginPageInput currentState = state;
+    currentState.rePassword = rePassword;
     emit(currentState);
   }
 
@@ -184,36 +193,24 @@ class LoginPage extends StatelessWidget {
 class LoginPageContents extends StatelessWidget {
   // When true, we are only logging in. When false, we're signing up.
   final String title;
-  final ScrollController scrollController = ScrollController();
   LoginPageContents({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      controller: scrollController,
+      /* controller: scrollController, */
       child: Column(
         children: [
           Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                KeyboardVisibilityBuilder(builder: (context, keyboardOpen) {
-                  if (keyboardOpen) {
-                    Future.delayed(const Duration(milliseconds: 300), () {
-                      if (scrollController.hasClients) {
-                        scrollController.jumpTo(
-                          scrollController.position.maxScrollExtent,
-                        );
-                      }
-                    });
-                  }
-                  return Container(
-                    margin: EdgeInsets.only(top: 48, bottom: 48),
-                    child: LoginOrSignupPrompt(
-                      title: title,
-                    ),
-                  );
-                }),
+                Container(
+                  margin: EdgeInsets.only(top: 48, bottom: 48),
+                  child: LoginOrSignupPrompt(
+                    title: title,
+                  ),
+                ),
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 16),
                   child: Builder(builder: (context) {
@@ -463,13 +460,13 @@ class SignupFields extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         child: Column(children: [
           InputField(
-            hint: 'Name'.i18n(),
+            hint: 'Name'.i18n() + ' *',
             onChanged: (value) {
               context.read<UserLoginPageInputCubit>().setName(value);
             },
           ),
           CountryField(
-            hint: 'Select Country'.i18n(),
+            hint: 'Select Country'.i18n() + ' *',
             onChanged: (String selectedCountry) {
               context
                   .read<UserLoginPageInputCubit>()
@@ -477,7 +474,7 @@ class SignupFields extends StatelessWidget {
             },
           ),
           InputField(
-            hint: 'Occupation'.i18n(),
+            hint: 'Occupation'.i18n() + ' *',
             onChanged: (value) {
               context.read<UserLoginPageInputCubit>().setOccupation(value);
             },
@@ -489,18 +486,34 @@ class SignupFields extends StatelessWidget {
             },
           ),
           InputField(
-            hint: 'Email'.i18n() + ' *',
+            hint: 'Email'.i18n(),
             onChanged: (value) {
               context.read<UserLoginPageInputCubit>().setEmail(value);
             },
           ),
+          /* Container( */
+          /*   padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8), */
+          /*   child: Text( */
+          /*     "e-mail address will be used to send project training " */
+          /*     "documents and news.", */
+          /*     style: Theme.of(context).textTheme.labelMedium, */
+          /*   ), */
+          /* ), */
           InputField(
             hint: 'Username'.i18n() + ' *',
             onChanged: (value) {
               context.read<UserLoginPageInputCubit>().setUsername(value);
             },
           ),
-          const PasswordField(),
+          PasswordField(onChanged: (value) {
+            context.read<UserLoginPageInputCubit>().setPassword(value);
+          }),
+          PasswordField(
+              // TODO: Translate hint
+              hint: 'Retype Password',
+              onChanged: (value) {
+                context.read<UserLoginPageInputCubit>().setrePassword(value);
+              }),
         ]));
   }
 }
@@ -519,35 +532,49 @@ class LoginFields extends StatelessWidget {
               context.read<UserLoginPageInputCubit>().setUsername(value);
             },
           ),
-          const PasswordField(),
+          PasswordField(onChanged: (value) {
+            context.read<UserLoginPageInputCubit>().setPassword(value);
+          }),
         ]));
   }
 }
 
 class PasswordField extends StatefulWidget {
   final bool startObsecured;
-  const PasswordField({super.key, this.startObsecured = true});
+  String hint;
+  final void Function(String value) onChanged;
+  PasswordField(
+      {super.key,
+      this.startObsecured = true,
+      required this.onChanged,
+      this.hint = 'Password'});
 
   @override
-  State<PasswordField> createState() =>
-      _PasswordFieldState(obscured: startObsecured);
+  State<PasswordField> createState() => _PasswordFieldState(
+      hint: hint, obscured: startObsecured, onChanged: onChanged);
 }
 
 class _PasswordFieldState extends State<PasswordField> {
   bool obscured;
+  String hint;
+  final void Function(String value) onChanged;
 
-  _PasswordFieldState({this.obscured = true});
+  _PasswordFieldState({
+    required this.onChanged,
+    this.obscured = true,
+    required this.hint,
+  });
   @override
   Widget build(BuildContext context) {
     return Row(children: [
       Expanded(
         child: InputField(
+          hint: hint.i18n() + ' *',
           lastField: true,
           obscured: obscured,
           initialValue: context.read<UserLoginPageInputCubit>().state.password,
-          hint: 'Password'.i18n() + ' *',
           onChanged: (value) {
-            context.read<UserLoginPageInputCubit>().setPassword(value);
+            this.onChanged(value);
           },
         ),
       ),
@@ -620,17 +647,21 @@ class InputField extends StatelessWidget {
   final String hint, initialValue;
   final bool obscured;
   final bool lastField;
+  final TextEditingController? controller;
   final void Function(String value) onChanged;
   const InputField(
       {super.key,
       this.hint = '',
       this.initialValue = '',
+      this.controller,
       this.obscured = false,
       this.lastField = false,
       required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController controller =
+        this.controller ?? TextEditingController(text: initialValue);
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -641,8 +672,8 @@ class InputField extends StatelessWidget {
             borderRadius: BorderRadius.circular(6)),
         child: Builder(builder: (context) {
           var textFormFieldRow = CupertinoTextFormFieldRow(
+              controller: controller,
               padding: EdgeInsets.zero,
-              initialValue: initialValue,
               obscureText: obscured,
               placeholder: hint,
               placeholderStyle: const TextStyle(color: Colors.grey),
@@ -716,6 +747,36 @@ class ActionButton extends StatelessWidget {
                 /* context */
                 /*     .read<AuthenticationBloc>() */
                 /*     .add(ReloadAuthEvent(authState)); */
+
+                if (loginPageInput.name.isEmpty) {
+                  showToast('Enter Name');
+                  return;
+                }
+
+                if (loginPageInput.country.isEmpty) {
+                  showToast('Select Country');
+                  return;
+                }
+
+                if (loginPageInput.occupation.isEmpty) {
+                  showToast('Enter Occupation');
+                  return;
+                }
+
+                if (loginPageInput.username.isEmpty) {
+                  showToast('Enter Username');
+                  return;
+                }
+
+                if (loginPageInput.password.length < 6) {
+                  showToast('Passwords should be at least 6 characters long');
+                  return;
+                }
+
+                if (loginPageInput.password != loginPageInput.rePassword) {
+                  showToast('Passwords do not match');
+                  return;
+                }
 
                 context.read<AuthenticationBloc>().add(AttempSignupEvent(
                       name: loginPageInput.name,
