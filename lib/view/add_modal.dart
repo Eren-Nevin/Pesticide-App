@@ -469,12 +469,12 @@ class LandFieldsColumnWidget extends StatelessWidget {
                     }),
               ),
               CupertinoButton.filled(
-                padding: EdgeInsets.all(4),
+                padding: const EdgeInsets.all(4),
                 child: Container(
                     alignment: AlignmentDirectional.center,
                     width: 96,
                     height: 36,
-                    child: Text("Get Location")),
+                    child: const Text("Get Location")),
                 onPressed: () async {
                   Location location = Location();
 
@@ -570,7 +570,7 @@ class LandFieldsColumnWidget extends StatelessWidget {
           alignment: AlignmentDirectional.centerStart,
           height: 48,
           child: TitleWithTextFieldRow(
-              title: 'Area'.i18n(),
+              title: 'Area'.i18n() + ' (hectar)',
               editing: false,
               numberOnly: true,
               callback: (v) async {
@@ -650,14 +650,11 @@ class CropFieldsColumnWidget extends StatelessWidget {
         .toList();
 
     inputCubit.setCrop(Crop());
-    // TODO: implement build
-    /* return Container(height: 1000, color: Colors.red); */
     return Column(children: [
       Container(
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
         alignment: AlignmentDirectional.centerStart,
         height: 48,
-        // TODO: Force accepted to using input filters
         child: TitleWithMenuFieldRow(
           title: 'Land'.i18n(),
           callback: (v) async {
@@ -673,7 +670,6 @@ class CropFieldsColumnWidget extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
           alignment: AlignmentDirectional.centerStart,
           height: 48,
-          // TODO: Force accepted to using input filters
           /* child: TitleWithTextFieldRow( */
           /*     title: 'Crop'.i18n(), */
           /*     editing: false, */
@@ -686,7 +682,6 @@ class CropFieldsColumnWidget extends StatelessWidget {
             title: 'Crop'.i18n(),
             suggestions: getKnownCropNames(),
             callback: (v) async {
-              print(v);
               Crop currentCrop = inputCubit.state.crop;
               Crop updatedCrop = currentCrop.apply(name: v);
               inputCubit.setCrop(updatedCrop);
@@ -697,7 +692,6 @@ class CropFieldsColumnWidget extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
           alignment: AlignmentDirectional.centerStart,
           height: 48,
-          // TODO: Make this pick date
           child: TitleWithDateFieldRow(
               title: 'Planting Date'.i18n(),
               callback: (v) async {
@@ -711,7 +705,6 @@ class CropFieldsColumnWidget extends StatelessWidget {
       /*     margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0), */
       /*     alignment: AlignmentDirectional.centerStart, */
       /*     height: 48, */
-      /*     // TODO: Make this pick dates instead of one day */
       /*     child: TitleWithDateFieldRow( */
       /*         title: 'Harvest Day'.i18n(), */
       /*         callback: (v) async { */
@@ -742,7 +735,6 @@ class HarvestDayFieldsColumnWidget extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
         alignment: AlignmentDirectional.centerStart,
         height: 48,
-        // TODO: Force accepted to using input filters
         child: TitleWithMenuFieldRow(
           title: 'Land'.i18n(),
           callback: (v) async {
@@ -761,7 +753,6 @@ class HarvestDayFieldsColumnWidget extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
         alignment: AlignmentDirectional.centerStart,
         height: 48,
-        // TODO: Force accepted to using input filters
         child: Builder(builder: (context) {
           ModalInputCubit inputCubit = context.watch<ModalInputCubit>();
           Crop crop = inputCubit.state.crop;
@@ -786,7 +777,6 @@ class HarvestDatesWidgets extends StatelessWidget {
 
     /* }) */
     ModalInputCubit inputCubit = context.read<ModalInputCubit>();
-    AppState appState = context.read<AppStateBloc>().state;
     List<int> harvestDates = inputCubit.state.crop.harvestDates!;
 
     Widget getSingleHarvestWidget(int i) {
@@ -799,7 +789,6 @@ class HarvestDatesWidgets extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
               alignment: AlignmentDirectional.centerStart,
               height: 48,
-              // TODO: Make this pick dates instead of one day
               child: TitleWithDateFieldRow(
                   title: 'Harvest Day'.i18n() + ': ${i + 1}',
                   initialSelectedDate: harvestTime,
@@ -859,24 +848,13 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
     List<Map<String, String>> landOptions = appState.lands
         .map((land) => {land.name: land.landId.toString()})
         .toList();
-    /* List<Map<String, String>> cropOptions = appState.crops */
-    /*     .map((crop) => {crop.name: crop.cropId.toString()}) */
-    /* .toList(); */
     inputCubit.setPesticide(PesticideApplication());
     inputCubit.setCrop(Crop());
-    // TODO: implement build
-    /* Land defaultLand = appState.lands[0]; */
-    /* inputCubit.setLand(defaultLand); */
-    /* Crop? corrospondingCrop = findALandCrop(appState, defaultLand); */
-    /* if (corrospondingCrop != null) { */
-    /*   inputCubit.setLandAndCrop(defaultLand, corrospondingCrop); */
-    /* } */
     return Column(children: [
       Container(
           margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
           alignment: AlignmentDirectional.centerStart,
           height: 48,
-          // TODO: Force accepted to using input filters
           child: TitleWithMenuFieldRow(
             title: 'Land'.i18n(),
             callback: (v) async {
@@ -894,22 +872,11 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
             },
             options: landOptions,
           )),
-      /* child: TitleWithMenuFieldRow( */
-      /*     title: 'Land'.i18n(), */
-      /*     callback: (v) async { */
-      /*       PesticideApplication currentPesticide = */
-      /*           inputCubit.state.pesticide; */
-      /*       PesticideApplication updatedPesticide = */
-      /*           currentPesticide.apply(landId: int.parse(v)); */
-      /*       inputCubit.setPesticide(updatedPesticide); */
-      /*     }, */
-      /*     options: landOptions)), */
       const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
       Container(
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
         alignment: AlignmentDirectional.centerStart,
         height: 48,
-        // TODO: Force accepted to using input filters
         child: Builder(builder: (context) {
           ModalInputCubit inputCubit = context.watch<ModalInputCubit>();
           Crop crop = inputCubit.state.crop;
@@ -920,48 +887,10 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
         }),
       ),
       const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
-      /* Container( */
-      /*     margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0), */
-      /*     alignment: AlignmentDirectional.centerStart, */
-      /*     height: 48, */
-      /*     // TODO: Force accepted to using input filters */
-      /*     child: TitleWithMenuFieldRow( */
-      /*       title: 'Crop'.i18n(), */
-      /*       callback: (v) async { */
-      /*         PesticideApplication currentPesticide = */
-      /*             inputCubit.state.pesticide; */
-      /*         PesticideApplication updatedPesticide = */
-      /*             currentPesticide.apply(cropId: int.parse(v)); */
-      /*         inputCubit.setPesticide(updatedPesticide); */
-      /*       }, */
-      /*       options: cropOptions, */
-      /*     )), */
-      /* const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)), */
       Container(
           margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
           alignment: AlignmentDirectional.centerStart,
           height: 48,
-          // TODO: Force accepted to using input filters
-          /* child: TitleWithMenuFieldRow( */
-          /*     title: 'Problem'.i18n(), */
-          /*     callback: (v) async { */
-          /*       PesticideApplication currentPesticide = */
-          /*           inputCubit.state.pesticide; */
-          /*       PesticideApplication updatedPesticide = */
-          /*           currentPesticide.apply(problem: v); */
-          /*       inputCubit.setPesticide(updatedPesticide); */
-          /*     }, */
-          /*     options: [ */
-          /*       { */
-          /*         PesticideProblems.ProblemA.name: */
-          /*             PesticideProblems.ProblemA.name */
-          /*       }, */
-          /*       { */
-          /*         PesticideProblems.ProblemB.name: */
-          /*             PesticideProblems.ProblemB.name */
-          /*       }, */
-          /*       {PesticideProblems.Other.name: PesticideProblems.Other.name}, */
-          /*     ])), */
           child: Builder(builder: (context) {
             Crop crop = context.select<ModalInputCubit, Crop>((value) {
               return value.state.crop;
@@ -984,17 +913,6 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
           alignment: AlignmentDirectional.centerStart,
           height: 48,
-          // TODO: Force accepted to using input filters
-          /* child: TitleWithTextFieldRow( */
-          /*     title: 'Pesticide'.i18n(), */
-          /*     editing: false, */
-          /*     callback: (v) async { */
-          /*       PesticideApplication currentPesticide = */
-          /*           inputCubit.state.pesticide; */
-          /*       PesticideApplication updatedPesticide = */
-          /*           currentPesticide.apply(pesticide: v); */
-          /*       inputCubit.setPesticide(updatedPesticide); */
-          /*     })), */
           child: Builder(builder: (context) {
             String pesticideProblem =
                 context.select<ModalInputCubit, String>((value) {
@@ -1033,9 +951,6 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
 
         ShownPesticide? shownPesticide =
             shownPesticides.length == 1 ? shownPesticides[0] : null;
-        /* modalInputCubit */
-        /* modalInputCubit.state.pesticide.pesticide */
-        print(shownPesticide);
         TextEditingController controller = TextEditingController();
         if (shownPesticide != null) {
           controller.text = shownPesticide.dose.toString();
@@ -1052,13 +967,12 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
             child: TitleWithTextFieldRow(
                 controller: controller,
                 title: 'Dose'.i18n(),
-                numberOnly: true,
                 editing: false,
                 callback: (v) async {
                   PesticideApplication currentPesticide =
                       inputCubit.state.pesticide;
                   PesticideApplication updatedPesticide =
-                      currentPesticide.apply(dose: double.parse(v));
+                      currentPesticide.apply(dose: v);
                   inputCubit.setPesticide(updatedPesticide);
                 }));
       }),

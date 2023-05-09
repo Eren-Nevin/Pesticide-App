@@ -152,7 +152,7 @@ List<String> getKnownCropNames() => [
 
 class ShownPesticide {
   String name;
-  double dose;
+  String dose;
   int phi;
 
   ShownPesticide(this.name, this.dose, this.phi);
@@ -258,7 +258,7 @@ class PesticideApplication {
 
   String problem = '';
   String pesticide = '';
-  double dose = 0;
+  String dose = '';
   int applicationDate = 0;
   int harvestIntervalDays = 0;
 
@@ -268,7 +268,7 @@ class PesticideApplication {
     this.cropId = 0,
     this.problem = '',
     this.pesticide = '',
-    this.dose = 0,
+    this.dose = '',
     this.applicationDate = 0,
     this.harvestIntervalDays = 0,
   }) {
@@ -282,7 +282,7 @@ class PesticideApplication {
     int? cropId,
     String? problem,
     String? pesticide,
-    double? dose,
+    String? dose,
     int? applicationDate,
     int? harvestIntervalDays,
   }) {
