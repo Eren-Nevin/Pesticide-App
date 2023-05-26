@@ -16,8 +16,6 @@ class SegmentDetailWidget extends StatelessWidget {
     final ScrollController scrollController = ScrollController();
     // TODO: Should have used select to prevent updating on overal models
     // change
-    GetIt.I<AddFABController>().setOnPressed(AppPages.Crop, (context) async {});
-
     return SafeArea(
       child: Stack(
         children: [

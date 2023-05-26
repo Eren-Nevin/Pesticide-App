@@ -3,6 +3,12 @@ import 'package:isar/isar.dart';
 import 'package:localization/localization.dart';
 import 'package:logger/logger.dart';
 import 'package:pesticide/model/app_state.dart';
+import 'package:pesticide/model/pesticide_db_germany.dart';
+import 'package:pesticide/model/pesticide_db_italy.dart';
+import 'package:pesticide/model/pesticide_db_turkey.dart';
+import 'package:pesticide/model/pesticides_db_croatia.dart';
+import 'package:pesticide/model/pesticides_db_romania.dart';
+import 'package:pesticide/model/pesticides_db_england.dart';
 
 import 'pesticides_db.dart';
 part 'models.g.dart';
@@ -141,15 +147,6 @@ class Land {
       };
 }
 
-List<String> getKnownCropNames() => [
-      "Wheat".i18n(),
-      "Corn".i18n(),
-      "Grape".i18n(),
-      "Tomato".i18n(),
-      "Pepper".i18n(),
-      "Apple".i18n(),
-    ];
-
 class ShownPesticide {
   String name;
   String dose;
@@ -158,34 +155,71 @@ class ShownPesticide {
   ShownPesticide(this.name, this.dose, this.phi);
 }
 
+Map<String, List<Map<String, List<ShownPesticide>>>>
+    getCountryProblemPesiticideMap(String country) {
+  if (country == 'Turkey') {
+    return getTurkeyCropProblemPesticideMap();
+  } else if (country == 'Croatia') {
+    return getCroatiaCropProblemPesticideMap();
+  } else if (country == 'Romania') {
+    return getRomaniaCropProblemPesticideMap();
+  } else if (country == 'Italy') {
+    return getItalyCropProblemPesticideMap();
+  } else if (country == 'Germany') {
+    return getGermanyCropProblemPesticideMap();
+  } else if (country == 'England') {
+    return getEnglandCropProblemPesticideMap();
+  }
+
+  return {};
+}
+
+List<String> getKnownCropNames(String country) {
+  final problemsPesticidesMap = getCountryProblemPesiticideMap(country);
+
+  return problemsPesticidesMap.keys.toList();
+}
+
 var string = '''
 ''';
 
 List<String> getShownProblems(String country, String crop) {
-  Map<String, Map<String, List<Map<String, List<ShownPesticide>>>>> res =
-      getCropProblemPesticideMap();
+  if (crop.isEmpty) {
+    return [];
+  }
+  final problemsPesticidesMap = getCountryProblemPesiticideMap(country);
+  /* Map<String, Map<String, List<Map<String, List<ShownPesticide>>>>> res = */
+  /*     getCropProblemPesticideMap(); */
 
-  List<Map<String, List<ShownPesticide>>> problemsPesticidesMap =
-      res[crop]?[country] ?? [];
+  List<Map<String, List<ShownPesticide>>> cropProblemsPesticidesMap =
+      problemsPesticidesMap[crop]!;
 
   List<String> problems =
-      problemsPesticidesMap.map((e) => e.keys.first).toList();
+      cropProblemsPesticidesMap.map((e) => e.keys.first).toList();
+  /*     .map((e) => e.i18n()) */
+  /*     .toList(); */
 
   return problems;
 }
 
 List<ShownPesticide> getShownPesticides(
     String country, String crop, String problem) {
-  Map<String, Map<String, List<Map<String, List<ShownPesticide>>>>> res =
-      getCropProblemPesticideMap();
+  if (crop.isEmpty) {
+    return [];
+  }
+  final problemsPesticidesMap = getCountryProblemPesiticideMap(country);
+  List<Map<String, List<ShownPesticide>>> cropProblemsPesticidesMap =
+      problemsPesticidesMap[crop]!;
+  /* Map<String, Map<String, List<Map<String, List<ShownPesticide>>>>> res = */
+  /*     getCropProblemPesticideMap(); */
 
-  List<Map<String, List<ShownPesticide>>> problemsPesticidesList =
-      res[crop]?[country] ?? [];
+  /* List<Map<String, List<ShownPesticide>>> problemsPesticidesList = */
+  /*     res[crop]?[country] ?? []; */
 
   List<ShownPesticide> specificProblemPesticides = [];
 
   for (Map<String, List<ShownPesticide>> pesticidesForProblem
-      in problemsPesticidesList) {
+      in cropProblemsPesticidesMap) {
     if (pesticidesForProblem.keys.contains(problem)) {
       specificProblemPesticides = [...pesticidesForProblem.values.first];
       break;
@@ -381,4 +415,33 @@ PesticideApplication? getPesiticideById(AppState appState, int id) {
   }
 
   return possiblePesticides[0];
+}
+
+List<Land> getEmptyLands(AppState appState) {
+  List<Crop> allCrops = [...appState.crops];
+  List<Land> emptyLands = [];
+  List<int> filledLandIds = [];
+  List<Land> allLands = [...appState.lands];
+
+  for (Land land in allLands) {
+    for (Crop crop in allCrops) {
+      if (crop.landId == land.landId) {
+        filledLandIds.add(land.landId);
+      }
+    }
+  }
+
+  emptyLands =
+      allLands.where((land) => !filledLandIds.contains(land.landId)).toList();
+
+  return emptyLands;
+}
+
+List<PesticideApplication> getAppliedPesticidesForCrop(
+    AppState appState, int cropId) {
+  List<PesticideApplication> possiblePesticides = appState.pesticides
+      .where((pesticide) => pesticide.cropId == cropId)
+      .toList();
+
+  return possiblePesticides;
 }

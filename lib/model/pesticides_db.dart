@@ -1,5 +1,7 @@
 import 'models.dart';
 
+// Note that germany doesn't provide localized names
+
 Map<
     String,
     Map<
@@ -184,7 +186,7 @@ Map<
             ]
           },
           {
-            'Speckled': [
+            'Speckled Leaf Blotch': [
               ShownPesticide('%25 Tebuconazole', '0.75', 35),
               ShownPesticide(
                   '%52,5 Mancozeb + %3,75 Azoxystrobin + %3,75 Prothioconazole',
@@ -293,7 +295,7 @@ Map<
             ]
           },
           {
-            'Powdery': [
+            'Powdery Mildew': [
               ShownPesticide(
                   '%52,5 Mancozeb + %3,75 Azoxystrobin + %3,75 Prothioconazole',
                   '2',
@@ -399,7 +401,7 @@ Map<
             ]
           },
         ],
-        'Coratia': [
+        'Croatia': [
           {
             'Sunn Pest': [
               ShownPesticide('25g/l Deltametrin', '0,5 l / ha', 30),
@@ -1248,7 +1250,7 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
             ]
           },
           {
-            'Common Wind stalk Annual Bluegrass': [
+            'Common Wind Stalk Annual Bluegrass': [
               ShownPesticide('pendimethalin + diflufenican',
                   '2.5l/ha in 200 to 400 l/ha of water', 0),
             ]
@@ -1294,7 +1296,7 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
             ]
           },
         ],
-        'English': [],
+        'England': [],
       },
       // Only italy remains, germany had only one corn crop
       'Corn': {
@@ -1400,7 +1402,7 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
             ]
           }
         ],
-        'Coratia': [
+        'Croatia': [
           {
             'Sunn Pest': [
               ShownPesticide('25g/l Deltametrin', '0,5 l / ha', 30),
@@ -1904,13 +1906,13 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
             ]
           },
         ],
-        'English': [],
+        'England': [],
       },
-      // Italy remains, germany empty
+      // Italy and germany empty
       'Grape': {
         'Turkey': [
           {
-            'Two-Spotted Spider  Mite': [
+            'Two-Spotted Spider Mite': [
               ShownPesticide('%10 hexythiazox', '25', 7),
               ShownPesticide('110 g/l Etoxazole', '25', 7),
               ShownPesticide('156 g/l Acequinocyl', '125', 14),
@@ -1965,7 +1967,7 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
             ]
           },
           {
-            'Grape  Powdery Mildew': [
+            'Grape Powdery Mildew': [
               ShownPesticide(
                   '400 g/l Tea tree oil + 200 g/l Difenoconazole', '40', 14),
               ShownPesticide('%30 Triflumizole', '30', 7),
@@ -2445,7 +2447,7 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
             ]
           },
           {
-            'phomopsis Cane And Leaf Spot': [
+            'Phomopsis Cane And Leaf Spot': [
               ShownPesticide(
                   'DELAN PRO - Ditianon 125 g/l+Kalijevi fosfati 561,2 g/l',
                   '3 l/ha',
@@ -2457,7 +2459,7 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
         ],
         // Germany doesn't have grapes too
         'Germany': [],
-        'English': [],
+        'England': [],
       },
       'Tomato': {
         'Turkey': [
@@ -2701,7 +2703,7 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
             ]
           },
           {
-            'Leaf Miner': [
+            'Tomato Leaf Miner': [
               ShownPesticide(
                   '230 g/l Metaflumizone+16 g/l Abamectin', '100', 3),
               ShownPesticide('% 5.7 Emamectin benzoate', '40', 7),
@@ -2763,7 +2765,7 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
             ]
           },
           {
-            'Fruit Borer': [
+            'Tomato Fruit Borer': [
               ShownPesticide('% 5.7 Emamectin benzoate', '0.25', 7),
               ShownPesticide('%35 Chlorantraniliprole', '0.12', 1),
               ShownPesticide('%5 Emamectin benzoate', '0.3', 7),
@@ -3462,39 +3464,55 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
         ],
         'Croatia': [
           {
+            'Zelena breskvina uš': [
+              ShownPesticide(
+                  'Decis 2,5 EC (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+              ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
+                  '0,075-0,125 l/ ha', 3),
+              ShownPesticide(
+                  'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+              ShownPesticide(
+                  'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+              ShownPesticide('Tappeki 500 WG (Flonikamid 500,00 g/kg)',
+                  '0,1-0,12 l/ ha', 3),
+            ]
+          },
+          {
+            'Pamukova lisna uš': [
+              ShownPesticide(
+                  'Decis 2,5 EC (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+              ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
+                  '0,075-0,125 l/ ha', 3),
+              ShownPesticide(
+                  'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+              ShownPesticide(
+                  'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+              ShownPesticide('Tappeki 500 WG (Flonikamid 500,00 g/kg)',
+                  '0,1-0,12 l/ ha', 3),
+            ]
+          },
+          {
+            'Šljivina velika uš': [
+              ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
+                  '0,075-0,125 l/ ha', 3),
+              ShownPesticide(
+                  'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+              ShownPesticide(
+                  'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+            ]
+          },
+          {
+            'Lisna uš': [
+              ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
+                  '0,075-0,125 l/ ha', 3),
+              ShownPesticide(
+                  'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+              ShownPesticide(
+                  'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+            ]
+          },
+          {
             'Aphids': [
-              ShownPesticide(
-                  'Decis 2,5 EC (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
-                  '0,075-0,125 l/ ha', 3),
-              ShownPesticide(
-                  'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide(
-                  'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide('Tappeki 500 WG (Flonikamid 500,00 g/kg)',
-                  '0,1-0,12 l/ ha', 3),
-              ShownPesticide(
-                  'Decis 2,5 EC (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
-                  '0,075-0,125 l/ ha', 3),
-              ShownPesticide(
-                  'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide(
-                  'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide('Tappeki 500 WG (Flonikamid 500,00 g/kg)',
-                  '0,1-0,12 l/ ha', 3),
-              ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
-                  '0,075-0,125 l/ ha', 3),
-              ShownPesticide(
-                  'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide(
-                  'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
-                  '0,075-0,125 l/ ha', 3),
-              ShownPesticide(
-                  'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide(
-                  'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
               ShownPesticide(
                   'Pirimor 50 WG (Pirimikarb 500,00 g/l)', '0,8 kg/ ha', 9),
               ShownPesticide(
@@ -3506,7 +3524,7 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
             ]
           },
           {
-            'Owls': [
+            'Žuta kukuruzna sovica': [
               ShownPesticide(
                   'Decis 2,5 EC (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
               ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
@@ -3517,12 +3535,36 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
                   'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
               ShownPesticide(
                   'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+            ]
+          },
+          {
+            'Sovica gama': [
               ShownPesticide(
                   'Decis 2,5 EC (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+            ]
+          },
+          {
+            'Sovice podzemljuše': [
               ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
                   '0,075-0,125 l/ ha', 3),
               ShownPesticide(
                   'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+            ]
+          },
+          {
+            'Karadrina': [
+              ShownPesticide('Runner 240 SC (Metoksifenozid 240,00 g/l)',
+                  '40 ml/ 100 l', 1),
+            ]
+          },
+          {
+            'Zlatna sovica': [
+              ShownPesticide('Runner 240 SC (Metoksifenozid 240,00 g/l)',
+                  '40 ml/ 100 l', 1),
+            ]
+          },
+          {
+            'Owls': [
               ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
                   '0,075-0,125 l/ ha', 3),
               ShownPesticide(
@@ -3531,10 +3573,6 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
                   'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
               ShownPesticide(
                   'Affirm (Emamektin benzoat 9,50 g/kg)', '2 kg/ ha', 3),
-              ShownPesticide('Runner 240 SC (Metoksifenozid 240,00 g/l)',
-                  '40 ml/ 100 l', 1),
-              ShownPesticide('Runner 240 SC (Metoksifenozid 240,00 g/l)',
-                  '40 ml/ 100 l', 1),
             ]
           },
           {
@@ -3562,11 +3600,19 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
             ]
           },
           {
-            'Thrips': [
+            'Tobacco Thrips': [
               ShownPesticide(
                   'Decis 2,5 EC (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+            ]
+          },
+          {
+            'California Thrips': [
               ShownPesticide(
                   'Kraft 18 EC (Abamektin 18,00 g/l)', '0,75-1,2 l/ ha', 7),
+            ]
+          },
+          {
+            'Thrips': [
               ShownPesticide(
                   'Vidate 10 L (Oksamil 100,00 g/l)', '10-20 l/ ha', 28),
               ShownPesticide(
@@ -3839,9 +3885,9 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
             ]
           },
         ],
-        'English': [],
+        'England': [],
       },
-      // Italy remains, germany maybe
+      // germany maybe
       'Pepper': {
         'Turkey': [
           {
@@ -3929,7 +3975,7 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
             ]
           },
           {
-            'Leafworm': [
+            'Cotton leafworm': [
               ShownPesticide('%30 Indoxacarb', '17', 3),
               ShownPesticide('%35 Chlorantraniliprole', '12', 1),
               ShownPesticide('%5 Emamectin benzoate', '0.3', 7),
@@ -4226,35 +4272,51 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
         ],
         'Croatia': [
           {
+            'Zelena breskvina uš': [
+              ShownPesticide(
+                  'Decis 2,5 EC (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+              ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
+                  '0,075-0,125 l/ ha', 3),
+              ShownPesticide(
+                  'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+              ShownPesticide(
+                  'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+            ]
+          },
+          {
+            'Pamukova lisna uš': [
+              ShownPesticide(
+                  'Decis 2,5 EC (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+              ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
+                  '0,075-0,125 l/ ha', 3),
+              ShownPesticide(
+                  'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+              ShownPesticide(
+                  'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+            ]
+          },
+          {
+            'Šljivina velika uš': [
+              ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
+                  '0,075-0,175 l/ ha', 3),
+              ShownPesticide(
+                  'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+              ShownPesticide(
+                  'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+            ]
+          },
+          {
+            'Lisna uš': [
+              ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
+                  '0,075-0,175 l/ ha', 3),
+              ShownPesticide(
+                  'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+              ShownPesticide(
+                  'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+            ]
+          },
+          {
             'Aphids': [
-              ShownPesticide(
-                  'Decis 2,5 EC (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
-                  '0,075-0,125 l/ ha', 3),
-              ShownPesticide(
-                  'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide(
-                  'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide(
-                  'Decis 2,5 EC (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
-                  '0,075-0,125 l/ ha', 3),
-              ShownPesticide(
-                  'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide(
-                  'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
-                  '0,075-0,175 l/ ha', 3),
-              ShownPesticide(
-                  'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide(
-                  'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
-                  '0,075-0,175 l/ ha', 3),
-              ShownPesticide(
-                  'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
-              ShownPesticide(
-                  'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
               ShownPesticide(
                   'Tappeki (Flonikamid 500,00 g/kg)', '0,12 kg/ ha', 7),
               ShownPesticide(
@@ -4270,7 +4332,7 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
             ]
           },
           {
-            'Owls': [
+            'Žuta kukuruzna sovica': [
               ShownPesticide(
                   'Decis 2,5 EC (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
               ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
@@ -4281,12 +4343,36 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
                   'Scatto (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
               ShownPesticide(
                   'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+            ]
+          },
+          {
+            'Sovica gama': [
               ShownPesticide(
                   'Decis 2,5 EC (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+            ]
+          },
+          {
+            'Sovice podzemljuše': [
               ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
                   '0,075-0,125 l/ ha', 3),
               ShownPesticide(
                   'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
+            ]
+          },
+          {
+            'Karadrina': [
+              ShownPesticide('Runner 240 SC (Metoksifenozid 240,00 g/l)',
+                  '40 ml/ 100 l', 1),
+            ]
+          },
+          {
+            'Zlatna sovica': [
+              ShownPesticide('Runner 240 SC (Metoksifenozid 240,00 g/l)',
+                  '40 ml/ 100 l', 1),
+            ]
+          },
+          {
+            'Owls': [
               ShownPesticide('Decis 100 EC (Deltametrin 100,00 g/l)',
                   '0,075-0,175 l/ ha', 3),
               ShownPesticide(
@@ -4295,10 +4381,6 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
                   'Rotor super (Deltametrin 25,00 g/l)', '0,3-0,5 l/ ha', 3),
               ShownPesticide(
                   'Affirm (Emamektin benzoat 9,50 g/kg)', '2 kg/ ha', 3),
-              ShownPesticide('Runner 240 SC (Metoksifenozid 240,00 g/l)',
-                  '40 ml/ 100 l', 1),
-              ShownPesticide('Runner 240 SC (Metoksifenozid 240,00 g/l)',
-                  '40 ml/ 100 l', 1),
             ]
           },
           {
@@ -4508,9 +4590,8 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
           },
         ],
         'Germany': [],
-        'English': [],
+        'England': [],
       },
-      // Italy remains
       'Apple': {
         'Turkey': [
           {
@@ -5316,6 +5397,6 @@ Tebuconazolo 15,1%''', '1 lt/ha', 60),
             ]
           },
         ],
-        'English': [],
+        'England': [],
       },
     };

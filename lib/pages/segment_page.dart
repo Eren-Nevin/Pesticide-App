@@ -18,8 +18,6 @@ class SegmentDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GetIt.I<Logger>().w("Building Whole Detail Page");
-
     Widget pageWidget = const SegmentDetailWidget();
 
     if (page == 'lands') {

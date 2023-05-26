@@ -15,6 +15,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 /* import 'package:tab_container/tab_container.dart'; */
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pesticide/blocs/events/app_state_events.dart';
+import 'package:pesticide/i18n/translator.dart';
 import 'package:pesticide/model/app_state.dart';
 import 'package:pesticide/model/models.dart';
 import 'package:pesticide/utilities/utils.dart';
@@ -42,7 +43,7 @@ class InputAppState {
   Crop crop = Crop();
   PesticideApplication pesticide = PesticideApplication();
 
-  InputAppState();
+  InputAppState({this.segment = 'Land'});
 
   InputAppState.clone(InputAppState source) {
     segment = source.segment;
@@ -105,8 +106,13 @@ class ModalInputCubit extends Cubit<InputAppState> {
 Future<void> showAddStuffDialog(
   BuildContext context, {
   required AppStateBloc appStateBloc,
+  String? segment,
 }) async {
   ModalInputCubit modalInputCubit = ModalInputCubit(InputAppState());
+  if (segment != null) {
+    modalInputCubit = ModalInputCubit(InputAppState(segment: segment));
+    print("Modal Input Cubit ${modalInputCubit.state.segment}");
+  }
   var result = await showCupertinoModalBottomSheet(
       context: context,
       useRootNavigator: true,
@@ -134,7 +140,7 @@ Future<DateTime?> showDateDialog(BuildContext context) async {
   var results = await showCalendarDatePicker2Dialog(
     context: context,
     config: CalendarDatePicker2WithActionButtonsConfig(
-      firstDate: DateTime.now(),
+      firstDate: DateTime.now().copyWith(year: 2021),
       lastDate: DateTime.now().copyWith(year: 2030),
       calendarType: CalendarDatePicker2Type.single,
       currentDate: DateTime.now(),
@@ -210,14 +216,13 @@ class AddStuffDialogContent extends StatelessWidget {
   }
 }
 
-void showToast(String message) {
-  Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM);
-}
+/* void showToast(String message) { */
+/*   Fluttertoast.showToast( */
+/*       msg: message, */
+/*       toastLength: Toast.LENGTH_SHORT, */
+/*       gravity: ToastGravity.BOTTOM); */
+/* } */
 
-// TODO: Add proper translations for toast messages
 class AddDialogTitleRow extends StatelessWidget {
   final String title;
 
@@ -239,69 +244,69 @@ class AddDialogTitleRow extends StatelessWidget {
           AppState newState = AppState.clone(currentState);
           if (segment == 'Land') {
             if (inputAppState.land.name.isEmpty) {
-              showToast('Enter Land Name');
+              showToast('Enter Land Name'.i18n());
               return;
             }
             if (inputAppState.land.location.isEmpty) {
-              showToast('Enter Land Location');
+              showToast('Enter Land Location'.i18n());
               return;
             }
             if (inputAppState.land.lattitude == 0) {
-              showToast('Enter Land Lattitude');
+              showToast('Enter Land Latitude'.i18n());
               return;
             }
             if (inputAppState.land.longitude == 0) {
-              showToast('Enter Land Longitude');
+              showToast('Enter Land Longitude'.i18n());
               return;
             }
             if (inputAppState.land.area == 0) {
-              showToast('Enter Land Area');
+              showToast('Enter Land Area'.i18n());
               return;
             }
             if (inputAppState.land.slope == 0) {
-              showToast('Enter Land Slope');
+              showToast('Enter Land Slope'.i18n());
               return;
             }
             newState.lands = [...newState.lands, inputAppState.land];
           }
           if (segment == 'Crop') {
             if (inputAppState.crop.landId == 0) {
-              showToast('Select Land');
+              showToast('Select Land'.i18n());
               return;
             }
             if (inputAppState.crop.name.isEmpty) {
-              showToast('Enter Crop Name');
+              showToast('Enter Crop Name'.i18n());
               return;
             }
             if (inputAppState.crop.plantingDate == 0) {
-              showToast('Enter Planting Date');
+              showToast('Enter Planting Date'.i18n());
               return;
             }
             newState.crops = [...newState.crops, inputAppState.crop];
           }
           if (segment == 'Pesticide') {
             if (inputAppState.pesticide.landId == 0) {
-              showToast('Select Land');
+              showToast('Select Land'.i18n());
               return;
             }
             if (inputAppState.pesticide.pesticide.isEmpty) {
-              showToast('Enter Pesticide Name');
+              showToast('Enter Pesticide Name'.i18n());
               return;
             }
-            if (inputAppState.pesticide.dose == 0) {
-              showToast('Enter Proper Dose');
+            if (inputAppState.pesticide.dose.isEmpty) {
+              showToast('Enter Proper Dose'.i18n());
               return;
             }
             if (inputAppState.pesticide.applicationDate == 0) {
-              showToast('Enter Proper Application Date');
+              showToast('Enter Proper Application Date'.i18n());
               return;
             }
             if (inputAppState.pesticide.harvestIntervalDays == 0) {
-              showToast('Enter Proper Harvest Interval Date');
+              showToast('Enter Proper Harvest Interval Date'.i18n());
               return;
             }
             if (inputAppState.pesticide.problem.isEmpty) {
-              showToast('Enter Proper Problem');
+              showToast('Enter Proper Problem'.i18n());
               return;
             }
             newState.pesticides = [
@@ -311,7 +316,7 @@ class AddDialogTitleRow extends StatelessWidget {
           }
           if (segment == 'Harvest') {
             if (inputAppState.crop.landId == 0) {
-              showToast('Select Land');
+              showToast('Select Land'.i18n());
               return;
             }
             Crop editedCrop = inputAppState.crop;
@@ -320,7 +325,7 @@ class AddDialogTitleRow extends StatelessWidget {
             newState.crops[editedIndex] = editedCrop;
           }
 
-          context.read<AppStateBloc>().add(ReloadAppStateEvent(newState));
+          context.read<AppStateBloc>().add(ReloadAppStateEvent(newState, true));
           GoRouter.of(context).pop();
         });
   }
@@ -410,6 +415,7 @@ class AddStuffDialogForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String selectedSegment = context.watch<ModalInputCubit>().state.segment;
     /* TabContainerController tabContainerController = */
     /*     TabContainerController(length: 4); */
     return Column(
@@ -418,11 +424,12 @@ class AddStuffDialogForm extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
             alignment: AlignmentDirectional.centerStart,
             height: 48,
-            child: SelectWhichToAdd(editing: editing)),
+            child: SelectWhichToAdd(
+              editing: editing,
+              initialSelection: selectedSegment,
+            )),
         const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
         Builder(builder: (context) {
-          String selectedSegment =
-              context.watch<ModalInputCubit>().state.segment;
           if (selectedSegment == addOptions[0]) {
             return const LandFieldsColumnWidget();
           } else if (selectedSegment == addOptions[1]) {
@@ -443,12 +450,10 @@ class LandFieldsColumnWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GetIt.I<Logger>().e('Rebuilding');
     ModalInputCubit inputCubit = context.read<ModalInputCubit>();
-    TextEditingController lattitudeController = TextEditingController();
+    TextEditingController latitudeController = TextEditingController();
     TextEditingController longitudeController = TextEditingController();
     inputCubit.setLand(Land());
-    // TODO: implement build
     return Column(children: [
       Container(
           margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
@@ -472,9 +477,9 @@ class LandFieldsColumnWidget extends StatelessWidget {
                 padding: const EdgeInsets.all(4),
                 child: Container(
                     alignment: AlignmentDirectional.center,
-                    width: 96,
+                    width: 120,
                     height: 36,
-                    child: const Text("Get Location")),
+                    child: Text("Get Location".i18n())),
                 onPressed: () async {
                   Location location = Location();
 
@@ -503,9 +508,7 @@ class LandFieldsColumnWidget extends StatelessWidget {
                   final lattitude = _locationData.latitude ?? 0;
                   final longitude = _locationData.longitude ?? 0;
 
-                  GetIt.I<Logger>().w(lattitude);
-
-                  lattitudeController.value =
+                  latitudeController.value =
                       TextEditingValue(text: lattitude.toString());
                   longitudeController.value =
                       TextEditingValue(text: longitude.toString());
@@ -526,7 +529,7 @@ class LandFieldsColumnWidget extends StatelessWidget {
           // TODO: Force accepted to using input filters
           child: TitleWithTextFieldRow(
               title: 'Latitude'.i18n(),
-              controller: lattitudeController,
+              controller: latitudeController,
               editing: false,
               numberOnly: true,
               callback: (v) async {
@@ -645,7 +648,7 @@ class CropFieldsColumnWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ModalInputCubit inputCubit = context.read<ModalInputCubit>();
     AppState appState = context.read<AppStateBloc>().state;
-    List<Map<String, String>> options = appState.lands
+    List<Map<String, String>> options = getEmptyLands(appState)
         .map((land) => {land.name: land.landId.toString()})
         .toList();
 
@@ -670,17 +673,9 @@ class CropFieldsColumnWidget extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
           alignment: AlignmentDirectional.centerStart,
           height: 48,
-          /* child: TitleWithTextFieldRow( */
-          /*     title: 'Crop'.i18n(), */
-          /*     editing: false, */
-          /*     callback: (v) async { */
-          /*       Crop currentCrop = inputCubit.state.crop; */
-          /*       Crop updatedCrop = currentCrop.apply(name: v); */
-          /*       inputCubit.setCrop(updatedCrop); */
-          /*     })), */
           child: TitleWithAutoCompleteTextFieldRow(
             title: 'Crop'.i18n(),
-            suggestions: getKnownCropNames(),
+            suggestions: getKnownCropNames(getCountryByAppState(appState)),
             callback: (v) async {
               Crop currentCrop = inputCubit.state.crop;
               Crop updatedCrop = currentCrop.apply(name: v);
@@ -741,7 +736,6 @@ class HarvestDayFieldsColumnWidget extends StatelessWidget {
             Land? selectedLand = getLandById(appState, int.parse(v));
             Crop? corrospondingCrop = findALandCrop(appState, selectedLand!);
             if (corrospondingCrop != null) {
-              /* print("HELLO WORLD"); */
               inputCubit.setLandAndCrop(selectedLand, corrospondingCrop);
             }
           },
@@ -823,6 +817,33 @@ class HarvestDatesWidgets extends StatelessWidget {
                 title: 'Add'.i18n() + ' ' + 'Harvest Day'.i18n(),
                 callback: (v) async {
                   Crop currentCrop = inputCubit.state.crop;
+                  List<PesticideApplication> appliedPesticides =
+                      getAppliedPesticidesForCrop(
+                          context.read<AppStateBloc>().state,
+                          currentCrop.cropId);
+
+                  int numberOfHarvestDates = currentCrop.harvestDates!.length;
+                  if (appliedPesticides.length > numberOfHarvestDates) {
+                    PesticideApplication corrospondingPesticideApplication =
+                        appliedPesticides[numberOfHarvestDates];
+                    Duration difference = DateTime.fromMillisecondsSinceEpoch(v)
+                        .difference(DateTime.fromMillisecondsSinceEpoch(
+                            corrospondingPesticideApplication.applicationDate));
+
+                    if (difference.inDays <
+                        corrospondingPesticideApplication.harvestIntervalDays) {
+                      await showStartingAlert(
+                          context,
+                          '''The minimum harvest period for this product has not been completed following the pesticide application on'''
+                                  .i18n() +
+                              ' ' +
+                              convertIntTimeToDate(v) +
+                              'Please reschedule harvest'.i18n());
+                      inputCubit.setCrop(currentCrop);
+                      return;
+                    }
+                  }
+
                   List<int> currentCropHarvestDates =
                       List.from(currentCrop.harvestDates!);
                   currentCropHarvestDates.add(v);
@@ -905,7 +926,8 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
                 inputCubit.setPesticide(updatedPesticide);
               },
               /* suggestions: _getStandardCropProblemsMap()[crop.name] ?? [], */
-              suggestions: getShownProblems('Turkey', crop.name),
+              suggestions:
+                  getShownProblems(getCountryByAppState(appState), crop.name),
             );
           })),
       const Divider(thickness: 1, height: 2, color: Color(0xFFE4E4E4)),
@@ -930,7 +952,7 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
                     currentPesticide.apply(pesticide: v);
                 inputCubit.setPesticide(updatedPesticide);
               },
-              suggestions: getShownPesticides('Turkey',
+              suggestions: getShownPesticides(getCountryByAppState(appState),
                       modalInputCubit.state.crop.name, pesticideProblem)
                   .map((e) => e.name)
                   .toList(),
@@ -945,15 +967,20 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
         ModalInputCubit modalInputCubit = context.read<ModalInputCubit>();
         String problemName = modalInputCubit.state.pesticide.problem;
         List<ShownPesticide> shownPesticides = getShownPesticides(
-                'Turkey', modalInputCubit.state.crop.name, problemName)
+                getCountryByAppState(appState),
+                modalInputCubit.state.crop.name,
+                problemName)
             .where((e) => e.name == modalInputCubit.state.pesticide.pesticide)
             .toList();
+
+        print(shownPesticides);
+        print(shownPesticides);
 
         ShownPesticide? shownPesticide =
             shownPesticides.length == 1 ? shownPesticides[0] : null;
         TextEditingController controller = TextEditingController();
         if (shownPesticide != null) {
-          controller.text = shownPesticide.dose.toString();
+          controller.text = shownPesticide.dose;
           PesticideApplication currentPesticide = inputCubit.state.pesticide;
           PesticideApplication updatedPesticide =
               currentPesticide.apply(dose: shownPesticide.dose);
@@ -984,15 +1011,14 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
         ModalInputCubit modalInputCubit = context.read<ModalInputCubit>();
         String problemName = modalInputCubit.state.pesticide.problem;
         List<ShownPesticide> shownPesticides = getShownPesticides(
-                'Turkey', modalInputCubit.state.crop.name, problemName)
+                getCountryByAppState(appState),
+                modalInputCubit.state.crop.name,
+                problemName)
             .where((e) => e.name == modalInputCubit.state.pesticide.pesticide)
             .toList();
 
         ShownPesticide? shownPesticide =
             shownPesticides.length == 1 ? shownPesticides[0] : null;
-        /* modalInputCubit */
-        /* modalInputCubit.state.pesticide.pesticide */
-        print(shownPesticide);
         TextEditingController controller = TextEditingController();
         if (shownPesticide != null) {
           controller.text = shownPesticide.phi.toString();
@@ -1041,8 +1067,9 @@ class PesticideFieldsColumnWidget extends StatelessWidget {
 
 class SelectWhichToAdd extends StatelessWidget {
   final bool editing;
+  String? initialSelection;
 
-  const SelectWhichToAdd({super.key, required this.editing});
+  SelectWhichToAdd({super.key, required this.editing, this.initialSelection});
 
   @override
   Widget build(BuildContext context) {
@@ -1056,7 +1083,7 @@ class SelectWhichToAdd extends StatelessWidget {
               inputDecorationTheme: dropdownMenuTheme,
               /* menuHeight: 36, */
               /*   menuStyle: MenuStyle(padding: EdgeInsets.all(4)), */
-              initialSelection: addOptions[0],
+              initialSelection: initialSelection ?? addOptions[0],
               dropdownMenuEntries: [
                 DropdownMenuEntry(value: addOptions[0], label: 'Land'.i18n()),
                 DropdownMenuEntry(value: addOptions[1], label: 'Crop'.i18n()),

@@ -22,9 +22,7 @@ class PesticidePageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ScrollController scrollController = ScrollController();
-    GetIt.I<AddFABController>().setOnPressed(AppPages.Crop, (context) async {});
-
-    AppState appState = context.read<AppStateBloc>().state;
+    AppState appState = context.watch<AppStateBloc>().state;
 
     List<PesticideApplication> pesticides = appState.pesticides;
 
@@ -98,6 +96,7 @@ class PesticidePageWidget extends StatelessWidget {
                               title: 'Harvest Interval'.i18n() + ':',
                               value:
                                   '${pesticide.harvestIntervalDays.toString()}' +
+                                      ' ' +
                                       'Days'.i18n()),
                         ];
                         return SegmentCard(itemCards: cardItems);

@@ -43,6 +43,11 @@ class AddFABController {
 
   Future<void> onFabPressed(BuildContext context) async {
     _activePage = getCurrentPage(context);
+    print(_activePage);
+    print(_activePage);
+    print(_activePage);
+    print(_activePage);
+    print(_activePage);
 
     FabClickHandler clickHandler =
         onPressedPageMap[_activePage] ?? defaultOnPressed;

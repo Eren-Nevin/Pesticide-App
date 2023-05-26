@@ -1567,7 +1567,7 @@ const PesticideApplicationSchema = Schema(
     r'dose': PropertySchema(
       id: 2,
       name: r'dose',
-      type: IsarType.double,
+      type: IsarType.string,
     ),
     r'harvestIntervalDays': PropertySchema(
       id: 3,
@@ -1607,6 +1607,7 @@ int _pesticideApplicationEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.dose.length * 3;
   bytesCount += 3 + object.pesticide.length * 3;
   bytesCount += 3 + object.problem.length * 3;
   return bytesCount;
@@ -1620,7 +1621,7 @@ void _pesticideApplicationSerialize(
 ) {
   writer.writeLong(offsets[0], object.applicationDate);
   writer.writeLong(offsets[1], object.cropId);
-  writer.writeDouble(offsets[2], object.dose);
+  writer.writeString(offsets[2], object.dose);
   writer.writeLong(offsets[3], object.harvestIntervalDays);
   writer.writeLong(offsets[4], object.landId);
   writer.writeString(offsets[5], object.pesticide);
@@ -1637,7 +1638,7 @@ PesticideApplication _pesticideApplicationDeserialize(
   final object = PesticideApplication(
     applicationDate: reader.readLongOrNull(offsets[0]) ?? 0,
     cropId: reader.readLongOrNull(offsets[1]) ?? 0,
-    dose: reader.readDoubleOrNull(offsets[2]) ?? 0,
+    dose: reader.readStringOrNull(offsets[2]) ?? '',
     harvestIntervalDays: reader.readLongOrNull(offsets[3]) ?? 0,
     landId: reader.readLongOrNull(offsets[4]) ?? 0,
     pesticide: reader.readStringOrNull(offsets[5]) ?? '',
@@ -1659,7 +1660,7 @@ P _pesticideApplicationDeserializeProp<P>(
     case 1:
       return (reader.readLongOrNull(offset) ?? 0) as P;
     case 2:
-      return (reader.readDoubleOrNull(offset) ?? 0) as P;
+      return (reader.readStringOrNull(offset) ?? '') as P;
     case 3:
       return (reader.readLongOrNull(offset) ?? 0) as P;
     case 4:
@@ -1791,57 +1792,57 @@ extension PesticideApplicationQueryFilter on QueryBuilder<PesticideApplication,
 
   QueryBuilder<PesticideApplication, PesticideApplication,
       QAfterFilterCondition> doseEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
+    String value, {
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'dose',
         value: value,
-        epsilon: epsilon,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<PesticideApplication, PesticideApplication,
       QAfterFilterCondition> doseGreaterThan(
-    double value, {
+    String value, {
     bool include = false,
-    double epsilon = Query.epsilon,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'dose',
         value: value,
-        epsilon: epsilon,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<PesticideApplication, PesticideApplication,
       QAfterFilterCondition> doseLessThan(
-    double value, {
+    String value, {
     bool include = false,
-    double epsilon = Query.epsilon,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'dose',
         value: value,
-        epsilon: epsilon,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<PesticideApplication, PesticideApplication,
       QAfterFilterCondition> doseBetween(
-    double lower,
-    double upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    double epsilon = Query.epsilon,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1850,7 +1851,79 @@ extension PesticideApplicationQueryFilter on QueryBuilder<PesticideApplication,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        epsilon: epsilon,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> doseStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'dose',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> doseEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'dose',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PesticideApplication, PesticideApplication,
+          QAfterFilterCondition>
+      doseContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'dose',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PesticideApplication, PesticideApplication,
+          QAfterFilterCondition>
+      doseMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'dose',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> doseIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'dose',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<PesticideApplication, PesticideApplication,
+      QAfterFilterCondition> doseIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'dose',
+        value: '',
       ));
     });
   }

@@ -22,9 +22,8 @@ class CropPageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ScrollController scrollController = ScrollController();
-    GetIt.I<AddFABController>().setOnPressed(AppPages.Crop, (context) async {});
 
-    AppState appState = context.read<AppStateBloc>().state;
+    AppState appState = context.watch<AppStateBloc>().state;
 
     List<Crop> crops = appState.crops;
 

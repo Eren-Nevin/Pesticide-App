@@ -18,32 +18,6 @@ import '../view/common_widgets.dart';
 
 import 'package:share_plus/share_plus.dart';
 
-// TODO: Add "Pesticide"
-/* class DashboardPage extends StatelessWidget { */
-/*   const DashboardPage({super.key}); */
-
-/*   @override */
-/*   Widget build(BuildContext context) { */
-/*     return CupertinoPageScaffold( */
-/*       backgroundColor: Colors.white, */
-/*       child: SafeArea( */
-/*           child: NestedScrollView( */
-/*               headerSliverBuilder: (context, innerBoxIsScrolled) { */
-/*                 return [ */
-/*                   CupertinoSliverNavigationBar( */
-/*                     stretch: true, */
-/*                     largeTitle: Text('Dashboard'.i18n()), */
-/*                   ) */
-/*                 ]; */
-/*               }, */
-/*               body: Container( */
-/*                 color: Colors.white, */
-/*                 constraints: const BoxConstraints.expand(), */
-/*                 child: const DashboardPageContent(), */
-/*               ))), */
-/*     ); */
-/*   } */
-/* } */
 class ReportPage extends StatelessWidget {
   const ReportPage({super.key});
 
@@ -66,7 +40,7 @@ class ReportPage extends StatelessWidget {
                             padding: const EdgeInsetsDirectional.symmetric(
                                 horizontal: 8),
                             child: Text(
-                              "Share",
+                              "Share".i18n(),
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium!
@@ -170,11 +144,6 @@ String generateHTMLReport(AppState appState) {
       int totalRows =
           crop.harvestDates!.isNotEmpty ? thisCropPesticides.length : 1;
 
-      GetIt.I<Logger>().e(land);
-      GetIt.I<Logger>().e(crop);
-      GetIt.I<Logger>().e(thisCropPesticides);
-      /* GetIt.I<Logger>().e(appState.pesticides); */
-
       /* String generateSingleCropHTML( */
       /*     AppState appState, Crop crop, List<PesticideApplication> pesticides) { */
       /*   String generateSinglePesticideHTML( */
@@ -226,13 +195,13 @@ String generateHTMLReport(AppState appState) {
         if (i < crop.harvestDates!.length) {
           harvestDate = crop.harvestDates![i];
         }
+        // TODO: Fix this. We should check if pesticide exists and if not, show
+        // '-' instead
         return generateSinglePesticideHTML(harvestDate, thisCropPesticides[i]);
       }
 
       String firstPesticideRow =
           crop.harvestDates!.isNotEmpty ? generateNthPesticideHTML(0) : '';
-
-      /* GetIt.I<Logger>().w(totalRows); */
 
       List<String> otherPesticideRowsList = [];
 
@@ -266,8 +235,6 @@ $otherPesticideRows
         .map((Land land) => generateSingleLandHTML(appState, land))
         .join('\n');
 
-    /* GetIt.I<Logger>().w(landsHTML); */
-
     return landsHTML;
   }
 
@@ -300,7 +267,7 @@ $otherPesticideRows
 <td rowspan="1" colspan="3" style="border-collapse: collapse; border:solid black 1.0pt;text-align: center; vertical-align: middle; background:#92D050;padding:0in 5.4pt 0in 5.4pt;">
   <p align="center"
   style="margin-bottom:0in;text-align:center;line-height:normal;">
-  Pesticide Applications
+  ${"Pesticide Applications".i18n()}
   </p>
   </td>
 

@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'package:localization/localization.dart';
+import 'package:pesticide/blocs/app_state_bloc.dart';
 import 'package:pesticide/theme.dart';
 import 'package:pesticide/view/add_fab.dart';
 import 'package:pesticide/routing.dart';
@@ -11,6 +12,7 @@ import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
 import 'package:pesticide/repository.dart';
+import 'package:pesticide/view/add_modal.dart';
 
 enum AppPages {
   Dashboard,
@@ -60,6 +62,23 @@ class MainPage extends StatelessWidget {
     if (!GetIt.I.isRegistered<AddFABController>()) {
       GetIt.I.registerSingleton<AddFABController>(fabController);
     }
+
+    fabController.setOnPressed(AppPages.Land, (BuildContext context) async {
+      print("FAB CLICKED on Land");
+      showAddStuffDialog(context,
+          appStateBloc: context.read<AppStateBloc>(), segment: 'Land');
+    });
+    fabController.setOnPressed(AppPages.Crop, (BuildContext context) async {
+      print("FAB CLICKED on Crop");
+      showAddStuffDialog(context,
+          appStateBloc: context.read<AppStateBloc>(), segment: 'Crop');
+    });
+    fabController.setOnPressed(AppPages.Pesticide,
+        (BuildContext context) async {
+      print("FAB CLICKED on Pesticide");
+      showAddStuffDialog(context,
+          appStateBloc: context.read<AppStateBloc>(), segment: 'Pesticide');
+    });
   }
 
   @override

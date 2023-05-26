@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:localization/localization.dart';
 import 'package:pesticide/blocs/app_state_bloc.dart';
+import 'package:pesticide/blocs/authentication_bloc.dart';
+import 'package:pesticide/blocs/events/app_state_events.dart';
+import 'package:pesticide/blocs/events/authentication_events.dart';
 
 import '../model/app_state.dart';
 import '../model/models.dart';
@@ -22,6 +25,30 @@ class DashboardPage extends StatelessWidget {
                   CupertinoSliverNavigationBar(
                     stretch: true,
                     largeTitle: Text('Dashboard'.i18n()),
+                    trailing: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        child: Container(
+                            height: 64,
+                            alignment: AlignmentDirectional.bottomEnd,
+                            padding: const EdgeInsetsDirectional.symmetric(
+                                horizontal: 8),
+                            child: Text(
+                              "Logout".i18n(),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(
+                                    color: Colors.green,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            )),
+                        onTap: () async {
+                          context
+                              .read<AuthenticationBloc>()
+                              .add(AuthLogoutEvent());
+                          context.read<AppStateBloc>().add(AppResetEvent());
+                        }),
                   )
                 ];
               },

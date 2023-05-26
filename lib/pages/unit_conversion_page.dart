@@ -20,111 +20,113 @@ class UnitConversionPageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final ScrollController scrollController = ScrollController();
     ExpandableController controller = ExpandableController();
-    GetIt.I<AddFABController>()
-        .setOnPressed(AppPages.UnitConversion, (context) async {});
+    // GetIt.I<AddFABController>()
+    //     .setOnPressed(AppPages.UnitConversion, (context) async {});
 
     return SafeArea(
       child: Stack(
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsetsDirectional.all(4),
-                  child: SegmentDetailTitleRowWidget(
-                    title: 'Unit Conversion'.i18n(),
-                    color: 0xFFb8b8b8,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsetsDirectional.all(4),
+                    child: SegmentDetailTitleRowWidget(
+                      title: 'Unit Conversion'.i18n(),
+                      color: 0xFFb8b8b8,
+                    ),
                   ),
-                ),
-                const Divider(
-                  thickness: 2,
-                  color: Color(0xFFE4E4E4),
-                  height: 12,
-                ),
-                Column(
-                  children: [
-                    Container(
-                      margin:
-                          const EdgeInsetsDirectional.symmetric(vertical: 4),
-                      child: ExpandableNotifier(
-                          child: Expandable(
-                              collapsed: UnitConversionTitleWidget(
-                                  title: "Area".i18n(), expanded: false),
-                              expanded: Column(
-                                children: [
-                                  UnitConversionTitleWidget(
-                                    title: "Area".i18n(),
-                                    expanded: true,
-                                  ),
-                                  UnitConversionExpandedWidget(
-                                    child: UnitConversionAreaWidget(),
-                                  ),
-                                ],
-                              ))),
-                    ),
-                    Container(
-                      margin:
-                          const EdgeInsetsDirectional.symmetric(vertical: 4),
-                      child: ExpandableNotifier(
-                          child: Expandable(
-                              collapsed: UnitConversionTitleWidget(
-                                  title: "Volume".i18n(), expanded: false),
-                              expanded: Column(
-                                children: [
-                                  UnitConversionTitleWidget(
-                                    title: "Volume".i18n(),
-                                    expanded: true,
-                                  ),
-                                  UnitConversionExpandedWidget(
-                                    child: UnitConversionVolumeWidget(),
-                                  ),
-                                ],
-                              ))),
-                    ),
-                    Container(
-                      margin:
-                          const EdgeInsetsDirectional.symmetric(vertical: 4),
-                      child: ExpandableNotifier(
-                          child: Expandable(
-                              collapsed: UnitConversionTitleWidget(
-                                  title: "Weight".i18n(), expanded: false),
-                              expanded: Column(
-                                children: [
-                                  UnitConversionTitleWidget(
-                                    title: "Weight".i18n(),
-                                    expanded: true,
-                                  ),
-                                  UnitConversionExpandedWidget(
-                                    child: UnitConversionWeightWidget(),
-                                  ),
-                                ],
-                              ))),
-                    ),
-                    Container(
-                      margin:
-                          const EdgeInsetsDirectional.symmetric(vertical: 4),
-                      child: ExpandableNotifier(
-                          child: Expandable(
-                              collapsed: UnitConversionTitleWidget(
-                                  title: "Dose".i18n(), expanded: false),
-                              expanded: Column(
-                                children: [
-                                  UnitConversionTitleWidget(
-                                    title: "Dose".i18n(),
-                                    expanded: true,
-                                  ),
-                                  UnitConversionExpandedWidget(
-                                    child: UnitConversionDoseWidget(),
-                                  ),
-                                ],
-                              ))),
-                    ),
-                  ],
-                )
-              ],
+                  const Divider(
+                    thickness: 2,
+                    color: Color(0xFFE4E4E4),
+                    height: 12,
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        margin:
+                            const EdgeInsetsDirectional.symmetric(vertical: 4),
+                        child: ExpandableNotifier(
+                            child: Expandable(
+                                collapsed: UnitConversionTitleWidget(
+                                    title: "Area".i18n(), expanded: false),
+                                expanded: Column(
+                                  children: [
+                                    UnitConversionTitleWidget(
+                                      title: "Area".i18n(),
+                                      expanded: true,
+                                    ),
+                                    UnitConversionExpandedWidget(
+                                      child: UnitConversionAreaWidget(),
+                                    ),
+                                  ],
+                                ))),
+                      ),
+                      Container(
+                        margin:
+                            const EdgeInsetsDirectional.symmetric(vertical: 4),
+                        child: ExpandableNotifier(
+                            child: Expandable(
+                                collapsed: UnitConversionTitleWidget(
+                                    title: "Volume".i18n(), expanded: false),
+                                expanded: Column(
+                                  children: [
+                                    UnitConversionTitleWidget(
+                                      title: "Volume".i18n(),
+                                      expanded: true,
+                                    ),
+                                    UnitConversionExpandedWidget(
+                                      child: UnitConversionVolumeWidget(),
+                                    ),
+                                  ],
+                                ))),
+                      ),
+                      Container(
+                        margin:
+                            const EdgeInsetsDirectional.symmetric(vertical: 4),
+                        child: ExpandableNotifier(
+                            child: Expandable(
+                                collapsed: UnitConversionTitleWidget(
+                                    title: "Weight".i18n(), expanded: false),
+                                expanded: Column(
+                                  children: [
+                                    UnitConversionTitleWidget(
+                                      title: "Weight".i18n(),
+                                      expanded: true,
+                                    ),
+                                    UnitConversionExpandedWidget(
+                                      child: UnitConversionWeightWidget(),
+                                    ),
+                                  ],
+                                ))),
+                      ),
+                      Container(
+                        margin:
+                            const EdgeInsetsDirectional.symmetric(vertical: 4),
+                        child: ExpandableNotifier(
+                            child: Expandable(
+                                collapsed: UnitConversionTitleWidget(
+                                    title: "Dose".i18n(), expanded: false),
+                                expanded: Column(
+                                  children: [
+                                    UnitConversionTitleWidget(
+                                      title: "Dose".i18n(),
+                                      expanded: true,
+                                    ),
+                                    UnitConversionExpandedWidget(
+                                      child: UnitConversionDoseWidget(),
+                                    ),
+                                  ],
+                                ))),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ],

@@ -15,6 +15,8 @@
   "Education": "Educaţie",
   "Username": "Nume de utilizator",
 
+  "Days": "Zile",
+
   "Dashboard": "Bord",
   "Lands": "Terenuri",
   "Land": "Teren",
@@ -60,9 +62,100 @@
   "Soil Structure": "Structura solului",
   "Soil Texture": "Textura solului",
   "Select Date": "Selectați Data",
+"Get Location": "Obțineți locație",
 
   "Not Available": "Nu este disponibil",
   "Not Set": "Nu setat",
 
-  "Report": "Raport"
+  "Report": "Raport",
+
+
+  "Pesticide Applications": "Aplicații de pesticide",
+
+  "Please Enter Name": "Vă rugăm să introduceți numele",
+  "Please Enter Occupation": "Vă rugăm să introduceți ocupația",
+  "Please Enter Username": "Vă rugăm să introduceți numele de utilizator",
+  "Passwords should be at least 6 characters long": "Parolele trebuie să aibă cel puțin 6 caractere",
+  "Passwords do not match": "Parolele nu se potrivesc",
+
+
+  "Enter Land Name": "Introduceți numele terenului",
+  "Enter Land Location": "Introduceți locația terenului",
+  "Enter Land Latitude": "Introduceți latitudinea terestră",
+  "Enter Land Longitude": "Introduceți longitudinea terenului",
+  "Enter Land Area": "Intrați în zona de teren",
+  "Enter Land Slope": "Intrați în panta terenului",
+  "Enter Crop Name": "Introduceți numele culturii",
+  "Enter Planting Date": "Introduceți data de plantare",
+  "Enter Pesticide Name": "Introduceți numele pesticidului",
+  "Enter Proper Dose": "Introduceți doza de pesticid",
+  "Enter Proper Application Date": "Introduceți data corespunzătoare de aplicare",
+  "Enter Proper Harvest Interval Date": "Introduceți data corectă a intervalului de recoltare",
+  "Enter Proper Problem": "Introduceți problema corectă",
+  "Select Land": "Selectați terenul",
+
+
+  "Share": "Acțiune",
+  "Logout": "Deconectare",
+  "Warning": "Avertizare",
+  "Continue": "Continua",
+
+
+
+
+  "Sunn Pest":"Plosnita cerealelor",
+  "Stink Bug":"Plosnita vargata a cerealelor",
+  "Yellow Rust":"Rugina galbena",
+  "Brown Rust":"Rugina bruna",
+  "Speckled Leaf Blotch":"Septorioza",
+  "Powdery Mildew":"Fainarea graului",
+
+  "Corn Fusarium":"Fuzarioza",
+  "European Maize Borer":"Sfredelitorul porumbului",
+  "Cutworm":"Viermele",
+  "Wire Worm":"Viermele sarma",
+  "Western Worm Of Corn Roots":"Viermele vestic al radacinilor de porumb",
+
+  "Two-spotted Spider Mite":"Paianjenul rosu comun",
+  "European Grapevine Moth ":"Molia vitei de vie",
+  "Grape Powdery Mildew":"Fainarea vitei de vie",
+  "Grape Anthracnose":"Antracnoza",
+  "Grape Downy Mildew":"Mana vitei de vie",
+
+  "Late Blight":"Mana tomatelor",
+  "Bacterial Speck":"Patarea pustulara",
+  "Early Blight":"Alternarioza tomatelor",
+  "Grey Mold":"Putregaiul cenusiu",
+  "Bacterial Spot":"Bacterial Spot",
+  "Tomato Leaf Miner":"Molia tomatelor",
+  "Tomato Fruit Borer":"Omida fructelor",
+  "Whiteflies":"Musculita alba",
+  "Aphids":"Afide",
+
+  "Green Peach Aphid":"Paduchele verde",
+  "Western Flower Thrips":"Tripsul californian",
+  "Fruit Borer":"Omida fructelor",
+
+  "Codling Moth":"Viermele merelor",
+  "San Jose Scale":"Paduchele de San Jose",
+  "Two Spotted Spider Mite":"Paianjenul rosu comun",
+  "Apple Scab":"Rapanul marului",
+  "Apple Powdery Mildew":"Fainarea",
+
+
+"Please check the pH level of the water you intend to spray. The pH of the water should be between 5.5 and 6.5. If the pH of the water you use is higher than this, use a pH lowering product":"Vă rugăm să verificați nivelul pH-ului apei pe care intenționați să o pulverizați. pH-ul apei trebuie să fie între 5,5 și 6,5. Dacă pH-ul apei pe care o utilizați este mai mare decât acesta, utilizați un produs de scădere a pH-ului",
+
+"Please make the spraying mixture at the location that is closest to the land. Do not operate a vehicle while the tank is filled with a pesticide mixture. This may cause environmental pollution and the pesticide mixture to be dispersed":"Vă rugăm să faceți amestecul de pulverizare în locația cea mai apropiată de pământ. Nu operați un vehicul în timp ce rezervorul este umplut cu un amestec de pesticide. Acest lucru poate cauza poluarea mediului și dispersarea amestecului de pesticide",
+
+"After preparing the mixing mixture, do not keep it waiting. Begin the spraying as soon as possible. Waiting for the pesticide mixture may reduce its effectiveness, cause diseases and pests to develop resistance, and reduce application success":"După ce ați pregătit amestecul de amestecare, nu îl lăsați în așteptare. Începeți pulverizarea cât mai curând posibil. Așteptarea amestecului de pesticide poate reduce eficacitatea acestuia, poate cauza boli și dăunători să dezvolte rezistență și poate reduce succesul aplicării.",
+
+
+"The minimum harvest period for this product has not been completed following the pesticide application on": "Perioada minimă de recoltare pentru acest produs nu a fost finalizată în urma aplicării pesticidelor pe",
+
+    "It is very important to calibrate the crop protection machine. According to the literature calibration can save up to 10% of pesticides": "Este foarte important să calibrați mașina de protecție a culturilor. Conform literaturii de specialitate, calibrarea poate economisi până la 10% din pesticide",
+    "Occupational health and safety equipment needs to be used, masks, gloves, etc. Cleaning the tank as cleaning. Procedures for cleaning the equipment, information on waste management": "Este necesar să se folosească echipament de sănătate și securitate în muncă, măști, mănuși etc. Curățarea rezervorului ca curățare. Proceduri de curățare a echipamentelor, informații privind gestionarea deșeurilor",
+
+"Please reschedule harvest": "Vă rugăm să reprogramați recolta"
+
+
 }

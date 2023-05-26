@@ -19,6 +19,8 @@ import 'package:pesticide/routing.dart';
 import 'package:pesticide/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// TODO: Don't allow same username on server
+
 void initializeLogger() {
   final logger = Logger(
       level: Level.info,
@@ -43,8 +45,6 @@ Future<void> createAndAddGoRouterToGetIt() async {
   GoRouter appRouter = createAppRouter(isLoggedIn);
 
   GetIt.I.registerSingleton<GoRouter>(appRouter);
-
-  print(GetIt.I<GoRouter>());
 }
 
 void main() async {
@@ -78,77 +78,77 @@ class LocaleCubit extends Cubit<Locale> {
   }
 }
 
-void setTestData() {
-  AppStateBloc appStateBloc = GetIt.I<Repository>().getAppStateBloc();
-  AppState state = appStateBloc.state;
-  AppState newState = AppState.clone(state);
-  newState.lands = [
-    Land(
-        landId: 1,
-        name: 'West Field',
-        location: 'Turkey',
-        area: 100,
-        slope: 10),
-    Land(landId: 2, name: 'Bigly', location: 'Greece', area: 10, slope: 20),
-  ];
-  newState.crops = [
-    Crop(
-      cropId: 1,
-      name: 'Tomato',
-      plantingDate:
-          DateTime.now().subtract(Duration(days: 40)).millisecondsSinceEpoch,
-      landId: 1,
-      harvestDates: [
-        DateTime.now().add(Duration(days: 20)).millisecondsSinceEpoch,
-        DateTime.now().add(Duration(days: 30)).millisecondsSinceEpoch,
-      ],
-    ),
-    Crop(
-        cropId: 2,
-        name: 'Potato',
-        plantingDate:
-            DateTime.now().subtract(Duration(days: 10)).millisecondsSinceEpoch,
-        harvestDates: [
-          /* DateTime.now().millisecondsSinceEpoch, */
-          DateTime.now().add(Duration(days: 10)).millisecondsSinceEpoch,
-        ],
-        landId: 2),
-  ];
+/* void setTestData() { */
+/*   AppStateBloc appStateBloc = GetIt.I<Repository>().getAppStateBloc(); */
+/*   AppState state = appStateBloc.state; */
+/*   AppState newState = AppState.clone(state); */
+/*   newState.lands = [ */
+/*     Land( */
+/*         landId: 1, */
+/*         name: 'West Field', */
+/*         location: 'Turkey', */
+/*         area: 100, */
+/*         slope: 10), */
+/*     Land(landId: 2, name: 'Bigly', location: 'Greece', area: 10, slope: 20), */
+/*   ]; */
+/*   newState.crops = [ */
+/*     Crop( */
+/*       cropId: 1, */
+/*       name: 'Tomato', */
+/*       plantingDate: */
+/*           DateTime.now().subtract(Duration(days: 40)).millisecondsSinceEpoch, */
+/*       landId: 1, */
+/*       harvestDates: [ */
+/*         DateTime.now().add(Duration(days: 20)).millisecondsSinceEpoch, */
+/*         DateTime.now().add(Duration(days: 30)).millisecondsSinceEpoch, */
+/*       ], */
+/*     ), */
+/*     Crop( */
+/*         cropId: 2, */
+/*         name: 'Potato', */
+/*         plantingDate: */
+/*             DateTime.now().subtract(Duration(days: 10)).millisecondsSinceEpoch, */
+/*         harvestDates: [ */
+/*           /1* DateTime.now().millisecondsSinceEpoch, *1/ */
+/*           DateTime.now().add(Duration(days: 10)).millisecondsSinceEpoch, */
+/*         ], */
+/*         landId: 2), */
+/*   ]; */
 
-  newState.pesticides = [
-    PesticideApplication(
-      pesticide: 'Argon',
-      cropId: 1,
-      landId: 1,
-      problem: 'Ants',
-      dose: 3,
-      applicationDate: DateTime.now().millisecondsSinceEpoch,
-      harvestIntervalDays: 21,
-    ),
-    PesticideApplication(
-      pesticide: 'Mayonaise',
-      cropId: 1,
-      landId: 1,
-      problem: 'Ants',
-      dose: 22,
-      applicationDate: DateTime.now().millisecondsSinceEpoch,
-      harvestIntervalDays: 11,
-    ),
-    PesticideApplication(
-      pesticide: 'Depismin',
-      cropId: 2,
-      landId: 2,
-      problem: 'Dogs',
-      dose: 16,
-      applicationDate: DateTime.now().millisecondsSinceEpoch,
-      harvestIntervalDays: 14,
-    ),
-  ];
+/*   newState.pesticides = [ */
+/*     PesticideApplication( */
+/*       pesticide: 'Argon', */
+/*       cropId: 1, */
+/*       landId: 1, */
+/*       problem: 'Ants', */
+/*       dose: 3, */
+/*       applicationDate: DateTime.now().millisecondsSinceEpoch, */
+/*       harvestIntervalDays: 21, */
+/*     ), */
+/*     PesticideApplication( */
+/*       pesticide: 'Mayonaise', */
+/*       cropId: 1, */
+/*       landId: 1, */
+/*       problem: 'Ants', */
+/*       dose: 22, */
+/*       applicationDate: DateTime.now().millisecondsSinceEpoch, */
+/*       harvestIntervalDays: 11, */
+/*     ), */
+/*     PesticideApplication( */
+/*       pesticide: 'Depismin', */
+/*       cropId: 2, */
+/*       landId: 2, */
+/*       problem: 'Dogs', */
+/*       dose: 16, */
+/*       applicationDate: DateTime.now().millisecondsSinceEpoch, */
+/*       harvestIntervalDays: 14, */
+/*     ), */
+/*   ]; */
 
-  appStateBloc.add(
-    ReloadAppStateEvent(newState),
-  );
-}
+/*   appStateBloc.add( */
+/*     ReloadAppStateEvent(newState), */
+/*   ); */
+/* } */
 
 class MyApp extends StatelessWidget {
   MyLifecycleObserver observer = MyLifecycleObserver();
@@ -167,6 +167,8 @@ class MyApp extends StatelessWidget {
     GetIt.I<Repository>().getAuthenticationBloc().stream.listen((event) {
       if (event.loggedIn) {
         GetIt.I<GoRouter>().go('/dashboard');
+      } else {
+        GetIt.I<GoRouter>().go('/login');
       }
     });
 

@@ -1,6 +1,7 @@
 import 'dart:io';
-import 'dart:typed_data';
 
+import 'dart:typed_data';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import 'package:pesticide/blocs/app_state_bloc.dart';
 import 'package:pesticide/blocs/authentication_bloc.dart';
 import 'package:pesticide/blocs/events/app_state_events.dart';
 import 'package:pesticide/blocs/events/authentication_events.dart';
+import 'package:pesticide/model/app_state.dart';
 import 'package:pesticide/model/authentication_state.dart';
 import 'package:pesticide/repository.dart';
 import 'package:pesticide/utilities/utils.dart';
@@ -193,7 +195,7 @@ class LoginPage extends StatelessWidget {
 class LoginPageContents extends StatelessWidget {
   // When true, we are only logging in. When false, we're signing up.
   final String title;
-  LoginPageContents({super.key, required this.title});
+  const LoginPageContents({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -206,20 +208,20 @@ class LoginPageContents extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 48, bottom: 48),
+                  margin: const EdgeInsets.only(top: 48, bottom: 48),
                   child: LoginOrSignupPrompt(
                     title: title,
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 16),
+                  margin: const EdgeInsets.symmetric(vertical: 16),
                   child: Builder(builder: (context) {
                     bool isLoggingInCubit =
                         context.watch<IsLoggingInCubit>().state;
                     if (isLoggingInCubit) {
-                      return LoginForm();
+                      return const LoginForm();
                     } else {
-                      return SignupForm();
+                      return const SignupForm();
                     }
                   }),
                 ),
@@ -243,7 +245,7 @@ class LoginOrSignupPrompt extends StatelessWidget {
                 context.read<UserLoginPageInputCubit>().reset();
                 context.read<IsLoggingInCubit>().setToSignup();
               },
-            text: ' ' + 'Sign up'.i18n(),
+            text: ' ${'Sign up'.i18n()}',
             style: const TextStyle(fontWeight: FontWeight.bold))
       ];
     } else {
@@ -255,7 +257,7 @@ class LoginOrSignupPrompt extends StatelessWidget {
                 context.read<UserLoginPageInputCubit>().reset();
                 context.read<IsLoggingInCubit>().setToLogin();
               },
-            text: ' ' + 'Sign in'.i18n(),
+            text: ' ${'Sign in'.i18n()}',
             style: const TextStyle(fontWeight: FontWeight.bold))
       ];
     }
@@ -340,7 +342,7 @@ class SignupForm extends StatelessWidget {
         bool languageSelected =
             context.watch<AppStateBloc>().state.hasChosenLocale;
         if (!languageSelected) {
-          return SignupSelectLanguageWidget();
+          return const SignupSelectLanguageWidget();
         } else {
           return Column(
               mainAxisSize: MainAxisSize.max,
@@ -367,7 +369,7 @@ class SignupForm extends StatelessWidget {
                     context.read<AppStateBloc>().add(UnchoseLocalEvent());
                   },
                   child: Container(
-                    margin: EdgeInsetsDirectional.symmetric(vertical: 8),
+                    margin: const EdgeInsetsDirectional.symmetric(vertical: 8),
                     alignment: AlignmentDirectional.centerStart,
                     child: Text("< Select Language".i18n(),
                         style: Theme.of(context)
@@ -408,14 +410,15 @@ class SelectLanguageButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String country = language == 'English' ? 'us' : languageCodes[language]!;
+    String country =
+        language == 'English' ? 'us' : languageToLocaleCodes[language]!;
 
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         height: 64,
         child: OutlinedButton(
             onPressed: (() async {
-              String? languageCode = languageCodes[language];
+              String? languageCode = languageToLocaleCodes[language];
 
               if (languageCode != null) {
                 GetIt.I<Logger>().i("$language Button Clicked");
@@ -439,7 +442,7 @@ class SelectLanguageButton extends StatelessWidget {
             ),
             child: Row(children: [
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 8),
+                margin: const EdgeInsets.symmetric(horizontal: 8),
                 child: Flag.fromString(
                   country,
                   height: 48,
@@ -460,13 +463,13 @@ class SignupFields extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         child: Column(children: [
           InputField(
-            hint: 'Name'.i18n() + ' *',
+            hint: '${'Name'.i18n()} *',
             onChanged: (value) {
               context.read<UserLoginPageInputCubit>().setName(value);
             },
           ),
           CountryField(
-            hint: 'Select Country'.i18n() + ' *',
+            hint: '${'Select Country'.i18n()} *',
             onChanged: (String selectedCountry) {
               context
                   .read<UserLoginPageInputCubit>()
@@ -474,7 +477,7 @@ class SignupFields extends StatelessWidget {
             },
           ),
           InputField(
-            hint: 'Occupation'.i18n() + ' *',
+            hint: '${'Occupation'.i18n()} *',
             onChanged: (value) {
               context.read<UserLoginPageInputCubit>().setOccupation(value);
             },
@@ -500,7 +503,7 @@ class SignupFields extends StatelessWidget {
           /*   ), */
           /* ), */
           InputField(
-            hint: 'Username'.i18n() + ' *',
+            hint: '${'Username'.i18n()} *',
             onChanged: (value) {
               context.read<UserLoginPageInputCubit>().setUsername(value);
             },
@@ -527,7 +530,7 @@ class LoginFields extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         child: Column(children: [
           InputField(
-            hint: 'Username'.i18n() + ' *',
+            hint: '${'Username'.i18n()} *',
             onChanged: (value) {
               context.read<UserLoginPageInputCubit>().setUsername(value);
             },
@@ -569,12 +572,12 @@ class _PasswordFieldState extends State<PasswordField> {
     return Row(children: [
       Expanded(
         child: InputField(
-          hint: hint.i18n() + ' *',
+          hint: '${hint.i18n()} *',
           lastField: true,
           obscured: obscured,
           initialValue: context.read<UserLoginPageInputCubit>().state.password,
           onChanged: (value) {
-            this.onChanged(value);
+            onChanged(value);
           },
         ),
       ),
@@ -627,7 +630,8 @@ class CountryField extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 22),
                 decoration: BoxDecoration(
-                    border: Border.all(width: 0, color: Color(0x88000000)),
+                    border:
+                        Border.all(width: 0, color: const Color(0x88000000)),
                     /* color: const Color(0x17000000), */
                     color: Colors.white70,
                     borderRadius: BorderRadius.circular(6)),
@@ -668,7 +672,7 @@ class InputField extends StatelessWidget {
         decoration: BoxDecoration(
             /* color: const Color(0x17000000), */
             color: Colors.white70,
-            border: Border.all(width: 0, color: Color(0x88000000)),
+            border: Border.all(width: 0, color: const Color(0x88000000)),
             borderRadius: BorderRadius.circular(6)),
         child: Builder(builder: (context) {
           var textFormFieldRow = CupertinoTextFormFieldRow(
@@ -686,20 +690,10 @@ class InputField extends StatelessWidget {
   }
 }
 
-void showLoginPageToast(FToast fToast, String message) {
-  fToast.showToast(
-      child: ToastWidget(
-        message: message,
-        backgroundColor: CupertinoColors.systemRed,
-        messageColor: CupertinoColors.white,
-      ),
-      gravity: ToastGravity.CENTER,
-      toastDuration: Duration(seconds: 1));
-}
-
 class ActionButton extends StatelessWidget {
   final bool loggingIn;
-  const ActionButton({super.key, required this.loggingIn});
+  bool hasPressed = false;
+  ActionButton({super.key, required this.loggingIn});
 
   @override
   Widget build(BuildContext context) {
@@ -714,79 +708,169 @@ class ActionButton extends StatelessWidget {
                   context.read<UserLoginPageInputCubit>().state;
               if (loggingIn) {
                 GetIt.I<Logger>().i("Logging in");
-                /* LoginResponse? response = await GetIt.I<AuthService>().login( */
-                /*   context.read<UserLoginPageInputCubit>().state.email, */
-                /*   context.read<UserLoginPageInputCubit>().state.password, */
-                /* ); */
-                /* if (response == null) { */
-                context.read<AuthenticationBloc>().add(AttemptLoginEvent(
-                      username: loginPageInput.username,
-                      password: loginPageInput.password,
-                    ));
 
-                /* } else if (response.result == LoginResult.UserNotFound) { */
-                /*   showLoginPageToast(fToast, 'Email Not Found'); */
-                /* } else if (response.result == LoginResult.WrongPassword) { */
-                /*   showLoginPageToast(fToast, 'Wrong Password'); */
-                /* } */
+                // TODO: Add user not found and other errors
+                if (!hasPressed) {
+                  hasPressed = true;
+
+                  Dio client = Dio();
+
+                  AttemptLoginEvent event = AttemptLoginEvent(
+                    username: loginPageInput.username,
+                    password: loginPageInput.password,
+                  );
+
+                  Response response = await client.post(
+                      "$serverAddress/api/login",
+                      data: {
+                        'payload': {'login_info': event.toJson()}
+                      },
+                      options:
+                          Options().copyWith(responseType: ResponseType.json));
+
+                  GetIt.I<Logger>()
+                      .d("Returned response from server rest api $response");
+
+                  GetIt.I<Logger>().w(response.data);
+
+                  /* // TODO: Make  proper  success and error handling */
+                  if (response.data['uid'] != 0) {
+                    AuthenticationState newState =
+                        AuthenticationState.getEmptyAuthState();
+                    newState.loggedInUserGlobalId = response.data['uid'];
+                    newState.name = response.data['name'];
+                    newState.email = response.data['email'];
+                    newState.username = response.data['username'];
+                    newState.password = response.data['password'];
+                    newState.occupation = response.data['occupation'];
+                    newState.education = response.data['education'];
+                    newState.country = response.data['country'];
+                    newState.loggedIn = true;
+
+                    await showStartingAlerts(context);
+
+                    context
+                        .read<AuthenticationBloc>()
+                        .add(ReloadAuthEvent(newState));
+
+                    if (newState.loggedIn) {
+                      await GetIt.I<Repository>()
+                          .getStateFromServer(newState.loggedInUserGlobalId);
+                    }
+
+                    /* context.read<AuthenticationBloc>().add(AttemptLoginEvent( */
+                    /*       username: loginPageInput.username, */
+                    /*       password: loginPageInput.password, */
+                    /*     )); */
+                    hasPressed = false;
+                  }
+                }
               } else {
                 GetIt.I<Logger>().i("Signing up");
-                /* AuthenticationState authState = AuthenticationState( */
-                /*     token: '', */
-                /*     firebaseToken: '', */
-                /*     loggedInUserGlobalId: 0, */
-                /*     name: loginPageInput.name, */
-                /*     email: loginPageInput.email, */
-                /*     username: loginPageInput.username, */
-                /*     password: loginPageInput.password, */
-                /*     country: loginPageInput.language, */
-                /*     education: loginPageInput.education, */
-                /*     occupation: loginPageInput.occupation, */
-                /*     loggedIn: true); */
-
-                /* context */
-                /*     .read<AuthenticationBloc>() */
-                /*     .add(ReloadAuthEvent(authState)); */
 
                 if (loginPageInput.name.isEmpty) {
-                  showToast('Enter Name');
+                  showToast('Please Enter Name'.i18n());
                   return;
                 }
 
                 if (loginPageInput.country.isEmpty) {
-                  showToast('Select Country');
+                  showToast('Select Country'.i18n());
                   return;
                 }
 
                 if (loginPageInput.occupation.isEmpty) {
-                  showToast('Enter Occupation');
+                  showToast('Please Enter Occupation'.i18n());
                   return;
                 }
 
                 if (loginPageInput.username.isEmpty) {
-                  showToast('Enter Username');
+                  showToast('Please Enter Username'.i18n());
                   return;
                 }
 
                 if (loginPageInput.password.length < 6) {
-                  showToast('Passwords should be at least 6 characters long');
+                  showToast('''Passwords should be at least 6 characters long'''
+                      .i18n());
                   return;
                 }
 
                 if (loginPageInput.password != loginPageInput.rePassword) {
-                  showToast('Passwords do not match');
+                  showToast('Passwords do not match'.i18n());
                   return;
                 }
 
-                context.read<AuthenticationBloc>().add(AttempSignupEvent(
-                      name: loginPageInput.name,
-                      email: loginPageInput.email,
-                      username: loginPageInput.username,
-                      password: loginPageInput.password,
-                      country: loginPageInput.country,
-                      education: loginPageInput.education,
-                      occupation: loginPageInput.occupation,
-                    ));
+                Dio client = Dio();
+                AttempSignupEvent event = AttempSignupEvent(
+                  name: loginPageInput.name,
+                  email: loginPageInput.email,
+                  username: loginPageInput.username,
+                  password: loginPageInput.password,
+                  country: loginPageInput.country,
+                  education: loginPageInput.education,
+                  occupation: loginPageInput.occupation,
+                );
+
+                if (!hasPressed) {
+                  hasPressed = true;
+
+                  Response response = await client.post(
+                      "$serverAddress/api/signup",
+                      data: {
+                        'payload': {'signup_info': event.toJson()}
+                      },
+                      options:
+                          Options().copyWith(responseType: ResponseType.json));
+
+                  GetIt.I<Logger>()
+                      .d("Returned response from server rest api $response");
+
+                  GetIt.I<Logger>().w(response.data);
+
+                  /* // TODO: Make  proper  success and error handling */
+                  if (response.data['uid'] != 0) {
+                    AuthenticationState newState =
+                        AuthenticationState.getEmptyAuthState();
+                    newState.loggedInUserGlobalId = response.data['uid'];
+                    newState.name = response.data['name'];
+                    newState.email = response.data['email'];
+                    newState.username = response.data['username'];
+                    newState.password = response.data['password'];
+                    newState.occupation = response.data['occupation'];
+                    newState.education = response.data['education'];
+                    newState.country = response.data['country'];
+                    newState.loggedIn = true;
+
+                    AppState cleanState =
+                        AppState.clone(context.read<AppStateBloc>().state);
+                    cleanState.lands = [];
+                    cleanState.crops = [];
+                    cleanState.pesticides = [];
+
+                    await showStartingAlerts(context);
+
+                    context
+                        .read<AppStateBloc>()
+                        .add(ReloadAppStateEvent(cleanState, true));
+
+                    context
+                        .read<AuthenticationBloc>()
+                        .add(ReloadAuthEvent(newState));
+                  }
+                  /* context.read<AuthenticationBloc>().add(AttempSignupEvent( */
+                  /*       name: loginPageInput.name, */
+                  /*       email: loginPageInput.email, */
+                  /*       username: loginPageInput.username, */
+                  /*       password: loginPageInput.password, */
+                  /*       country: loginPageInput.country, */
+                  /*       education: loginPageInput.education, */
+                  /*       occupation: loginPageInput.occupation, */
+                  /*     )); */
+
+                  /* context */
+                  /*     .read<AppStateBloc>() */
+                  /*     .add(ReloadAppStateEvent(null, true)); */
+                  /* hasPressed = false; */
+                }
 
                 /* GoRouter.of(context).go('/dashboard'); */
               }
@@ -803,4 +887,34 @@ class ActionButton extends StatelessWidget {
             ),
             child: Text(loggingIn ? 'Sign in'.i18n() : 'Sign up'.i18n())));
   }
+}
+
+Future<bool> showStartingAlerts(BuildContext context) async {
+  await showStartingAlert(
+      context,
+      '''Please check the pH level of the water you intend to spray. The pH of the water should be between 5.5 and 6.5. If the pH of the water you use is higher than this, use a pH lowering product'''
+          .i18n());
+  await showStartingAlert(
+      context,
+      '''Please make the spraying mixture at the location that is closest to the land. Do not operate a vehicle while the tank is filled with a pesticide mixture. This may cause environmental pollution and the pesticide mixture to be dispersed'''
+          .i18n());
+  await showStartingAlert(
+      context,
+      '''After preparing the mixing mixture, do not keep it waiting. Begin the spraying as soon as possible. Waiting for the pesticide mixture may reduce its effectiveness, cause diseases and pests to develop resistance, and reduce application success'''
+          .i18n());
+
+// Newly added ones
+  // ignore: use_build_context_synchronously
+  await showStartingAlert(
+      context,
+      '''It is very important to calibrate the crop protection machine. According to the literature calibration can save up to 10% of pesticides'''
+          .i18n());
+
+  // ignore: use_build_context_synchronously
+  await showStartingAlert(
+      context,
+      '''Occupational health and safety equipment needs to be used, masks, gloves, etc. Cleaning the tank as cleaning. Procedures for cleaning the equipment, information on waste management'''
+          .i18n());
+
+  return true;
 }

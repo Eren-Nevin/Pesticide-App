@@ -16,5 +16,8 @@ class UnchoseLocalEvent extends AppStateEvent {}
 
 class ReloadAppStateEvent extends AppStateEvent {
   AppState? appState;
-  ReloadAppStateEvent(this.appState);
+  bool sendToServer;
+  ReloadAppStateEvent(this.appState, this.sendToServer);
 }
+
+class AppResetEvent extends AppStateEvent {}

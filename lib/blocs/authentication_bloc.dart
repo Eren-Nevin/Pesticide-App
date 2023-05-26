@@ -94,6 +94,13 @@ class AuthenticationBloc
       }
     });
 
+    on<AuthLogoutEvent>(
+      (event, emit) {
+        AuthenticationState state = AuthenticationState.getEmptyAuthState();
+        emit(state);
+      },
+    );
+
     on<ReloadAuthEvent>((event, emit) {
       AuthenticationState state =
           event.authenticationState ?? AuthenticationState.getEmptyAuthState();

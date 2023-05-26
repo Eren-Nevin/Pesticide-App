@@ -13,7 +13,6 @@ import 'package:pesticide/model/authentication_state.dart';
 import 'package:pesticide/model/app_state.dart';
 import 'package:pesticide/blocs/app_state_bloc.dart';
 import 'package:pesticide/blocs/authentication_bloc.dart';
-import 'package:pesticide/pages/report_page.dart';
 
 import 'model/models.dart';
 
@@ -68,7 +67,7 @@ class Repository {
   // This resets all states to empty except the auth state.
   // TODO: We need to have a clean state that we revert to here
   Future<void> resetAppState() async {
-    _appStateBloc.add(ReloadAppStateEvent(null));
+    _appStateBloc.add(ReloadAppStateEvent(null, false));
   }
 
   // This is called when app is reloaded (not relaunched). We reload the
@@ -119,7 +118,7 @@ class Repository {
 
   Future<void> reloadAppStateFromDatabase() async {
     AppState? appState = await readAppStateFromDatabase();
-    _appStateBloc.add(ReloadAppStateEvent(appState));
+    _appStateBloc.add(ReloadAppStateEvent(appState, true));
   }
 
   // Make same for user models as well
@@ -162,48 +161,9 @@ class Repository {
 
     _appStateBlocSubscription = _appStateBloc.stream.listen((appState) async {
       await _saveAppStateToDatabase(appState);
-      int uid = _authenticationBloc.state.loggedInUserGlobalId;
-
-      await sendStateToServer(uid, appState);
-
-      await sendReportToServer(uid, appState);
 
       /* // TODO: Make  proper  success and error handling */
     });
-  }
-
-  Future<void> sendStateToServer(int uid, AppState appState) async {
-    Dio client = Dio();
-    dynamic sentData = {
-      'payload': {
-        'uid': uid,
-        'app_state': appState.toJson(),
-      }
-    };
-
-    GetIt.I<Logger>().w("Sending state to server $sentData");
-    Response response = await client.post("$serverAddress/api/save_state",
-        data: sentData,
-        options: Options().copyWith(responseType: ResponseType.json));
-
-    GetIt.I<Logger>().d("Returned response from server rest api $response");
-
-    GetIt.I<Logger>().w(response.data);
-    client.close();
-  }
-
-  Future<void> sendReportToServer(int uid, AppState appState) async {
-    Dio client = Dio();
-    GetIt.I<Logger>().w("Sending report to server");
-    Response reportResponse =
-        await client.post("$serverAddress/api/save_report",
-            queryParameters: {'uid': uid},
-            data: generateHTMLReport(appState),
-            options: Options().copyWith(
-              contentType: 'text/html',
-            ));
-
-    client.close();
   }
 
   Future<void> getStateFromServer(int uid) async {
@@ -260,7 +220,7 @@ class Repository {
         pesticideId: pesticideRaw['pesticide_id'],
         landId: pesticideRaw['land_id'],
         cropId: pesticideRaw['crop_id'],
-        dose: pesticideRaw['dose'],
+        dose: '${pesticideRaw['dose']}',
         problem: pesticideRaw['problem'],
         applicationDate: pesticideRaw['application_date'],
         harvestIntervalDays: pesticideRaw['harvest_interval_days'],
@@ -275,7 +235,7 @@ class Repository {
     newState.crops = [...crops];
     newState.pesticides = [...pesticides];
 
-    _appStateBloc.add(ReloadAppStateEvent(newState));
+    _appStateBloc.add(ReloadAppStateEvent(newState, true));
     client.close();
   }
 

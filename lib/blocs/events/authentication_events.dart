@@ -42,6 +42,8 @@ class AttempSignupEvent extends AuthenticationEvent {
       };
 }
 
+class AuthLogoutEvent extends AuthenticationEvent {}
+
 class ReloadAuthEvent extends AuthenticationEvent {
   AuthenticationState? authenticationState;
   ReloadAuthEvent(this.authenticationState);
