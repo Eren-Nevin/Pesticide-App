@@ -1,4 +1,5 @@
 {
+    "Type": "Typ",
     "Already have an account?": "Sie haben bereits ein Konto?",
     "Don't have an account?": "Sie haben kein Konto?",
     "Sign up": "Anmeldung",
@@ -17,6 +18,7 @@
     "Crops": "Getreide",
     "Crop": "Gerte",
     "Pesticides": "Pestizide",
+    "Pesticide": "Pestizid",
     "Unit Conversion": "Einheitenumrechnung",
     "Days": "Tage",
     "Location": "Standort",

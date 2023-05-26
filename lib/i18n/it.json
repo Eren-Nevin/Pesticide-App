@@ -1,4 +1,5 @@
 {
+    "Type": "Tipo",
     "Select Language": "Select Language",
     "Already have an account?": "Hai già un account?",
     "Don't have an account?": "Non hai un account?",
@@ -18,6 +19,7 @@
     "Crops": "Raccolti",
     "Crop": "Raccolto",
     "Pesticides": "Pesticidi",
+    "Pesticide": "Pesticida",
     "Unit Conversion": "Conversione unità",
     "Location": "Posizione",
     "Slope": "Pendenza",

@@ -233,7 +233,7 @@ class AddDialogTitleRow extends StatelessWidget {
     String titleSuffix =
         context.select<ModalInputCubit, String>((value) => value.state.segment);
 
-    String title = 'Add'.i18n() + ' $titleSuffix';
+    String title = 'Add'.i18n() + ' ${titleSuffix.i18n()}';
 
     return SimpleDialogTitleRowWidget(
         title: title,
@@ -356,7 +356,7 @@ class SimpleDialogTitleRowWidget extends StatelessWidget {
                 margin: const EdgeInsetsDirectional.only(end: 16),
                 child: const DialogCloseButton(size: 24)),
             Text(
-              title,
+              title.i18n(),
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const Spacer(),
@@ -1074,7 +1074,7 @@ class SelectWhichToAdd extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(textBaseline: TextBaseline.alphabetic, children: [
-      const DialogFormRowTitles(title: 'Type'),
+      DialogFormRowTitles(title: 'Type'.i18n()),
       Flexible(
         child: Builder(builder: (context) {
           return Container(
