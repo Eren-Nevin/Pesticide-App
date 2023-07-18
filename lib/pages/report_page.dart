@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +14,6 @@ import 'package:pesticide/utilities/utils.dart';
 
 import '../model/app_state.dart';
 import '../model/models.dart';
-import '../view/add_fab.dart';
-import '../view/common_widgets.dart';
 
 import 'package:share_plus/share_plus.dart';
 
@@ -141,44 +140,19 @@ String generateHTMLReport(AppState appState) {
       }
       List<PesticideApplication> thisCropPesticides =
           findALandCropPairPesiticdeApplications(appState, land, crop);
-      int totalRows =
-          crop.harvestDates!.isNotEmpty ? thisCropPesticides.length : 1;
+      int harvests = crop.harvestDates?.length ?? 0;
+      int pesticides = thisCropPesticides.length;
 
-      /* String generateSingleCropHTML( */
-      /*     AppState appState, Crop crop, List<PesticideApplication> pesticides) { */
-      /*   String generateSinglePesticideHTML( */
-      /*       PesticideApplication pesticide, int harvestDate) { */
-      /*     return ''' */
-      /*           ${generateSingleTD(1, pesticide.pesticide)} */
-      /*           ${generateSingleTD(1, pesticide.dose.toString())} */
-      /*           ${generateSingleTD(1, convertIntTimeToDate(pesticide.applicationDate))} */
-      /*           ${generateSingleTD(1, convertIntTimeToDate(harvestDate))} */
-      /*       '''; */
-      /*   } */
+      int totalRows = max(max(harvests, pesticides), 1);
 
-      /*   List<String> pesticidesHTML = []; */
-      /*   for (int i = 0; i < pesticides.length; i++) { */
-      /*     String singlePesticideHTML = */
-      /*         generateSinglePesticideHTML(pesticides[i], crop.harvestDates![i]); */
+      // int totalRows =
+      //     crop.harvestDates!.isNotEmpty ? thisCropPesticides.length : 1;
+      //
+      // if (crop.harvestDates != null) {
+      //   totalRows = max(totalRows, crop.harvestDates!.length);
+      // }
 
-      /*     pesticidesHTML.add(singlePesticideHTML); */
-      /*   } */
-
-      /*   String result = ''' */
-      /*       ${generateSingleTD(pesticides.length, crop.name)} */
-      /*       ${generateSingleTD(pesticides.length, convertIntTimeToDate(crop.plantingDate))} */
-      /*       ${pesticidesHTML.join('\n')} */
-      /*     '''; */
-
-      /*   return result; */
-      /* } */
-
-      /* List<String> cropsHTML = []; */
-
-      /* for (Crop crop in pesticideMap.keys) { */
-      /*   cropsHTML */
-      /*       .add(generateSingleCropHTML(appState, crop, pesticideMap[crop]!)); */
-      /* } */
+      print("TOTAL ROWS: ${totalRows}");
 
       String generateSinglePesticideHTML(
           int harvestDate, PesticideApplication pesticide) {
@@ -190,26 +164,68 @@ String generateHTMLReport(AppState appState) {
             ''';
       }
 
+      String generateSingleEmptyPesiticeHTML(int harvestDate) {
+        return '''
+                ${generateSingleTD(1, '-')}
+                ${generateSingleTD(1, '-')}
+                ${generateSingleTD(1, '-')}
+                ${generateSingleTD(1, harvestDate == 0 ? '-' : convertIntTimeToDate(harvestDate))}
+            ''';
+      }
+
+      String generateSingleRowHTML(
+          int harvestDate, PesticideApplication? pesticide) {
+        return '''
+                ${generateSingleTD(1, pesticide?.pesticide ?? '-')}
+                ${generateSingleTD(1, pesticide?.dose.toString() ?? '-')}
+                ${generateSingleTD(1, pesticide != null ? convertIntTimeToDate(pesticide.applicationDate) : '-')}
+                ${generateSingleTD(1, harvestDate == 0 ? '-' : convertIntTimeToDate(harvestDate))}
+            ''';
+      }
+
       String generateNthPesticideHTML(int i) {
         int harvestDate = 0;
         if (i < crop.harvestDates!.length) {
           harvestDate = crop.harvestDates![i];
         }
+
+        PesticideApplication? pesticide;
+        if (i < thisCropPesticides.length) {
+          pesticide = thisCropPesticides[i];
+        }
+
         // TODO: Fix this. We should check if pesticide exists and if not, show
         // '-' instead
-        return generateSinglePesticideHTML(harvestDate, thisCropPesticides[i]);
+        // if (thisCropPesticides.length > i) {
+        //   return generateSinglePesticideHTML(
+        //       harvestDate, thisCropPesticides[i]);
+        // } else {
+        // return generateSingleEmptyPesiticeHTML(harvestDate);
+        // return generateSingleEmptyPesiticeHTML(harvestDate);
+        // }
+
+        return generateSingleRowHTML(harvestDate, pesticide);
       }
 
-      String firstPesticideRow =
-          crop.harvestDates!.isNotEmpty ? generateNthPesticideHTML(0) : '';
+      // String firstPesticideRow =
+      //     crop.harvestDates!.isNotEmpty ? generateNthPesticideHTML(0) : '';
+      // String firstPesticideRow = generateNthPesticideHTML(0);
 
       List<String> otherPesticideRowsList = [];
 
-      for (int i = 1; i < thisCropPesticides.length; i++) {
+      // for (int i = 1; i < thisCropPesticides.length; i++) {
+      //   String row = '''
+      //       <tr>
+      //           ${generateNthPesticideHTML(i)}
+      //       </tr>
+      //   ''';
+      //   otherPesticideRowsList.add(row);
+      // }
+      for (int i = 0; i < totalRows; i++) {
         String row = '''
-            <tr>
+            ${i != 0 ? '<tr>' : ''}
                 ${generateNthPesticideHTML(i)}
-            </tr>
+            ${i != 0 ? '</tr>' : ''}
         ''';
         otherPesticideRowsList.add(row);
       }
@@ -221,8 +237,6 @@ String generateHTMLReport(AppState appState) {
 ${generateSingleTD(totalRows, land.name)}
 ${generateSingleTD(totalRows, crop.name)}
 ${generateSingleTD(totalRows, convertIntTimeToDate(crop.plantingDate))}
-$firstPesticideRow
-</tr>
 $otherPesticideRows
   ''';
 

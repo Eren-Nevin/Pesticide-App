@@ -1,2 +1,2 @@
-server_address = '0.0.0.0'
+server_address = 'adinal.co'
 server_port = 3004
