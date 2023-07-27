@@ -81,6 +81,16 @@ class AccountManager:
         else:
             return 0
 
+    def remove_account(self, uid: int):
+        possible_user = self.ws.find(str(uid), in_column=1)
+        if possible_user:
+            user_row = possible_user.row
+            self.ws.batch_clear([f"A{user_row}:J{user_row}"])
+        else:
+            return False
+
+
+
     def save_account_info(self, user_info: AccountInfo):
         print("Saving account info into google sheet")
         self.read_database()

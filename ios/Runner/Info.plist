@@ -26,6 +26,12 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We need your location to determine your land location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to determine your land location</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We need your location to determine your land location</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -49,12 +55,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>some description</string> 
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>some description</string>
-
-
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

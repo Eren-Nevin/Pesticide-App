@@ -23,7 +23,6 @@ import 'package:pesticide/utilities/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:pesticide/main.dart';
 import 'package:pesticide/view/common_widgets.dart';
 

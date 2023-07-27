@@ -64,6 +64,20 @@ class Server:
 
         return None#                            )
 
+    async def remove_user(self, request: Request):
+        payload = request.json.get('payload', None)
+        if payload:
+            uid = payload.get('uid', None)
+            if uid:
+                res = self.account_manager.remove_account(uid)
+                if res:
+                    return json({'status': 'OK'})
+                else:
+                    return json({'status': 'FAIL'})
+
+        return json({'status': 'Bad request'})
+
+
     async def login(self, request: Request):
         self.account_manager.read_database()
         payload = request.json.get('payload', None)
@@ -125,10 +139,6 @@ class Server:
 
     async def save_app_report(self, request: Request):
         print("SAVING REPORT")
-        # print(request.body.decode())
-        # if req_files := request.files:
-        #     state_file = req_files.get('file')
-        #     static_file_content_binary = state_file.body
         if uid := int(request.get_args().get('uid')):
             with open(Path(f'./data/report_{uid}.html'), 'wb') as file:
                 file.write(request.body)
