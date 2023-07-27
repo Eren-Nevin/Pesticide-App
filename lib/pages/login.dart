@@ -733,6 +733,11 @@ class ActionButton extends StatelessWidget {
                   GetIt.I<Logger>().w(response.data);
 
                   /* // TODO: Make  proper  success and error handling */
+                  if (response.data['status'] == 'Bad request') {
+                    showToast('User Not Found Or Password is Wrong');
+                    hasPressed = false;
+                    return;
+                  }
                   if (response.data['uid'] != 0) {
                     AuthenticationState newState =
                         AuthenticationState.getEmptyAuthState();

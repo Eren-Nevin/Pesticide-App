@@ -85,7 +85,8 @@ class AccountManager:
         possible_user = self.ws.find(str(uid), in_column=1)
         if possible_user:
             user_row = possible_user.row
-            self.ws.batch_clear([f"A{user_row}:J{user_row}"])
+            self.ws.delete_rows(user_row);
+            return True
         else:
             return False
 

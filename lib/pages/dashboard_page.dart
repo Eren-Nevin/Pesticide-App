@@ -1,15 +1,51 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:localization/localization.dart';
+import 'package:logger/logger.dart';
 import 'package:pesticide/blocs/app_state_bloc.dart';
 import 'package:pesticide/blocs/authentication_bloc.dart';
 import 'package:pesticide/blocs/events/app_state_events.dart';
 import 'package:pesticide/blocs/events/authentication_events.dart';
 
 import '../model/app_state.dart';
+import '../model/authentication_state.dart';
 import '../model/models.dart';
+
+// logout function
+Future<void> logout(
+    AuthenticationBloc authBloc, AppStateBloc appStateBloc) async {
+  authBloc.add(AuthLogoutEvent());
+  appStateBloc.add(AppResetEvent());
+}
+
+Future<void> deleteUser(
+    AuthenticationBloc authBloc, AppStateBloc appStateBloc) async {
+  AuthenticationState authState = authBloc.state;
+  int userId = authState.loggedInUserGlobalId;
+
+  GetIt.I<Logger>().w("Deleting User $userId");
+
+  Dio client = Dio();
+
+  Response response = await client.post("$serverAddress/api/remove_user",
+      data: {
+        'payload': {'uid': userId}
+      },
+      options: Options().copyWith(responseType: ResponseType.json));
+
+  GetIt.I<Logger>().d("Returned response from server rest api $response");
+
+  GetIt.I<Logger>().w(response.data);
+
+  /* // TODO: Make  proper  success and error handling */
+  if (response.data['status'] == 'OK') {
+    await logout(authBloc, appStateBloc);
+  }
+}
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -44,10 +80,41 @@ class DashboardPage extends StatelessWidget {
                                   ),
                             )),
                         onTap: () async {
-                          context
-                              .read<AuthenticationBloc>()
-                              .add(AuthLogoutEvent());
-                          context.read<AppStateBloc>().add(AppResetEvent());
+                          AuthenticationBloc authBloc =
+                              context.read<AuthenticationBloc>();
+                          AppStateBloc appBloc = context.read<AppStateBloc>();
+                          await showCupertinoModalPopup<void>(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                CupertinoAlertDialog(
+                              title: const Text('Alert'),
+                              content: const Text(
+                                  "Be Cautious: by pressing Delete User, all your data will be lost and you can't log back again"),
+                              actions: <CupertinoDialogAction>[
+                                CupertinoDialogAction(
+                                  /// This parameter indicates this action is the default,
+                                  /// and turns the action's text to bold text.
+                                  isDefaultAction: true,
+                                  onPressed: () async {
+                                    // Navigator.pop(context);
+                                    await logout(authBloc, appBloc);
+                                  },
+                                  child: const Text('Logout'),
+                                ),
+                                CupertinoDialogAction(
+                                  /// This parameter indicates the action would perform
+                                  /// a destructive action such as deletion, and turns
+                                  /// the action's text color to red.
+                                  isDestructiveAction: true,
+                                  onPressed: () async {
+                                    // Navigator.pop(context);
+                                    await deleteUser(authBloc, appBloc);
+                                  },
+                                  child: const Text('Delete User'),
+                                ),
+                              ],
+                            ),
+                          );
                         }),
                   )
                 ];

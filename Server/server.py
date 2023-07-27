@@ -36,10 +36,12 @@ class Server:
         #     'POST'])
         self.app.add_route(self.signup, 'api/signup', ['POST'])
         self.app.add_route(self.login, 'api/login', ['POST'])
+        self.app.add_route(self.remove_user, 'api/remove_user', ['POST'])
         self.app.add_route(self.save_app_state, 'api/save_state', ['POST'])
         self.app.add_route(self.save_app_report, 'api/save_report', ['POST'])
         self.app.add_route(self.load_app_state, 'api/load_state', ['POST'])
         self.app.add_route(self.show_report, 'api/show_report', ['GET'])
+        self.app.add_route(self.show_privacy_policy, 'privacy_policy', ['GET'])
 
         Extend(self.app)
 
@@ -102,6 +104,7 @@ class Server:
                 return json(asdict(auth_res))
         except Exception as e:
             print(e)
+            return json({'status': 'Bad request'})
 
     async def retrieve_user(self, request: Request):
         self.account_manager.read_database()
@@ -162,6 +165,10 @@ class Server:
 
         return html('<h1>Not Found</h1>')
 
+    async def show_privacy_policy(self, request: Request):
+        with open(f'./privacy.html') as f:
+            return html(f.read())
+
 
 
     # @protected
@@ -188,8 +195,8 @@ class Server:
 server = Server()
 
 if __name__ == '__main__':
-    server.app.run(server_address, server_port, auto_reload=True)
-    # server.app.run(server_address, server_port, ssl=dict(
-    #     cert='/root/.acme.sh/fundedmax.org_ecc/fullchain.cer',
-    #     key='/root/.acme.sh/fundedmax.org_ecc/fundedmax.org.key',
-    # ))
+    # server.app.run(server_address, server_port, auto_reload=True)
+     server.app.run(server_address, server_port, ssl=dict(
+         cert='/home/mvp/.acme.sh/adinal.co_ecc/fullchain.cer',
+         key='/home/mvp/.acme.sh/adinal.co_ecc/adinal.co.key',
+     ))
