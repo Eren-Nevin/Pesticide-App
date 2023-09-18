@@ -1,0 +1,5 @@
+services:
+  copefa_server:
+    build: .
+    ports:
+      - "3004:3004"
