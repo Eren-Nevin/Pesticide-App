@@ -196,7 +196,4 @@ server = Server()
 
 if __name__ == '__main__':
     # server.app.run(server_address, server_port, auto_reload=True)
-     server.app.run(server_address, server_port, ssl=dict(
-         cert='/home/mvp/.acme.sh/adinal.co_ecc/fullchain.cer',
-         key='/home/mvp/.acme.sh/adinal.co_ecc/adinal.co.key',
-     ))
+     server.app.run(server_address, server_port)
