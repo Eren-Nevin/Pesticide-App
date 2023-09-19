@@ -1,2 +1,2 @@
-server_address = 'localhost'
-server_port = 3004
+server_address = '0.0.0.0'
+server_port = 3005
