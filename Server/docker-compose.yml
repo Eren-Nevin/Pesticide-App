@@ -1,5 +1,6 @@
 services:
   copefa_server:
     build: .
+    # Need a proxy to route 3004 to 3005
     ports:
-      - "3004:3004"
+      - "3005:3005"
