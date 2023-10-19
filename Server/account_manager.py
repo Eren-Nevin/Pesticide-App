@@ -9,6 +9,8 @@ import gspread
 
 from utils import server_address, server_port
 
+real_server_address = 'adinal.co:3004'
+
 class AccountManager:
 
     _instance = None
@@ -146,7 +148,7 @@ class AccountManager:
         return None
 
     def get_report_url(self, uid):
-        return f'https://{server_address}:{server_port}/api/show_report?uid={uid}'
+        return f'https://{real_server_address}/api/show_report?uid={uid}'
 
 
 if __name__ == '__main__':

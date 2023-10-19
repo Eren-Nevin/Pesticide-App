@@ -6,6 +6,6 @@ COPY . .
 
 RUN pip install -r requirements.txt
 
-EXPOSE 3004
+EXPOSE 3005
 
 CMD ["python", "server.py"]

@@ -4,3 +4,5 @@ services:
     # Need a proxy to route 3004 to 3005
     ports:
       - "3005:3005"
+    volumes:
+      - './data:/sanic/data'
